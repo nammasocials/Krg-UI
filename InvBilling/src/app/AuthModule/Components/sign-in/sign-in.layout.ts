@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
-export class SignInComponent {
+export class SignInLayout {
 
 }
