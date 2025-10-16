@@ -76,34 +76,54 @@
         <nav class="bg-white shadow-lg border-b">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-between items-center py-4">
-                    <div class="flex items-center space-x-8">
-                        <h1 class="text-2xl font-bold text-gray-800">Invoice Manager</h1>
-                        <div class="hidden md:flex space-x-6">
-                            <button onclick="showPage('customers')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
-                            <button onclick="showPage('products')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
-                            <button onclick="showPage('invoices')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
-                            <button onclick="showPage('reports')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
-                        </div>
+                    <div class="flex items-center">
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-800">Invoice Manager</h1>
+                        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden ml-4 p-2 rounded-md text-gray-600 hover:text-blue-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200">
+                    <div class="hidden md:flex space-x-6">
+                        <button onclick="showPage('customers')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
+                        <button onclick="showPage('products')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
+                        <button onclick="showPage('invoices')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
+                        <button onclick="showPage('reports')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+                    </div>
+                    <button onclick="logout()" class="bg-red-500 text-white px-3 py-2 md:px-4 text-sm md:text-base rounded-lg hover:bg-red-600 transition duration-200">
                         Logout
                     </button>
+                </div>
+                <!-- Mobile Menu -->
+                <div id="mobileMenu" class="md:hidden border-t border-gray-200 py-4" style="display: none;">
+                    <div class="flex flex-col space-y-2">
+                        <button onclick="showPage('customers'); toggleMobileMenu()" class="nav-btn text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
+                        <button onclick="showPage('products'); toggleMobileMenu()" class="nav-btn text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
+                        <button onclick="showPage('invoices'); toggleMobileMenu()" class="nav-btn text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
+                        <button onclick="showPage('reports'); toggleMobileMenu()" class="nav-btn text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+                    </div>
                 </div>
             </div>
         </nav>
 
         <!-- Customers Page -->
         <div id="customersPage" class="page hidden">
-            <div class="max-w-7xl mx-auto px-4 py-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800">Customers</h2>
-                    <button onclick="openCustomerModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Customers</h2>
+                    <button onclick="openCustomerModal('add')" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-sm md:text-base">
                         Add Customer
                     </button>
                 </div>
                 
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <!-- Mobile Card View -->
+                    <div id="customersMobileView" class="md:hidden">
+                        <!-- Mobile customer cards will be populated here -->
+                    </div>
+                    
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -125,21 +145,27 @@
 
         <!-- Products Page -->
         <div id="productsPage" class="page hidden">
-            <div class="max-w-7xl mx-auto px-4 py-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800">Products</h2>
-                    <div class="space-x-4">
-                        <button onclick="openStockModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium">
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Products</h2>
+                    <div class="flex flex-col sm:flex-row w-full sm:w-auto space-y-2 sm:space-y-0 sm:space-x-4">
+                        <button onclick="openStockModal()" class="w-full sm:w-auto bg-green-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium text-sm md:text-base">
                             Add Stock
                         </button>
-                        <button onclick="openProductModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                        <button onclick="openProductModal('add')" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-sm md:text-base">
                             Add Product
                         </button>
                     </div>
                 </div>
                 
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <!-- Mobile Card View -->
+                    <div id="productsMobileView" class="md:hidden">
+                        <!-- Mobile product cards will be populated here -->
+                    </div>
+                    
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -161,16 +187,22 @@
 
         <!-- Invoices Page -->
         <div id="invoicesPage" class="page hidden">
-            <div class="max-w-7xl mx-auto px-4 py-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold text-gray-800">Invoices</h2>
-                    <button onclick="openInvoiceModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Invoices</h2>
+                    <button onclick="openInvoiceModal('add')" class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-sm md:text-base">
                         Create Invoice
                     </button>
                 </div>
                 
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <!-- Mobile Card View -->
+                    <div id="invoicesMobileView" class="md:hidden">
+                        <!-- Mobile invoice cards will be populated here -->
+                    </div>
+                    
+                    <!-- Desktop Table View -->
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -193,8 +225,8 @@
 
         <!-- Reports Page -->
         <div id="reportsPage" class="page hidden">
-            <div class="max-w-7xl mx-auto px-4 py-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Reports</h2>
+            <div class="max-w-7xl mx-auto px-4 py-4 md:py-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Reports</h2>
                 
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Report Filters</h3>
@@ -288,8 +320,8 @@
     </div>
 
     <!-- Customer Modal -->
-    <div id="customerModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+    <div id="customerModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h3 id="customerModalTitle" class="text-2xl font-bold text-gray-800">Add Customer</h3>
@@ -370,8 +402,8 @@
     </div>
 
     <!-- Product Modal -->
-    <div id="productModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+    <div id="productModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h3 id="productModalTitle" class="text-2xl font-bold text-gray-800">Add Product</h3>
@@ -452,8 +484,8 @@
     </div>
 
     <!-- Invoice Modal -->
-    <div id="invoiceModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl mx-4 max-h-screen overflow-y-auto">
+    <div id="invoiceModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-screen overflow-y-auto">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h3 id="invoiceModalTitle" class="text-2xl font-bold text-gray-800">Create Invoice</h3>
@@ -542,8 +574,8 @@
     </div>
 
     <!-- Stock Modal -->
-    <div id="stockModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div id="stockModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div class="p-6 border-b">
                 <div class="flex justify-between items-center">
                     <h3 class="text-2xl font-bold text-gray-800">Add Stock</h3>
@@ -643,8 +675,19 @@
             else if (pageName === 'invoices') loadInvoices();
         }
 
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu.style.display === 'none' || mobileMenu.style.display === '') {
+                mobileMenu.style.display = 'block';
+            } else {
+                mobileMenu.style.display = 'none';
+            }
+        }
+
         // Customer functions
         function loadCustomers() {
+            // Desktop table view
             const tbody = document.getElementById('customersTableBody');
             tbody.innerHTML = customers.map(customer => `
                 <tr class="hover:bg-gray-50">
@@ -658,6 +701,35 @@
                         <button onclick="deleteCustomer(${customer.id})" class="text-red-600 hover:text-red-900">Delete</button>
                     </td>
                 </tr>
+            `).join('');
+            
+            // Mobile card view
+            const mobileView = document.getElementById('customersMobileView');
+            mobileView.innerHTML = customers.map(customer => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-semibold text-gray-900">${customer.name}</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="openCustomerModal('view', ${customer.id})" class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">View</button>
+                            <button onclick="openCustomerModal('edit', ${customer.id})" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs hover:bg-indigo-200">Edit</button>
+                            <button onclick="deleteCustomer(${customer.id})" class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">Delete</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 text-sm">
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Email:</span>
+                            <span class="text-gray-900">${customer.email}</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Phone:</span>
+                            <span class="text-gray-900">${customer.phone}</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-gray-600">Company:</span>
+                            <span class="text-gray-900">${customer.company}</span>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         }
 
@@ -757,14 +829,31 @@
         }
 
         function deleteCustomer(id) {
-            if (confirm('Are you sure you want to delete this customer?')) {
-                customers = customers.filter(c => c.id !== id);
-                loadCustomers();
-            }
+            // Create inline confirmation instead of browser alert
+            const customerName = customers.find(c => c.id === id)?.name;
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            confirmDiv.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl max-w-md mx-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Delete Customer</h3>
+                    <p class="text-gray-600 mb-6">Are you sure you want to delete ${customerName}? This action cannot be undone.</p>
+                    <div class="flex justify-end space-x-4">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button onclick="confirmDeleteCustomer(${id}); this.closest('.fixed').remove()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteCustomer(id) {
+            customers = customers.filter(c => c.id !== id);
+            loadCustomers();
         }
 
         // Product functions
         function loadProducts() {
+            // Desktop table view
             const tbody = document.getElementById('productsTableBody');
             tbody.innerHTML = products.map(product => `
                 <tr class="hover:bg-gray-50">
@@ -778,6 +867,35 @@
                         <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-900">Delete</button>
                     </td>
                 </tr>
+            `).join('');
+            
+            // Mobile card view
+            const mobileView = document.getElementById('productsMobileView');
+            mobileView.innerHTML = products.map(product => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-semibold text-gray-900">${product.name}</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="openProductModal('view', ${product.id})" class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">View</button>
+                            <button onclick="openProductModal('edit', ${product.id})" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs hover:bg-indigo-200">Edit</button>
+                            <button onclick="deleteProduct(${product.id})" class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">Delete</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 text-sm">
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">SKU:</span>
+                            <span class="text-gray-900">${product.sku}</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Price:</span>
+                            <span class="text-gray-900">$${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-gray-600">Stock:</span>
+                            <span class="text-gray-900">${product.stock} units</span>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         }
 
@@ -885,10 +1003,25 @@
         }
 
         function deleteProduct(id) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                products = products.filter(p => p.id !== id);
-                loadProducts();
-            }
+            const productName = products.find(p => p.id === id)?.name;
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            confirmDiv.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl max-w-md mx-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Delete Product</h3>
+                    <p class="text-gray-600 mb-6">Are you sure you want to delete ${productName}? This action cannot be undone.</p>
+                    <div class="flex justify-end space-x-4">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button onclick="confirmDeleteProduct(${id}); this.closest('.fixed').remove()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            loadProducts();
         }
 
         // Stock management functions
@@ -914,7 +1047,12 @@
             const quantity = parseInt(document.getElementById('stockQuantity').value);
             
             if (!productId || !quantity) {
-                alert('Please select a product and enter quantity');
+                // Show inline message instead of alert
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+                messageDiv.textContent = 'Please select a product and enter quantity';
+                document.body.appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 3000);
                 return;
             }
             
@@ -926,12 +1064,17 @@
                 
                 // Show success message
                 const productName = products[productIndex].name;
-                alert(`Successfully added ${quantity} units to ${productName}. New stock: ${products[productIndex].stock}`);
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+                messageDiv.textContent = `Successfully added ${quantity} units to ${productName}. New stock: ${products[productIndex].stock}`;
+                document.body.appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 3000);
             }
         }
 
         // Invoice functions
         function loadInvoices() {
+            // Desktop table view
             const tbody = document.getElementById('invoicesTableBody');
             tbody.innerHTML = invoices.map(invoice => `
                 <tr class="hover:bg-gray-50">
@@ -950,6 +1093,46 @@
                         <button onclick="deleteInvoice(${invoice.id})" class="text-red-600 hover:text-red-900">Delete</button>
                     </td>
                 </tr>
+            `).join('');
+            
+            // Mobile card view
+            const mobileView = document.getElementById('invoicesMobileView');
+            mobileView.innerHTML = invoices.map(invoice => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">${invoice.number}</h3>
+                            <span class="px-2 py-1 text-xs rounded-full ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} mt-1 inline-block">
+                                ${invoice.status}
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="openInvoiceModal('view', ${invoice.id})" class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">View</button>
+                            <button onclick="openInvoiceModal('edit', ${invoice.id})" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs hover:bg-indigo-200">Edit</button>
+                            <button onclick="deleteInvoice(${invoice.id})" class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">Delete</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 text-sm">
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Customer:</span>
+                            <span class="text-gray-900">${invoice.customerName}</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Date:</span>
+                            <span class="text-gray-900">${invoice.date}</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-gray-100">
+                            <span class="font-medium text-gray-600">Amount:</span>
+                            <span class="text-gray-900 font-semibold">$${invoice.amount.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                            <span class="font-medium text-gray-600">Status:</span>
+                            <span class="px-2 py-1 text-xs rounded-full ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                ${invoice.status}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         }
 
@@ -1170,10 +1353,25 @@
         }
 
         function deleteInvoice(id) {
-            if (confirm('Are you sure you want to delete this invoice?')) {
-                invoices = invoices.filter(i => i.id !== id);
-                loadInvoices();
-            }
+            const invoiceNumber = invoices.find(i => i.id === id)?.number;
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            confirmDiv.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl max-w-md mx-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Delete Invoice</h3>
+                    <p class="text-gray-600 mb-6">Are you sure you want to delete ${invoiceNumber}? This action cannot be undone.</p>
+                    <div class="flex justify-end space-x-4">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button onclick="confirmDeleteInvoice(${id}); this.closest('.fixed').remove()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteInvoice(id) {
+            invoices = invoices.filter(i => i.id !== id);
+            loadInvoices();
         }
 
         // Reports functions
@@ -1211,7 +1409,11 @@
             const dateRange = document.getElementById('dateRange').value;
             
             if (!reportType) {
-                alert('Please select a report type');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+                messageDiv.textContent = 'Please select a report type';
+                document.body.appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 3000);
                 return;
             }
             
@@ -1432,5 +1634,5 @@
             document.getElementById('invoiceDate').value = today;
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f4dd79b7d27f22',t:'MTc2MDU4OTQ5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f5d128d2037fa9',t:'MTc2MDU5OTQ3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
