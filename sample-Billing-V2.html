@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .modal {
+            display: none;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .multiselect {
+            position: relative;
+        }
+        .multiselect-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 50;
+        }
+        .multiselect.active .multiselect-dropdown {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Invoice Manager</h1>
+                <p class="text-gray-600">Sign in to your account</p>
+            </div>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" name="username" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" name="password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg border-b">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-8">
+                        <h1 class="text-2xl font-bold text-gray-800">Invoice Manager</h1>
+                        <div class="hidden md:flex space-x-6">
+                            <button onclick="showPage('customers')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
+                            <button onclick="showPage('products')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
+                            <button onclick="showPage('invoices')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
+                            <button onclick="showPage('reports')" class="nav-btn text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Customers Page -->
+        <div id="customersPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Customers</h2>
+                    <button onclick="openCustomerModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                        Add Customer
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Customer rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="productsPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Products</h2>
+                    <div class="space-x-4">
+                        <button onclick="openStockModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium">
+                            Add Stock
+                        </button>
+                        <button onclick="openProductModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">SKU</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Product rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoices Page -->
+        <div id="invoicesPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Invoices</h2>
+                    <button onclick="openInvoiceModal('add')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                        Create Invoice
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Invoice rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reportsPage" class="page hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Reports</h2>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Report Filters</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="reportType" class="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
+                            <select id="reportType" onchange="updateReportFilters()" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Report Type</option>
+                                <option value="sales">Sales Report</option>
+                                <option value="customer">Customer Report</option>
+                                <option value="product">Product Report</option>
+                                <option value="invoice">Invoice Report</option>
+                            </select>
+                        </div>
+                        
+                        <div id="dateFilter" class="hidden">
+                            <label for="dateRange" class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+                            <select id="dateRange" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div id="customerFilter" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Customers</label>
+                            <div class="multiselect">
+                                <button type="button" onclick="toggleMultiselect('customerMultiselect')" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-left bg-white">
+                                    Select Customers
+                                </button>
+                                <div id="customerMultiselect" class="multiselect-dropdown">
+                                    <div class="p-2">
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="all" class="mr-2"> Select All
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="1" class="mr-2"> John Smith
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="2" class="mr-2"> Sarah Johnson
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="productFilter" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
+                            <div class="multiselect">
+                                <button type="button" onclick="toggleMultiselect('productMultiselect')" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-left bg-white">
+                                    Select Products
+                                </button>
+                                <div id="productMultiselect" class="multiselect-dropdown">
+                                    <div class="p-2">
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="all" class="mr-2"> Select All
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="1" class="mr-2"> Laptop Pro
+                                        </label>
+                                        <label class="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
+                                            <input type="checkbox" value="2" class="mr-2"> Wireless Mouse
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button onclick="generateReport()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium">
+                            Generate Report
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="reportResults" class="bg-white rounded-lg shadow-md p-6 hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Report Results</h3>
+                    <div id="reportContent">
+                        <!-- Report content will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 id="customerModalTitle" class="text-2xl font-bold text-gray-800">Add Customer</h3>
+                    <button onclick="closeModal('customerModal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form id="customerForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="customerName" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="customerName" name="name" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="customerEmail" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="customerEmail" name="email" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="customerPhone" class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                            <input type="tel" id="customerPhone" name="phone" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="customerCompany" class="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                            <input type="text" id="customerCompany" name="company" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="customerGstin" class="block text-sm font-medium text-gray-700 mb-2">GSTIN</label>
+                            <input type="text" id="customerGstin" name="gstin" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="customerLogo" class="block text-sm font-medium text-gray-700 mb-2">Company Logo</label>
+                            <input type="file" id="customerLogo" name="logo" accept="image/*"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="customerAddress" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                            <textarea id="customerAddress" name="address" rows="3" 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="customerInvoices" class="mt-8 hidden">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">Customer Invoices</h4>
+                    <div class="bg-gray-50 rounded-lg overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Invoice #</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Amount</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerInvoicesBody">
+                                <!-- Customer invoices will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50 flex justify-end space-x-4">
+                <button onclick="closeModal('customerModal')" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button id="customerSubmitBtn" onclick="saveCustomer()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    Save Customer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 id="productModalTitle" class="text-2xl font-bold text-gray-800">Add Product</h3>
+                    <button onclick="closeModal('productModal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form id="productForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="productName" class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                            <input type="text" id="productName" name="name" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="productSku" class="block text-sm font-medium text-gray-700 mb-2">SKU</label>
+                            <input type="text" id="productSku" name="sku" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="productPrice" class="block text-sm font-medium text-gray-700 mb-2">Price</label>
+                            <input type="number" id="productPrice" name="price" step="0.01" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="productStock" class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                            <input type="number" id="productStock" name="stock" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="productHsn" class="block text-sm font-medium text-gray-700 mb-2">HSN Code</label>
+                            <input type="text" id="productHsn" name="hsn" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="productImage" class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                            <input type="file" id="productImage" name="image" accept="image/*"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="productDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="productDescription" name="description" rows="3" 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="productInvoices" class="mt-8 hidden">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">Product Sales</h4>
+                    <div class="bg-gray-50 rounded-lg overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Invoice #</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Customer</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Quantity</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productInvoicesBody">
+                                <!-- Product invoices will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50 flex justify-end space-x-4">
+                <button onclick="closeModal('productModal')" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button id="productSubmitBtn" onclick="saveProduct()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    Save Product
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 id="invoiceModalTitle" class="text-2xl font-bold text-gray-800">Create Invoice</h3>
+                    <button onclick="closeModal('invoiceModal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form id="invoiceForm">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div>
+                            <label for="invoiceNumber" class="block text-sm font-medium text-gray-700 mb-2">Invoice Number</label>
+                            <input type="text" id="invoiceNumber" name="number" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="invoiceCustomer" class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                            <select id="invoiceCustomer" name="customer" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select Customer</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="invoiceDate" class="block text-sm font-medium text-gray-700 mb-2">Invoice Date</label>
+                            <input type="date" id="invoiceDate" name="date" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="includeGst" name="includeGst" onchange="toggleGst()" class="mr-2">
+                                <span class="text-sm font-medium text-gray-700">Include GST</span>
+                            </label>
+                            <div class="flex-1">
+                                <label for="gstRate" class="block text-sm font-medium text-gray-700 mb-2">GST Rate (%)</label>
+                                <input type="number" id="gstRate" name="gstRate" value="18" step="0.01" disabled
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold text-gray-800">Invoice Items</h4>
+                            <button type="button" onclick="addInvoiceItem()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                                Add Item
+                            </button>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg overflow-hidden">
+                            <table class="w-full">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Product</th>
+                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Quantity</th>
+                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Price</th>
+                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Total</th>
+                                        <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceItemsBody">
+                                    <!-- Invoice items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-end">
+                            <div class="bg-white p-4 rounded-lg border">
+                                <div class="text-right">
+                                    <div class="text-lg font-semibold">Total: $<span id="invoiceTotal">0.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50 flex justify-end space-x-4">
+                <button onclick="closeModal('invoiceModal')" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button id="invoiceSubmitBtn" onclick="saveInvoice()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+                    Save Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stock Modal -->
+    <div id="stockModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold text-gray-800">Add Stock</h3>
+                    <button onclick="closeModal('stockModal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form id="stockForm">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="stockProduct" class="block text-sm font-medium text-gray-700 mb-2">Product</label>
+                            <select id="stockProduct" name="product" required disabled
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100">
+                                <option value="">Select Product</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="stockQuantity" class="block text-sm font-medium text-gray-700 mb-2">Stock Quantity to Add</label>
+                            <input type="number" id="stockQuantity" name="quantity" required min="1"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50 flex justify-end space-x-4">
+                <button onclick="closeModal('stockModal')" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">
+                    Cancel
+                </button>
+                <button onclick="addStock()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
+                    Add Stock
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let customers = [
+            { id: 1, name: 'John Smith', email: 'john@example.com', phone: '555-0123', company: 'Tech Corp', address: '123 Main St', gstin: '27AABCT1332L000', logo: null },
+            { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', phone: '555-0456', company: 'Design Studio', address: '456 Oak Ave', gstin: '29AABCD1234E1Z5', logo: null }
+        ];
+
+        let products = [
+            { id: 1, name: 'Laptop Pro', sku: 'LP001', price: 1299.99, stock: 25, description: 'High-performance laptop', hsn: '84713000', image: null },
+            { id: 2, name: 'Wireless Mouse', sku: 'WM002', price: 29.99, stock: 100, description: 'Ergonomic wireless mouse', hsn: '84716000', image: null }
+        ];
+
+        let invoices = [
+            { id: 1, number: 'INV-001', customerId: 1, customerName: 'John Smith', date: '2024-01-15', amount: 1329.98, status: 'Paid', items: [
+                { productId: 1, productName: 'Laptop Pro', quantity: 1, price: 1299.99 },
+                { productId: 2, productName: 'Wireless Mouse', quantity: 1, price: 29.99 }
+            ]},
+            { id: 2, number: 'INV-002', customerId: 2, customerName: 'Sarah Johnson', date: '2024-01-16', amount: 59.98, status: 'Pending', items: [
+                { productId: 2, productName: 'Wireless Mouse', quantity: 2, price: 29.99 }
+            ]}
+        ];
+
+        let currentEditId = null;
+        let currentMode = 'add';
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username && password) {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                showPage('customers');
+            }
+        });
+
+        function logout() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        // Navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            
+            // Show selected page
+            document.getElementById(pageName + 'Page').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('text-blue-600', 'font-semibold'));
+            event.target.classList.add('text-blue-600', 'font-semibold');
+            
+            // Load data for the page
+            if (pageName === 'customers') loadCustomers();
+            else if (pageName === 'products') loadProducts();
+            else if (pageName === 'invoices') loadInvoices();
+        }
+
+        // Customer functions
+        function loadCustomers() {
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = customers.map(customer => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${customer.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.phone}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.company}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button onclick="openCustomerModal('view', ${customer.id})" class="text-blue-600 hover:text-blue-900">View</button>
+                        <button onclick="openCustomerModal('edit', ${customer.id})" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                        <button onclick="deleteCustomer(${customer.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openCustomerModal(mode, id = null) {
+            currentMode = mode;
+            currentEditId = id;
+            
+            const modal = document.getElementById('customerModal');
+            const title = document.getElementById('customerModalTitle');
+            const submitBtn = document.getElementById('customerSubmitBtn');
+            const form = document.getElementById('customerForm');
+            const invoicesSection = document.getElementById('customerInvoices');
+            
+            // Reset form
+            form.reset();
+            
+            if (mode === 'add') {
+                title.textContent = 'Add Customer';
+                submitBtn.textContent = 'Save Customer';
+                submitBtn.classList.remove('hidden');
+                invoicesSection.classList.add('hidden');
+                setFormDisabled(false);
+            } else {
+                const customer = customers.find(c => c.id === id);
+                if (customer) {
+                    document.getElementById('customerName').value = customer.name;
+                    document.getElementById('customerEmail').value = customer.email;
+                    document.getElementById('customerPhone').value = customer.phone;
+                    document.getElementById('customerCompany').value = customer.company;
+                    document.getElementById('customerGstin').value = customer.gstin || '';
+                    document.getElementById('customerAddress').value = customer.address;
+                    
+                    // Load customer invoices
+                    const customerInvoices = invoices.filter(inv => inv.customerId === id);
+                    const invoicesBody = document.getElementById('customerInvoicesBody');
+                    invoicesBody.innerHTML = customerInvoices.map(inv => `
+                        <tr>
+                            <td class="px-4 py-3 text-sm">${inv.number}</td>
+                            <td class="px-4 py-3 text-sm">${inv.date}</td>
+                            <td class="px-4 py-3 text-sm">$${inv.amount.toFixed(2)}</td>
+                            <td class="px-4 py-3 text-sm">
+                                <span class="px-2 py-1 text-xs rounded-full ${inv.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                    ${inv.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    invoicesSection.classList.remove('hidden');
+                }
+                
+                if (mode === 'view') {
+                    title.textContent = 'View Customer';
+                    submitBtn.classList.add('hidden');
+                    setFormDisabled(true);
+                } else {
+                    title.textContent = 'Edit Customer';
+                    submitBtn.textContent = 'Update Customer';
+                    submitBtn.classList.remove('hidden');
+                    setFormDisabled(false);
+                }
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function setFormDisabled(disabled) {
+            const form = document.getElementById('customerForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => input.disabled = disabled);
+        }
+
+        function saveCustomer() {
+            const form = document.getElementById('customerForm');
+            const formData = new FormData(form);
+            
+            const customerData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                company: formData.get('company'),
+                address: formData.get('address'),
+                gstin: formData.get('gstin'),
+                logo: formData.get('logo')
+            };
+            
+            if (currentMode === 'add') {
+                customerData.id = customers.length + 1;
+                customers.push(customerData);
+            } else {
+                const index = customers.findIndex(c => c.id === currentEditId);
+                customers[index] = { ...customers[index], ...customerData };
+            }
+            
+            closeModal('customerModal');
+            loadCustomers();
+        }
+
+        function deleteCustomer(id) {
+            if (confirm('Are you sure you want to delete this customer?')) {
+                customers = customers.filter(c => c.id !== id);
+                loadCustomers();
+            }
+        }
+
+        // Product functions
+        function loadProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = products.map(product => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${product.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.sku}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${product.price.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.stock}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button onclick="openProductModal('view', ${product.id})" class="text-blue-600 hover:text-blue-900">View</button>
+                        <button onclick="openProductModal('edit', ${product.id})" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                        <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openProductModal(mode, id = null) {
+            currentMode = mode;
+            currentEditId = id;
+            
+            const modal = document.getElementById('productModal');
+            const title = document.getElementById('productModalTitle');
+            const submitBtn = document.getElementById('productSubmitBtn');
+            const form = document.getElementById('productForm');
+            const invoicesSection = document.getElementById('productInvoices');
+            
+            form.reset();
+            
+            if (mode === 'add') {
+                title.textContent = 'Add Product';
+                submitBtn.textContent = 'Save Product';
+                submitBtn.classList.remove('hidden');
+                invoicesSection.classList.add('hidden');
+                setProductFormDisabled(false);
+            } else {
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productSku').value = product.sku;
+                    document.getElementById('productPrice').value = product.price;
+                    document.getElementById('productStock').value = product.stock;
+                    document.getElementById('productHsn').value = product.hsn || '';
+                    document.getElementById('productDescription').value = product.description;
+                    
+                    // Load product sales
+                    const productSales = [];
+                    invoices.forEach(inv => {
+                        inv.items.forEach(item => {
+                            if (item.productId === id) {
+                                productSales.push({
+                                    invoiceNumber: inv.number,
+                                    customerName: inv.customerName,
+                                    quantity: item.quantity,
+                                    total: item.quantity * item.price
+                                });
+                            }
+                        });
+                    });
+                    
+                    const invoicesBody = document.getElementById('productInvoicesBody');
+                    invoicesBody.innerHTML = productSales.map(sale => `
+                        <tr>
+                            <td class="px-4 py-3 text-sm">${sale.invoiceNumber}</td>
+                            <td class="px-4 py-3 text-sm">${sale.customerName}</td>
+                            <td class="px-4 py-3 text-sm">${sale.quantity}</td>
+                            <td class="px-4 py-3 text-sm">$${sale.total.toFixed(2)}</td>
+                        </tr>
+                    `).join('');
+                    
+                    invoicesSection.classList.remove('hidden');
+                }
+                
+                if (mode === 'view') {
+                    title.textContent = 'View Product';
+                    submitBtn.classList.add('hidden');
+                    setProductFormDisabled(true);
+                } else {
+                    title.textContent = 'Edit Product';
+                    submitBtn.textContent = 'Update Product';
+                    submitBtn.classList.remove('hidden');
+                    setProductFormDisabled(false);
+                }
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function setProductFormDisabled(disabled) {
+            const form = document.getElementById('productForm');
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => input.disabled = disabled);
+        }
+
+        function saveProduct() {
+            const form = document.getElementById('productForm');
+            const formData = new FormData(form);
+            
+            const productData = {
+                name: formData.get('name'),
+                sku: formData.get('sku'),
+                price: parseFloat(formData.get('price')),
+                stock: parseInt(formData.get('stock')),
+                description: formData.get('description'),
+                hsn: formData.get('hsn'),
+                image: formData.get('image')
+            };
+            
+            if (currentMode === 'add') {
+                productData.id = products.length + 1;
+                products.push(productData);
+            } else {
+                const index = products.findIndex(p => p.id === currentEditId);
+                products[index] = { ...products[index], ...productData };
+            }
+            
+            closeModal('productModal');
+            loadProducts();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                loadProducts();
+            }
+        }
+
+        // Stock management functions
+        function openStockModal() {
+            const modal = document.getElementById('stockModal');
+            const select = document.getElementById('stockProduct');
+            const form = document.getElementById('stockForm');
+            
+            form.reset();
+            
+            // Load product options
+            select.innerHTML = '<option value="">Select Product</option>' + 
+                products.map(product => `<option value="${product.id}">${product.name} (Current Stock: ${product.stock})</option>`).join('');
+            
+            // Enable the select for stock modal
+            select.disabled = false;
+            
+            modal.classList.add('active');
+        }
+
+        function addStock() {
+            const productId = parseInt(document.getElementById('stockProduct').value);
+            const quantity = parseInt(document.getElementById('stockQuantity').value);
+            
+            if (!productId || !quantity) {
+                alert('Please select a product and enter quantity');
+                return;
+            }
+            
+            const productIndex = products.findIndex(p => p.id === productId);
+            if (productIndex !== -1) {
+                products[productIndex].stock += quantity;
+                closeModal('stockModal');
+                loadProducts();
+                
+                // Show success message
+                const productName = products[productIndex].name;
+                alert(`Successfully added ${quantity} units to ${productName}. New stock: ${products[productIndex].stock}`);
+            }
+        }
+
+        // Invoice functions
+        function loadInvoices() {
+            const tbody = document.getElementById('invoicesTableBody');
+            tbody.innerHTML = invoices.map(invoice => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${invoice.number}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${invoice.customerName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${invoice.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${invoice.amount.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs rounded-full ${invoice.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                            ${invoice.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <button onclick="openInvoiceModal('view', ${invoice.id})" class="text-blue-600 hover:text-blue-900">View</button>
+                        <button onclick="openInvoiceModal('edit', ${invoice.id})" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                        <button onclick="deleteInvoice(${invoice.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openInvoiceModal(mode, id = null) {
+            currentMode = mode;
+            currentEditId = id;
+            
+            const modal = document.getElementById('invoiceModal');
+            const title = document.getElementById('invoiceModalTitle');
+            const submitBtn = document.getElementById('invoiceSubmitBtn');
+            const form = document.getElementById('invoiceForm');
+            
+            form.reset();
+            loadCustomerOptions();
+            
+            if (mode === 'add') {
+                title.textContent = 'Create Invoice';
+                submitBtn.textContent = 'Save Invoice';
+                submitBtn.classList.remove('hidden');
+                setInvoiceFormDisabled(false);
+                document.getElementById('invoiceNumber').value = 'INV-' + String(invoices.length + 1).padStart(3, '0');
+                document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+                clearInvoiceItems();
+            } else {
+                const invoice = invoices.find(i => i.id === id);
+                if (invoice) {
+                    document.getElementById('invoiceNumber').value = invoice.number;
+                    document.getElementById('invoiceCustomer').value = invoice.customerId;
+                    document.getElementById('invoiceDate').value = invoice.date;
+                    
+                    loadInvoiceItems(invoice.items);
+                }
+                
+                if (mode === 'view') {
+                    title.textContent = 'View Invoice';
+                    submitBtn.classList.add('hidden');
+                    setInvoiceFormDisabled(true);
+                } else {
+                    title.textContent = 'Edit Invoice';
+                    submitBtn.textContent = 'Update Invoice';
+                    submitBtn.classList.remove('hidden');
+                    setInvoiceFormDisabled(false);
+                }
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function setInvoiceFormDisabled(disabled) {
+            const form = document.getElementById('invoiceForm');
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => input.disabled = disabled);
+            
+            const buttons = form.querySelectorAll('button');
+            buttons.forEach(button => button.disabled = disabled);
+        }
+
+        function loadCustomerOptions() {
+            const select = document.getElementById('invoiceCustomer');
+            select.innerHTML = '<option value="">Select Customer</option>' + 
+                customers.map(customer => `<option value="${customer.id}">${customer.name}</option>`).join('');
+        }
+
+        function addInvoiceItem() {
+            const tbody = document.getElementById('invoiceItemsBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-4 py-3">
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="updateItemPrice(this)">
+                        <option value="">Select Product</option>
+                        ${products.map(product => `<option value="${product.id}" data-price="${product.price}">${product.name}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md" value="1" min="1" onchange="updateItemTotal(this)">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md" step="0.01" readonly>
+                </td>
+                <td class="px-4 py-3">
+                    <span class="item-total">$0.00</span>
+                </td>
+                <td class="px-4 py-3">
+                    <button type="button" onclick="removeInvoiceItem(this)" class="text-red-600 hover:text-red-900">Remove</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function updateItemPrice(select) {
+            const row = select.closest('tr');
+            const priceInput = row.querySelector('input[type="number"][step="0.01"]');
+            const option = select.selectedOptions[0];
+            
+            if (option && option.dataset.price) {
+                priceInput.value = option.dataset.price;
+                updateItemTotal(priceInput);
+            }
+        }
+
+        function updateItemTotal(input) {
+            const row = input.closest('tr');
+            const quantityInput = row.querySelector('input[type="number"]:not([step])');
+            const priceInput = row.querySelector('input[type="number"][step="0.01"]');
+            const totalSpan = row.querySelector('.item-total');
+            
+            const quantity = parseFloat(quantityInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const total = quantity * price;
+            
+            totalSpan.textContent = '$' + total.toFixed(2);
+            updateInvoiceTotal();
+        }
+
+        function updateInvoiceTotal() {
+            const totalSpans = document.querySelectorAll('.item-total');
+            let subtotal = 0;
+            
+            totalSpans.forEach(span => {
+                const amount = parseFloat(span.textContent.replace('$', '')) || 0;
+                subtotal += amount;
+            });
+            
+            const includeGst = document.getElementById('includeGst').checked;
+            const gstRate = parseFloat(document.getElementById('gstRate').value) || 0;
+            
+            let total = subtotal;
+            if (includeGst) {
+                const gstAmount = (subtotal * gstRate) / 100;
+                total = subtotal + gstAmount;
+            }
+            
+            document.getElementById('invoiceTotal').textContent = total.toFixed(2);
+        }
+
+        function toggleGst() {
+            const includeGst = document.getElementById('includeGst').checked;
+            const gstRateInput = document.getElementById('gstRate');
+            
+            gstRateInput.disabled = !includeGst;
+            updateInvoiceTotal();
+        }
+
+        function removeInvoiceItem(button) {
+            button.closest('tr').remove();
+            updateInvoiceTotal();
+        }
+
+        function clearInvoiceItems() {
+            document.getElementById('invoiceItemsBody').innerHTML = '';
+            updateInvoiceTotal();
+        }
+
+        function loadInvoiceItems(items) {
+            clearInvoiceItems();
+            items.forEach(item => {
+                addInvoiceItem();
+                const rows = document.querySelectorAll('#invoiceItemsBody tr');
+                const lastRow = rows[rows.length - 1];
+                
+                const select = lastRow.querySelector('select');
+                const quantityInput = lastRow.querySelector('input[type="number"]:not([step])');
+                const priceInput = lastRow.querySelector('input[type="number"][step="0.01"]');
+                
+                select.value = item.productId;
+                quantityInput.value = item.quantity;
+                priceInput.value = item.price;
+                updateItemTotal(priceInput);
+            });
+        }
+
+        function saveInvoice() {
+            const form = document.getElementById('invoiceForm');
+            const formData = new FormData(form);
+            
+            const items = [];
+            const rows = document.querySelectorAll('#invoiceItemsBody tr');
+            
+            rows.forEach(row => {
+                const select = row.querySelector('select');
+                const quantityInput = row.querySelector('input[type="number"]:not([step])');
+                const priceInput = row.querySelector('input[type="number"][step="0.01"]');
+                
+                if (select.value) {
+                    const product = products.find(p => p.id == select.value);
+                    items.push({
+                        productId: parseInt(select.value),
+                        productName: product.name,
+                        quantity: parseInt(quantityInput.value),
+                        price: parseFloat(priceInput.value)
+                    });
+                }
+            });
+            
+            const customer = customers.find(c => c.id == formData.get('customer'));
+            const total = parseFloat(document.getElementById('invoiceTotal').textContent);
+            
+            const invoiceData = {
+                number: formData.get('number'),
+                customerId: parseInt(formData.get('customer')),
+                customerName: customer.name,
+                date: formData.get('date'),
+                amount: total,
+                status: 'Pending',
+                items: items
+            };
+            
+            if (currentMode === 'add') {
+                invoiceData.id = invoices.length + 1;
+                invoices.push(invoiceData);
+            } else {
+                const index = invoices.findIndex(i => i.id === currentEditId);
+                invoices[index] = { ...invoices[index], ...invoiceData };
+            }
+            
+            closeModal('invoiceModal');
+            loadInvoices();
+        }
+
+        function deleteInvoice(id) {
+            if (confirm('Are you sure you want to delete this invoice?')) {
+                invoices = invoices.filter(i => i.id !== id);
+                loadInvoices();
+            }
+        }
+
+        // Reports functions
+        function updateReportFilters() {
+            const reportType = document.getElementById('reportType').value;
+            const dateFilter = document.getElementById('dateFilter');
+            const customerFilter = document.getElementById('customerFilter');
+            const productFilter = document.getElementById('productFilter');
+            
+            // Hide all filters first
+            dateFilter.classList.add('hidden');
+            customerFilter.classList.add('hidden');
+            productFilter.classList.add('hidden');
+            
+            if (reportType) {
+                dateFilter.classList.remove('hidden');
+                
+                if (reportType === 'sales' || reportType === 'customer') {
+                    customerFilter.classList.remove('hidden');
+                }
+                
+                if (reportType === 'sales' || reportType === 'product') {
+                    productFilter.classList.remove('hidden');
+                }
+            }
+        }
+
+        function toggleMultiselect(id) {
+            const multiselect = document.getElementById(id).parentElement;
+            multiselect.classList.toggle('active');
+        }
+
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const dateRange = document.getElementById('dateRange').value;
+            
+            if (!reportType) {
+                alert('Please select a report type');
+                return;
+            }
+            
+            const reportResults = document.getElementById('reportResults');
+            const reportContent = document.getElementById('reportContent');
+            
+            let content = '';
+            
+            switch (reportType) {
+                case 'sales':
+                    content = generateSalesReport();
+                    break;
+                case 'customer':
+                    content = generateCustomerReport();
+                    break;
+                case 'product':
+                    content = generateProductReport();
+                    break;
+                case 'invoice':
+                    content = generateInvoiceReport();
+                    break;
+            }
+            
+            reportContent.innerHTML = content;
+            reportResults.classList.remove('hidden');
+        }
+
+        function generateSalesReport() {
+            const totalSales = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+            const totalInvoices = invoices.length;
+            const avgSale = totalSales / totalInvoices;
+            
+            return `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="text-lg font-semibold text-blue-800">Total Sales</h4>
+                        <p class="text-2xl font-bold text-blue-600">$${totalSales.toFixed(2)}</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="text-lg font-semibold text-green-800">Total Invoices</h4>
+                        <p class="text-2xl font-bold text-green-600">${totalInvoices}</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="text-lg font-semibold text-purple-800">Average Sale</h4>
+                        <p class="text-2xl font-bold text-purple-600">$${avgSale.toFixed(2)}</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-2">Invoice #</th>
+                                <th class="border border-gray-300 px-4 py-2">Customer</th>
+                                <th class="border border-gray-300 px-4 py-2">Date</th>
+                                <th class="border border-gray-300 px-4 py-2">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoices.map(inv => `
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.number}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.customerName}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.date}</td>
+                                    <td class="border border-gray-300 px-4 py-2">$${inv.amount.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateCustomerReport() {
+            return `
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-2">Customer</th>
+                                <th class="border border-gray-300 px-4 py-2">Email</th>
+                                <th class="border border-gray-300 px-4 py-2">Total Invoices</th>
+                                <th class="border border-gray-300 px-4 py-2">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${customers.map(customer => {
+                                const customerInvoices = invoices.filter(inv => inv.customerId === customer.id);
+                                const totalAmount = customerInvoices.reduce((sum, inv) => sum + inv.amount, 0);
+                                return `
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-2">${customer.name}</td>
+                                        <td class="border border-gray-300 px-4 py-2">${customer.email}</td>
+                                        <td class="border border-gray-300 px-4 py-2">${customerInvoices.length}</td>
+                                        <td class="border border-gray-300 px-4 py-2">$${totalAmount.toFixed(2)}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateProductReport() {
+            return `
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-2">Product</th>
+                                <th class="border border-gray-300 px-4 py-2">SKU</th>
+                                <th class="border border-gray-300 px-4 py-2">Current Stock</th>
+                                <th class="border border-gray-300 px-4 py-2">Total Sold</th>
+                                <th class="border border-gray-300 px-4 py-2">Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${products.map(product => {
+                                let totalSold = 0;
+                                let revenue = 0;
+                                
+                                invoices.forEach(inv => {
+                                    inv.items.forEach(item => {
+                                        if (item.productId === product.id) {
+                                            totalSold += item.quantity;
+                                            revenue += item.quantity * item.price;
+                                        }
+                                    });
+                                });
+                                
+                                return `
+                                    <tr>
+                                        <td class="border border-gray-300 px-4 py-2">${product.name}</td>
+                                        <td class="border border-gray-300 px-4 py-2">${product.sku}</td>
+                                        <td class="border border-gray-300 px-4 py-2">${product.stock}</td>
+                                        <td class="border border-gray-300 px-4 py-2">${totalSold}</td>
+                                        <td class="border border-gray-300 px-4 py-2">$${revenue.toFixed(2)}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateInvoiceReport() {
+            const paidInvoices = invoices.filter(inv => inv.status === 'Paid');
+            const pendingInvoices = invoices.filter(inv => inv.status === 'Pending');
+            
+            return `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="text-lg font-semibold text-green-800">Paid Invoices</h4>
+                        <p class="text-2xl font-bold text-green-600">${paidInvoices.length}</p>
+                        <p class="text-sm text-green-600">$${paidInvoices.reduce((sum, inv) => sum + inv.amount, 0).toFixed(2)}</p>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h4 class="text-lg font-semibold text-yellow-800">Pending Invoices</h4>
+                        <p class="text-2xl font-bold text-yellow-600">${pendingInvoices.length}</p>
+                        <p class="text-sm text-yellow-600">$${pendingInvoices.reduce((sum, inv) => sum + inv.amount, 0).toFixed(2)}</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 px-4 py-2">Invoice #</th>
+                                <th class="border border-gray-300 px-4 py-2">Customer</th>
+                                <th class="border border-gray-300 px-4 py-2">Date</th>
+                                <th class="border border-gray-300 px-4 py-2">Amount</th>
+                                <th class="border border-gray-300 px-4 py-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${invoices.map(inv => `
+                                <tr>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.number}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.customerName}</td>
+                                    <td class="border border-gray-300 px-4 py-2">${inv.date}</td>
+                                    <td class="border border-gray-300 px-4 py-2">$${inv.amount.toFixed(2)}</td>
+                                    <td class="border border-gray-300 px-4 py-2">
+                                        <span class="px-2 py-1 text-xs rounded-full ${inv.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                            ${inv.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Close multiselects when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.multiselect')) {
+                document.querySelectorAll('.multiselect').forEach(ms => ms.classList.remove('active'));
+            }
+        });
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default for invoice date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f4dd79b7d27f22',t:'MTc2MDU4OTQ5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
