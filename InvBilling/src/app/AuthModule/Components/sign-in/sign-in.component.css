@@ -33,3 +33,9 @@ body {
         .multiselect.active .multiselect-dropdown {
             display: block;
         }
+        .error-messages{
+            color: red;
+        }
+.guidelines{
+    text-decoration: underline;
+}

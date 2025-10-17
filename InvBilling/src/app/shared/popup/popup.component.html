@@ -1,0 +1,49 @@
+<!-- Backdrop -->
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="close()"
+>
+  <!-- Modal content -->
+  <div
+    class="bg-white rounded-lg shadow-xl w-96 max-w-full p-6 relative"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">{{ title }}</h2>
+      <button
+        (click)="close()"
+        class="text-gray-500 hover:text-gray-700"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Body: either projected content or simple text -->
+    <ng-container *ngIf="!contentComponent">
+      <p>{{ content }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="contentComponent">
+      <ng-container *ngComponentOutlet="contentComponent; injector: contentInjector"></ng-container>
+    </ng-container>
+
+    <!-- Footer -->
+    <div class="mt-4 flex justify-end space-x-2">
+      <button
+        (click)="close()"
+        class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+      >
+        Cancel
+      </button>
+      <button
+        *ngIf="showConfirmButton"
+        (click)="confirm()"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
