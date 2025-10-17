@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PopupComponent } from '../../../shared/popup/popup.component';
-import { UsernameGuidlinesComponent } from '../username-guidlines/username-guidlines.component';
+import { GuidlinesComponent } from '../guidlines/guidlines.component';
 
 @Component({
   selector: 'app-sign-in',
@@ -13,7 +13,13 @@ import { UsernameGuidlinesComponent } from '../username-guidlines/username-guidl
 })
 export class SignInLayout {
   form: FormGroup;
-  guideLineComponent : any = UsernameGuidlinesComponent;
+  showPopup = false;
+  popupTitle = '';
+  popupMessage = '';
+  popupFooterType: 'ok' | 'confirm' | 'none' = 'ok';
+  popupChild?: any;
+  popupChildData: any;
+
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]],
@@ -28,6 +34,36 @@ export class SignInLayout {
   get password() {
     return this.form.get('password');
   }
+
+
+  openSimplePopup() {
+    this.popupTitle = 'Info';
+    this.popupMessage = 'This is a simple popup with OK button.';
+    this.popupFooterType = 'ok';
+    this.popupChild = undefined;
+    this.showPopup = true;
+  }
+
+  openConfirmPopup() {
+    this.popupTitle = 'Confirmation';
+    this.popupMessage = 'Are you sure you want to proceed?';
+    this.popupFooterType = 'confirm';
+    this.popupChild = undefined;
+    this.showPopup = true;
+  }
+  openChildPopup() {
+    this.popupTitle = 'Custom Popup';
+    this.popupFooterType = 'none';
+    this.popupChild = GuidlinesComponent;
+    this.popupChildData = { data: 'Loaded from parent!' };
+    this.showPopup = true;
+  }
+
+  handlePopupClose(response: any) {
+    console.log('Popup closed with:', response);
+    this.showPopup = false;
+  }
+
   SignIn(){
     if (this.form.valid) {
       console.log('Form Submitted', this.form.value);
