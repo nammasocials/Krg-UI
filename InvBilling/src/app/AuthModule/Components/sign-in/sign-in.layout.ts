@@ -23,7 +23,7 @@ export class SignInLayout {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]],
-      password: ['', Validators.required]
+      password: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]]
     });
   }
 
@@ -51,11 +51,14 @@ export class SignInLayout {
     this.popupChild = undefined;
     this.showPopup = true;
   }
-  openChildPopup() {
-    this.popupTitle = 'Custom Popup';
-    this.popupFooterType = 'none';
+  openChildPopup(isPassword : boolean) {
+    this.popupTitle = 'Username Guidlines';
+    if(isPassword){
+      this.popupTitle = 'Password Guidlines';
+    }
+    this.popupFooterType = 'confirm';
     this.popupChild = GuidlinesComponent;
-    this.popupChildData = { data: 'Loaded from parent!' };
+    this.popupChildData = { isPassword: isPassword };
     this.showPopup = true;
   }
 
