@@ -1,0 +1,15 @@
+  openSimplePopup() {
+    this.popupTitle = 'Info';
+    this.popupMessage = 'This is a simple popup with OK button.';
+    this.popupFooterType = 'ok';
+    this.popupChild = undefined;
+    this.showPopup = true;
+  }
+
+  openConfirmPopup() {
+    this.popupTitle = 'Confirmation';
+    this.popupMessage = 'Are you sure you want to proceed?';
+    this.popupFooterType = 'confirm';
+    this.popupChild = undefined;
+    this.showPopup = true;
+  }

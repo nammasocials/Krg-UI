@@ -31,6 +31,6 @@
         </form>
     </div>
     <app-popup *ngIf="showPopup" [title]="popupTitle" [message]="popupMessage" [footerType]="popupFooterType"
-        [childComponent]="popupChild" [childData]="popupChildData" (closed)="handlePopupClose($event)">
+     [width]="popupWidth" [childComponent]="popupChild" [childData]="popupChildData" (closed)="handlePopupClose($event)">
     </app-popup>
 </div>

@@ -19,6 +19,7 @@ export class SignInLayout {
   popupFooterType: 'ok' | 'confirm' | 'none' = 'ok';
   popupChild?: any;
   popupChildData: any;
+  popupWidth = '35%';
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -35,28 +36,12 @@ export class SignInLayout {
     return this.form.get('password');
   }
 
-
-  openSimplePopup() {
-    this.popupTitle = 'Info';
-    this.popupMessage = 'This is a simple popup with OK button.';
-    this.popupFooterType = 'ok';
-    this.popupChild = undefined;
-    this.showPopup = true;
-  }
-
-  openConfirmPopup() {
-    this.popupTitle = 'Confirmation';
-    this.popupMessage = 'Are you sure you want to proceed?';
-    this.popupFooterType = 'confirm';
-    this.popupChild = undefined;
-    this.showPopup = true;
-  }
   openChildPopup(isPassword : boolean) {
     this.popupTitle = 'Username Guidlines';
     if(isPassword){
       this.popupTitle = 'Password Guidlines';
     }
-    this.popupFooterType = 'confirm';
+    this.popupFooterType = 'ok';
     this.popupChild = GuidlinesComponent;
     this.popupChildData = { isPassword: isPassword };
     this.showPopup = true;
