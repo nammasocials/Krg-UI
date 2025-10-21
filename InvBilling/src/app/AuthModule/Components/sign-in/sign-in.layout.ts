@@ -64,11 +64,11 @@ export class SignInLayout {
 
   async SignIn() {
     if (this.form.valid) {
-      this.login_req.username = this.form.get('username')?.value();
-      this.login_req.password = this.form.get('password')?.value();
+      this.login_req.username = this.form.get('username')?.value;
+      this.login_req.password = this.form.get('password')?.value;
       try {
         const response: ApiResponse<VMAuthResponse> = await this.authService.InitiateLogin(this.login_req);
-        console.log('Login response:', response);
+        alert('Login response:' + response.toString());
       } catch (error) {
         console.error('Login failed:', error);
       }
@@ -77,5 +77,15 @@ export class SignInLayout {
     } else {
       this.form.markAllAsTouched(); // Show errors
     }
+  }
+  testSigin() {
+    this.authService.testLogin().subscribe(
+      (data: any) => {
+        alert(data);
+      },
+      (error: any) => {
+        console.log(error)
+      }
+    );
   }
 }

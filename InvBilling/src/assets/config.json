@@ -1,0 +1,8 @@
+{
+  "ApiEnv": "Default",
+  "apiDomainUrls":{
+    "Default": "http://localhost:1000",
+    "QA":"",
+    "Cloud":""
+  }
+}
