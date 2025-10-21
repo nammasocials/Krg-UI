@@ -34,7 +34,7 @@ export class SignInLayout {
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]],
-      password: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]]
+      password: ['', [Validators.required,   Validators.pattern(/^(?=(?:.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){2,})(?=(?:.*[A-Z]){2,}).{7,20}$/) ]]
     });
   }
 
