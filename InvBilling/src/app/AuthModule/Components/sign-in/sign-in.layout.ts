@@ -84,14 +84,4 @@ export class SignInLayout {
       this.form.markAllAsTouched(); // Show errors
     }
   }
-  testSigin() {
-    this.authService.testLogin().subscribe(
-      (data: any) => {
-        alert(data);
-      },
-      (error: any) => {
-        console.log(error)
-      }
-    );
-  }
 }

@@ -3,3 +3,13 @@ export class ApiResponse<T> {
   message: string = "";
   data!: T;
 }
+
+export class ApiErrorResponse {
+  message: string = "";
+  errors: { [key: string]: string[] } = {};
+
+  constructor(init?: Partial<ApiErrorResponse>) {
+    Object.assign(this, init);
+  }
+}
+``

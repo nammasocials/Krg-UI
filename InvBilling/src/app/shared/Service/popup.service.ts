@@ -16,16 +16,6 @@ export class PopupService {
     popupWidth: '35%',
   });
 
-  openSimplePopup() {
-    this.popupState.set({
-      showPopup: true,
-      popupTitle: 'Info',
-      popupMessage: 'This is a simple popup with OK button.',
-      popupFooterType: 'ok',
-      popupWidth: '35%',
-    });
-  }
-
   openConfirmPopup() {
     this.popupState.set({
       showPopup: true,

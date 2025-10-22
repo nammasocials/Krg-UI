@@ -16,8 +16,8 @@ export class AuthService {
     const url = `/${Constant.apiName}/User/Authenticate`;
     return firstValueFrom(this.http.post<ApiResponse<VMAuthResponse>>(url, request));
   }
-  testLogin(): Observable<string> {
-    const url = `/${Constant.apiName}/User/Test`;
-    return this.http.get<string>(url);
-  }
+  // testLogin(): Observable<string> {
+  //   const url = `/${Constant.apiName}/User/Test`;
+  //   return this.http.get<string>(url);
+  // }
 }
