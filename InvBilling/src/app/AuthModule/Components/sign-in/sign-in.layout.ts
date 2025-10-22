@@ -6,6 +6,7 @@ import { GuidlinesComponent } from '../guidlines/guidlines.component';
 import { AuthService } from '../../Services/auth.service';
 import { VMAuthReq, VMAuthResponse } from '../../Models/AuthModels';
 import { ApiResponse } from '../../../shared/Models/ApiResponse';
+import { PopupService } from '../../../shared/Service/popup.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -30,7 +31,7 @@ export class SignInLayout {
   popupWidth = '35%';
 
   constructor(private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,private popupService: PopupService
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]],
@@ -45,16 +46,21 @@ export class SignInLayout {
   get password() {
     return this.form.get('password');
   }
-
   openChildPopup(isPassword: boolean) {
-    this.popupTitle = 'Username Guidlines';
     if (isPassword) {
-      this.popupTitle = 'Password Guidlines';
+      this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: true }, 'Password Guidelines', 'ok');
     }
-    this.popupFooterType = 'ok';
-    this.popupChild = GuidlinesComponent;
-    this.popupChildData = { isPassword: isPassword };
-    this.showPopup = true;
+    else{
+      this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: false }, 'Username Guidelines', 'ok');
+    }
+    // this.popupTitle = 'Username Guidlines';
+    // if (isPassword) {
+    //   this.popupTitle = 'Password Guidlines';
+    // }
+    // this.popupFooterType = 'ok';
+    // this.popupChild = GuidlinesComponent;
+    // this.popupChildData = { isPassword: isPassword };
+    // this.showPopup = true;
   }
 
   handlePopupClose(response: any) {

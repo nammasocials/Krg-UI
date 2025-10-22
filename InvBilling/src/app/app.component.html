@@ -1,1 +1,8 @@
-<router-outlet></router-outlet>
+<router-outlet>
+    <app-popup *ngIf="popupService.popupState().showPopup" [title]="popupService.popupState().popupTitle"
+        [message]="popupService.popupState().popupMessage ?? ''"
+        [footerType]="popupService.popupState().popupFooterType" [width]="popupService.popupState().popupWidth ?? '50%'"
+        [childComponent]="popupService.popupState().popupChild" [childData]="popupService.popupState().popupChildData"
+        (closed)="popupService.closePopup()">
+    </app-popup>
+</router-outlet>

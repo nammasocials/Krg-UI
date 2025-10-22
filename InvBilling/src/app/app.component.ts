@@ -3,15 +3,18 @@ import { RouterOutlet } from '@angular/router';
 import { MainLayout } from './main-layout/main-layout.layout';
 import { SignInLayout } from './AuthModule/Components/sign-in/sign-in.layout';
 import { AuthService } from './AuthModule/Services/auth.service';
+import { PopupService } from './shared/Service/popup.service'
+import { PopupComponent } from './shared/popup/popup.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,MainLayout,SignInLayout ],
+  imports: [RouterOutlet, CommonModule,PopupComponent ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'InvBilling';
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService,public popupService: PopupService) {}
 }
