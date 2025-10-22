@@ -7,6 +7,7 @@ import { AuthService } from '../../Services/auth.service';
 import { VMAuthReq, VMAuthResponse } from '../../Models/AuthModels';
 import { ApiResponse } from '../../../shared/Models/ApiResponse';
 import { PopupService } from '../../../shared/Service/popup.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -30,7 +31,7 @@ export class SignInLayout {
   popupChildData: any;
   popupWidth = '35%';
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder, private router : Router,
     private authService: AuthService,private popupService: PopupService
   ) {
     this.form = this.fb.group({
@@ -74,7 +75,7 @@ export class SignInLayout {
       this.login_req.password = this.form.get('password')?.value;
       try {
         const response: ApiResponse<VMAuthResponse> = await this.authService.InitiateLogin(this.login_req);
-        alert('Login response:' + response.toString());
+        this.router.navigate(['/dashboard']);
       } catch (error) {
         console.error('Login failed:', error);
       }
