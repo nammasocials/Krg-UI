@@ -8,9 +8,9 @@ export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn): Observable<HttpEvent<any>> => {
 
-  const config = inject(APP_CONFIG);
-  const env = config.ApiEnv || 'Default';
-  const baseUrl = config.apiDomainUrls?.[env] || '';
+  // const config = inject(APP_CONFIG);
+  // const env = config.ApiEnv || 'Default';
+  const baseUrl = 'http://localhost:1000';
 
   const cloned = req.url.startsWith('/')
     ? req.clone
