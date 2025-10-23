@@ -1,3 +1,4 @@
+<app-loading-spinner></app-loading-spinner>
 <router-outlet>
     <app-popup *ngIf="popupService.popupState().showPopup" [title]="popupService.popupState().popupTitle"
         [message]="popupService.popupState().popupMessage ?? ''"

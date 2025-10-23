@@ -6,11 +6,12 @@ import { AuthService } from './AuthModule/Services/auth.service';
 import { PopupService } from './shared/Service/popup.service'
 import { PopupComponent } from './shared/Components/popup/popup.component';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from './shared/Components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule,PopupComponent ],
+  imports: [RouterOutlet, CommonModule,PopupComponent,LoadingSpinnerComponent ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
