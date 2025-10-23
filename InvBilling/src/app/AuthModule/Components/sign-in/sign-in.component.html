@@ -1,13 +1,17 @@
 <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
     <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md fade-in">
         <div class="text-center mb-8">
+            <img [src]="logo_src" alt="App Logo" class="mx-auto mb-4 w-16 h-16 rounded-full" />
             <h1 class="text-3xl font-bold text-gray-800 mb-2">Invoice Manager</h1>
             <p class="text-gray-600">Sign in to your account</p>
         </div>
         <form [formGroup]="form" (ngSubmit)="SignIn()">
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                <input formControlName="username" type="text" id="username" name="username" required
+                <input formControlName="username" type="text" id="username" name="username" required [ngClass]="{
+                    'border-red-500 focus:ring-red-500': username?.invalid && (username?.dirty || username?.touched),
+                    'border-gray-300 focus:ring-blue-500': !(username?.invalid && (username?.dirty || username?.touched))
+                }"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
                 <div *ngIf="username?.touched && username?.invalid" class="error-messages">
                     Username must start with a letter, be 5-20 characters long, and contain only letters or numbers..
@@ -15,10 +19,14 @@
             </div>
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                <input formControlName="password" type="password" id="password" name="password" required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                <input formControlName="password" type="password" id="password" name="password" required [ngClass]="{
+                    'border-red-500 focus:ring-red-500': password?.invalid && (password?.dirty || password?.touched),
+                    'border-gray-300 focus:ring-blue-500': !(password?.invalid && (password?.dirty || password?.touched))
+                }"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
                 <div *ngIf="password?.touched && password?.invalid" class="error-messages">
-                    Password should be 7-20 characters with 2 special characters, numbers, lowercase, and uppercase letters.
+                    Password should be 7-20 characters with 2 special characters, numbers, lowercase, and uppercase
+                    letters.
                 </div>
             </div>
             <br>

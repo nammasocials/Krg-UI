@@ -6,6 +6,7 @@ import { VMAuthReq, VMAuthResponse } from '../../Models/AuthModels';
 import { ApiResponse } from '../../../shared/Models/ApiResponse';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { Router } from '@angular/router';
+import { Constant } from '../../../constants';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,6 +20,7 @@ export class SignInLayout {
   form: FormGroup;
   login_req: VMAuthReq = new VMAuthReq();
   login_res: VMAuthResponse = new VMAuthResponse();
+  logo_src : string = Constant.LogoSrc;
 
   /////////////////////// Utility Variables ////////////////////////////////////
   showPopup = false;
