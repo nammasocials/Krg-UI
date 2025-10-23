@@ -10,8 +10,7 @@
                 <input formControlName="username" type="text" id="username" name="username" required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
                 <div *ngIf="username?.touched && username?.invalid" class="error-messages">
-                    Invalid username. Please click here for <span class="guidelines"
-                        (click)="openChildPopup(false)">guidelines</span>.
+                    Username must start with a letter, be 5-20 characters long, and contain only letters or numbers..
                 </div>
             </div>
             <div>
@@ -19,8 +18,7 @@
                 <input formControlName="password" type="password" id="password" name="password" required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
                 <div *ngIf="password?.touched && password?.invalid" class="error-messages">
-                    Invalid Password. Please click here for <span class="guidelines"
-                        (click)="openChildPopup(true)">guidelines</span>.
+                    Password should be 7-20 characters with 2 special characters, numbers, lowercase, and uppercase letters.
                 </div>
             </div>
             <br>

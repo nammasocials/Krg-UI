@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PopupComponent } from '../../../shared/popup/popup.component';
-import { GuidlinesComponent } from '../guidlines/guidlines.component';
 import { AuthService } from '../../Services/auth.service';
 import { VMAuthReq, VMAuthResponse } from '../../Models/AuthModels';
 import { ApiResponse } from '../../../shared/Models/ApiResponse';
@@ -12,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupComponent],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
@@ -47,22 +45,14 @@ export class SignInLayout {
   get password() {
     return this.form.get('password');
   }
-  openChildPopup(isPassword: boolean) {
-    if (isPassword) {
-      this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: true }, 'Password Guidelines', 'ok');
-    }
-    else{
-      this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: false }, 'Username Guidelines', 'ok');
-    }
-    // this.popupTitle = 'Username Guidlines';
-    // if (isPassword) {
-    //   this.popupTitle = 'Password Guidlines';
-    // }
-    // this.popupFooterType = 'ok';
-    // this.popupChild = GuidlinesComponent;
-    // this.popupChildData = { isPassword: isPassword };
-    // this.showPopup = true;
-  }
+  // openChildPopup(isPassword: boolean) {
+  //   if (isPassword) {
+  //     this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: true }, 'Password Guidelines', 'ok');
+  //   }
+  //   else{
+  //     this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: false }, 'Username Guidelines', 'ok');
+  //   }
+  // }
 
   handlePopupClose(response: any) {
     console.log('Popup closed with:', response);

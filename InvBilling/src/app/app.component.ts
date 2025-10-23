@@ -4,7 +4,7 @@ import { MainLayout } from './main-layout/main-layout.layout';
 import { SignInLayout } from './AuthModule/Components/sign-in/sign-in.layout';
 import { AuthService } from './AuthModule/Services/auth.service';
 import { PopupService } from './shared/Service/popup.service'
-import { PopupComponent } from './shared/popup/popup.component';
+import { PopupComponent } from './shared/Components/popup/popup.component';
 import { CommonModule } from '@angular/common';
 
 @Component({

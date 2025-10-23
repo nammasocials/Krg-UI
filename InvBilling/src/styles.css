@@ -2,3 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+      --primary-color: #be185d;
+      --Validation-Font-size: 14px; 
+}
