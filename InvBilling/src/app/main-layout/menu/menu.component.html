@@ -1,0 +1,44 @@
+<nav class="bg-white shadow-lg border-b">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <div class="flex items-center space-x-3">
+                <img [src]="Constant.LogoSrc" alt="App Logo" class="mx-auto mb-2 w-16 h-16 rounded-full self-end" />
+                <h1 class="text-xl md:text-2xl font-normal md:font-bold text-gray-800">Invoice Manager</h1>
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()"
+                    class="md:hidden ml-4 p-2 rounded-md text-gray-600 hover:text-blue-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <button onclick="showPage('customers')"
+                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
+                <button onclick="showPage('products')"
+                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
+                <button onclick="showPage('invoices')"
+                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
+                <button onclick="showPage('reports')"
+                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+            </div>
+            <button onclick="logout()"
+                class="bg-red-500 text-white px-3 py-2 md:px-4 text-sm md:text-base rounded-lg hover:bg-red-600 transition duration-200">
+                Logout
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden border-t border-gray-200 py-4" style="display: none;">
+            <div class="flex flex-col space-y-2">
+                <button onclick="showPage('customers'); toggleMobileMenu()"
+                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
+                <button onclick="showPage('products'); toggleMobileMenu()"
+                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
+                <button onclick="showPage('invoices'); toggleMobileMenu()"
+                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
+                <button onclick="showPage('reports'); toggleMobileMenu()"
+                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+            </div>
+        </div>
+    </div>
+</nav>

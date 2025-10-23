@@ -20,16 +20,7 @@ export class SignInLayout {
   form: FormGroup;
   login_req: VMAuthReq = new VMAuthReq();
   login_res: VMAuthResponse = new VMAuthResponse();
-  logo_src : string = Constant.LogoSrc;
-
-  /////////////////////// Utility Variables ////////////////////////////////////
-  showPopup = false;
-  popupTitle = '';
-  popupMessage = '';
-  popupFooterType: 'ok' | 'confirm' | 'none' = 'ok';
-  popupChild?: any;
-  popupChildData: any;
-  popupWidth = '35%';
+  readonly Constant = Constant;
 
   constructor(private fb: FormBuilder, private router : Router,
     private authService: AuthService,private popupService: PopupService
@@ -55,11 +46,6 @@ export class SignInLayout {
   //     this.popupService.openComponentPopup(GuidlinesComponent, { isPassword: false }, 'Username Guidelines', 'ok');
   //   }
   // }
-
-  handlePopupClose(response: any) {
-    console.log('Popup closed with:', response);
-    this.showPopup = false;
-  }
 
   async SignIn() {
     if (this.form.valid) {
