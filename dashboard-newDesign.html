@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Card Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .chart-bar {
+            transition: height 0.5s ease;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-full p-8">
+    <main class="max-w-6xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Analytics Dashboard</h1>
+            <p class="text-white/80">Monitor your key performance metrics</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Revenue Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                            <div class="flex items-center">
+                                <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                <span class="text-xs text-green-600 font-medium">Live</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900" id="revenue-amount">$24,567</h3>
+                    <p class="text-sm text-green-600 flex items-center mt-1">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        +12.5% from last month
+                    </p>
+                </div>
+                <div class="flex space-x-1 h-8">
+                    <div class="flex-1 bg-gray-100 rounded chart-bar" style="height: 60%"></div>
+                    <div class="flex-1 bg-gray-100 rounded chart-bar" style="height: 80%"></div>
+                    <div class="flex-1 bg-green-200 rounded chart-bar" style="height: 100%"></div>
+                    <div class="flex-1 bg-green-300 rounded chart-bar" style="height: 75%"></div>
+                    <div class="flex-1 bg-green-400 rounded chart-bar" style="height: 90%"></div>
+                    <div class="flex-1 bg-green-500 rounded chart-bar" style="height: 85%"></div>
+                </div>
+            </div>
+
+            <!-- Users Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Active Users</p>
+                            <p class="text-xs text-gray-500">Last 30 days</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">8,549</h3>
+                    <p class="text-sm text-blue-600 flex items-center mt-1">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        +8.2% growth
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">New Users</span>
+                        <span class="font-medium">2,341</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full" style="width: 68%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Performance Score</p>
+                            <p class="text-xs text-gray-500">Overall rating</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex items-baseline">
+                        <h3 class="text-2xl font-bold text-gray-900">94</h3>
+                        <span class="text-lg text-gray-500 ml-1">/100</span>
+                    </div>
+                    <p class="text-sm text-green-600 mt-1">Excellent performance</p>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Speed</span>
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-gray-700">92%</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Reliability</span>
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 96%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-gray-700">96%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                            <p class="text-xs text-gray-500">This month</p>
+                        </div>
+                    </div>
+                    <button class="px-3 py-1 text-xs bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200 transition-colors" onclick="refreshOrders()">
+                        Refresh
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900" id="orders-count">1,247</h3>
+                    <p class="text-sm text-orange-600 flex items-center mt-1">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        +15.3% increase
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-lg font-semibold text-gray-900">892</p>
+                        <p class="text-xs text-gray-600">Completed</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-lg font-semibold text-gray-900">355</p>
+                        <p class="text-xs text-gray-600">Pending</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion Rate Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Conversion Rate</p>
+                            <p class="text-xs text-gray-500">Visitors to customers</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Trending
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">3.24%</h3>
+                    <p class="text-sm text-pink-600 flex items-center mt-1">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        +0.8% this week
+                    </p>
+                </div>
+                <div class="relative">
+                    <div class="flex items-end space-x-1 h-16">
+                        <div class="w-full bg-pink-200 rounded-t" style="height: 40%"></div>
+                        <div class="w-full bg-pink-300 rounded-t" style="height: 60%"></div>
+                        <div class="w-full bg-pink-400 rounded-t" style="height: 80%"></div>
+                        <div class="w-full bg-pink-500 rounded-t" style="height: 100%"></div>
+                        <div class="w-full bg-pink-600 rounded-t" style="height: 75%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Quick Actions</h3>
+                    <p class="text-sm text-gray-600">Manage your dashboard</p>
+                </div>
+                <div class="space-y-3">
+                    <button class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors" onclick="exportData()">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Export Data</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <button class="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors" onclick="generateReport()">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Generate Report</span>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <button class="w-full flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" onclick="openSettings()">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-blue-700">Settings</span>
+                        </div>
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function refreshOrders() {
+            const ordersElement = document.getElementById('orders-count');
+            const currentCount = parseInt(ordersElement.textContent.replace(',', ''));
+            const newCount = currentCount + Math.floor(Math.random() * 10) + 1;
+            ordersElement.textContent = newCount.toLocaleString();
+            
+            // Show a brief success message
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Updated!';
+            button.classList.add('bg-green-100', 'text-green-700');
+            button.classList.remove('bg-orange-100', 'text-orange-700');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-100', 'text-green-700');
+                button.classList.add('bg-orange-100', 'text-orange-700');
+            }, 1500);
+        }
+
+        function exportData() {
+            // Create a simple CSV export simulation
+            const data = "Metric,Value,Change\nRevenue,$24567,+12.5%\nUsers,8549,+8.2%\nOrders,1247,+15.3%\nConversion,3.24%,+0.8%";
+            const blob = new Blob([data], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dashboard-data.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function generateReport() {
+            // Simulate report generation
+            const button = event.target.closest('button');
+            const originalContent = button.innerHTML;
+            
+            button.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="animate-spin w-5 h-5 text-gray-600 mr-3" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-gray-700">Generating...</span>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                button.innerHTML = originalContent;
+                alert('Report generated successfully! Check your downloads folder.');
+            }, 2000);
+        }
+
+        function openSettings() {
+            // Create a simple settings overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            overlay.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Dashboard Settings</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Auto-refresh</label>
+                            <input type="checkbox" class="rounded" checked>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Email notifications</label>
+                            <input type="checkbox" class="rounded">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700">Dark mode</label>
+                            <input type="checkbox" class="rounded">
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const revenueElement = document.getElementById('revenue-amount');
+            const currentRevenue = parseInt(revenueElement.textContent.replace('$', '').replace(',', ''));
+            const change = Math.floor(Math.random() * 100) - 50;
+            const newRevenue = Math.max(0, currentRevenue + change);
+            revenueElement.textContent = '$' + newRevenue.toLocaleString();
+        }, 10000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9930087fa4099be4',t:'MTc2MTIwOTkxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

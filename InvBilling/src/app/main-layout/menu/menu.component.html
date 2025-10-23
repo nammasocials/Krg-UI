@@ -12,15 +12,23 @@
                     </svg>
                 </button>
             </div>
-            <div class="hidden md:flex space-x-6">
-                <button onclick="showPage('customers')"
-                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
-                <button onclick="showPage('products')"
-                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
-                <button onclick="showPage('invoices')"
-                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
-                <button onclick="showPage('reports')"
-                    class="nav-btn font-bold text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
+            <div class="flex space-x-6 border-b border-gray-200">
+                <button class="tab-btn px-3 py-2 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none"
+                    aria-current="page">
+                    Dashboard
+                </button>
+                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
+                    Customers
+                </button>
+                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
+                    Products
+                </button>
+                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
+                    Invoices
+                </button>
+                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
+                    Reports
+                </button>
             </div>
             <button onclick="logout()"
                 class="bg-red-500 text-white px-3 py-2 md:px-4 text-sm md:text-base rounded-lg hover:bg-red-600 transition duration-200">

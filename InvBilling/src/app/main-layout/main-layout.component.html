@@ -1,7 +1,9 @@
-<div class="flex h-screen bg-gradient-to-br from-blue-600 to-purple-700">
-      <!-- Sidebar -->
-      <app-menu style="width: 100%;"></app-menu>
+<div class="flex flex-col min-h-screen bg-gradient-to-br from-blue-600 to-purple-700">
+  <!-- Sidebar -->
+  <app-menu></app-menu>
 
-      <!-- Main content -->
-      <router-outlet ></router-outlet>
-    </div>
+  <!-- Main content -->
+   <div class="flex-1 p-6 overflow-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>
