@@ -1,4 +1,4 @@
-<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
+<div id="loginPage" class=" p-[10%] min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
     <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md fade-in">
         <div class="text-center mb-8">
             <img [src]="logo_src" alt="App Logo" class="mx-auto mb-4 w-16 h-16 rounded-full" />
@@ -7,7 +7,7 @@
         </div>
         <form [formGroup]="form" (ngSubmit)="SignIn()">
             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                <label for="username" class="block label font-medium text-gray-700 mb-2">Username</label>
                 <input formControlName="username" type="text" id="username" name="username" required [ngClass]="{
                     'border-red-500 focus:ring-red-500': username?.invalid && (username?.dirty || username?.touched),
                     'border-gray-300 focus:ring-blue-500': !(username?.invalid && (username?.dirty || username?.touched))
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <label for="password" class="block label font-medium text-gray-700 mb-2">Password</label>
                 <input formControlName="password" type="password" id="password" name="password" required [ngClass]="{
                     'border-red-500 focus:ring-red-500': password?.invalid && (password?.dirty || password?.touched),
                     'border-gray-300 focus:ring-blue-500': !(password?.invalid && (password?.dirty || password?.touched))

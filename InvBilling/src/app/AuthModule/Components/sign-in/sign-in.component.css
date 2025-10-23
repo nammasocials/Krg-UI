@@ -37,6 +37,9 @@ body {
             color: red;
             font-size: var(--Validation-Font-size);
         }
+        .label{
+            font-size: var(--input-Font-size);
+        }
 .guidelines{
     text-decoration: underline;
 }

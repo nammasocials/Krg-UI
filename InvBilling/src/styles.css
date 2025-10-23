@@ -4,6 +4,7 @@
 @tailwind utilities;
 
 :root {
-      --primary-color: #be185d;
-      --Validation-Font-size: 14px; 
+    --primary-color: #be185d;
+    --Validation-Font-size: 14px; 
+    --input-Font-size: 16px; 
 }
