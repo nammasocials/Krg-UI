@@ -4,7 +4,7 @@ export interface PopupState {
   showPopup: boolean;
   popupTitle: string;
   popupMessage?: string;
-  popupFooterType: 'ok' | 'confirm' | 'none';
+  popupFooterType: 'ok' | 'confirm' | 'none' | 'Save';
   popupChild?: Type<any>;
   popupChildData?: any;
   popupWidth?: string;

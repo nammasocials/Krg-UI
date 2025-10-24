@@ -12,7 +12,7 @@ export class PopupComponent implements OnDestroy {
   @Input() title = 'Popup';
   @Input() width = '20%';
   @Input() message = '';
-  @Input() footerType: 'ok' | 'confirm' | 'none' = 'ok';
+  @Input() footerType: 'ok' | 'confirm' | 'none' | 'Save' = 'ok';
   @Input() headerBg = 'bg-blue-600';
   @Input() childComponent?: Type<any>;
   @Input() childData: any;

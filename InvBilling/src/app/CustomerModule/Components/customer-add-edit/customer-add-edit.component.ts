@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './customer-add-edit.component.css'
 })
 export class CustomerAddEditComponent {
-
+  
 }

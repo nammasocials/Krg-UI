@@ -6,11 +6,13 @@ import { customTableHeader } from '../../../shared/Models/custom-table';
 import { VCustomer } from '../../Models/VCustomer';
 import { switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { PopupService } from '../../../shared/Service/popup.service';
+import { CustomerAddEditComponent } from '../customer-add-edit/customer-add-edit.component';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [RouterModule, CustomTableComponent,CommonModule],
+  imports: [RouterModule, CustomTableComponent, CommonModule],
   templateUrl: './customer-list.component.html',
   styleUrl: './customer-list.component.css'
 })
@@ -22,7 +24,7 @@ export class CustomerListComponent {
     { headerLabel: 'GST', field: 'GST' },
   ];
   customerData: VCustomer[] = [];
-  constructor(private customerService: CustomerService) {
+  constructor(private customerService: CustomerService, private popupService: PopupService) {
     this.fetchCustomers();
   }
 
@@ -35,5 +37,9 @@ export class CustomerListComponent {
           this.loading = false;
         },
       });
+  }
+
+  AddCustomerPopup() {
+    this.popupService.openComponentPopup(CustomerAddEditComponent,{}, 'Add Customer Details', 'Save', '80%');
   }
 }

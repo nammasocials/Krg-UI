@@ -26,7 +26,7 @@ export class PopupService {
     });
   }
 
-  openComponentPopup(childComponent: Type<any>, childData?: any, popupTitle = 'Info', popupFooterType: 'ok' | 'confirm' | 'none' = 'ok', popupWidth = '35%') {
+  openComponentPopup(childComponent: Type<any>, childData?: any, popupTitle = 'Info', popupFooterType: 'ok' | 'confirm' | 'none' | 'Save' = 'ok', popupWidth = '35%') {
     this.popupState.set({
       showPopup: true,
       popupTitle,
