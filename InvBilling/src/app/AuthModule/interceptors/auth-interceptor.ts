@@ -14,6 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (
   // const config = inject(APP_CONFIG);
   // const env = config.ApiEnv || 'Default';
   const baseUrl = 'http://localhost:1000';
+  //const baseUrl = 'https://192.168.1.5:8002';
 
   const cloned = req.url.startsWith('/')
     ? req.clone

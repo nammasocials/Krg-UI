@@ -13,14 +13,16 @@
                 </button>
             </div>
             <div class="flex space-x-6 border-b border-gray-200">
-                <button class="tab-btn px-3 py-2 font-bold text-blue-600 border-b-2 border-blue-600 focus:outline-none"
-                    aria-current="page">
+                <button class="tab-btn px-3 py-2 font-bold" routerLink="/dashboard"
+                    routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+                    [routerLinkActiveOptions]="{ exact: true }" aria-current="page">
                     Dashboard
                 </button>
                 <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
                     Customers
                 </button>
-                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
+                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600" routerLink="/product"
+                    routerLinkActive="text-blue-600 border-b-2 border-blue-600">
                     Products
                 </button>
                 <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
