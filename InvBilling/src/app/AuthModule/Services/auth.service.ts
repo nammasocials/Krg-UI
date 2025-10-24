@@ -12,12 +12,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  InitiateLogin(request: VMAuthReq): Promise<ApiResponse<VMAuthResponse>> {
+  InitiateLogOut(): Observable<ApiResponse<VMAuthResponse>> {
+    const url = `/${Constant.apiName}/User/logout`;
+    return this.http.get<ApiResponse<VMAuthResponse>>(url);
+  }
+  InitiateLogIn(request: VMAuthReq): Promise<ApiResponse<VMAuthResponse>> {
     const url = `/${Constant.apiName}/User/Authenticate`;
     return firstValueFrom(this.http.post<ApiResponse<VMAuthResponse>>(url, request));
   }
   isLoggedIn() {
-    return this.http.get(`/${Constant.apiName}/User/Validate`,{withCredentials: true}).pipe(
+    return this.http.get(`/${Constant.apiName}/User/Validate`, { withCredentials: true }).pipe(
       map(() => true),
       catchError(() => of(false))
     );

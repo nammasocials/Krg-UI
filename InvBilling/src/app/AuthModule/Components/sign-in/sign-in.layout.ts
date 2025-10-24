@@ -52,7 +52,7 @@ export class SignInLayout {
       this.login_req.username = this.form.get('username')?.value;
       this.login_req.password = this.form.get('password')?.value;
       try {
-        const response: ApiResponse<VMAuthResponse> = await this.authService.InitiateLogin(this.login_req);
+        const response: ApiResponse<VMAuthResponse> = await this.authService.InitiateLogIn(this.login_req);
         this.router.navigate(['/dashboard']);
       } catch (error) {
         console.error('Login failed:', error);
