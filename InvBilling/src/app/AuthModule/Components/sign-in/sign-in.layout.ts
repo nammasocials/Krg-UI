@@ -22,15 +22,19 @@ export class SignInLayout {
   login_res: VMAuthResponse = new VMAuthResponse();
   readonly Constant = Constant;
 
-  constructor(private fb: FormBuilder, private router : Router,
-    private authService: AuthService,private popupService: PopupService
+  constructor(private fb: FormBuilder, private router: Router,
+    private authService: AuthService, private popupService: PopupService
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.pattern(/^(?!\d)[a-zA-Z0-9]{5,20}$/)]],
-      password: ['', [Validators.required,   Validators.pattern(/^(?=(?:.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){2,})(?=(?:.*[A-Z]){2,}).{7,20}$/) ]]
+      password: ['', [Validators.required, Validators.pattern(/^(?=(?:.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]){2,})(?=(?:.*\d){2,})(?=(?:.*[a-z]){2,})(?=(?:.*[A-Z]){2,}).{7,20}$/)]]
     });
   }
+  hide = true;
 
+  toggle() {
+    this.hide = !this.hide;
+  }
   get username() {
     return this.form.get('username');
   }

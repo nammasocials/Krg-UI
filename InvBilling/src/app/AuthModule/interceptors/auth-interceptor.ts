@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpHandlerFn, HttpInterceptor, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { finalize, Observable } from "rxjs";
+import { debounceTime, finalize, Observable } from "rxjs";
 import { APP_CONFIG } from "../../tokens/app-config.token";
 import { LoadingService } from "../../shared/Service/loading-service.service";
 
@@ -20,6 +20,9 @@ export const authInterceptor: HttpInterceptorFn = (
       ({ url: baseUrl + req.url, withCredentials: true })
     : req;
 
-  return next(cloned).pipe(finalize(() => loadingService.hide()));
+  return next(cloned).pipe(
+    debounceTime(3000), // delay emissions by 300ms
+    finalize(() => loadingService.hide()) // hide loader after debounce or completion
+  );
 };
 

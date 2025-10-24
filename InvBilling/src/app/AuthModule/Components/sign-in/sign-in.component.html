@@ -1,4 +1,5 @@
-<div id="loginPage" class=" p-[10%] min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
+<div id="loginPage"
+    class=" p-[10%] min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700">
     <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md fade-in">
         <div class="text-center mb-8">
             <img [src]="Constant.LogoSrc" alt="App Logo" class="mx-auto mb-4 w-16 h-16 rounded-full" />
@@ -17,18 +18,50 @@
                     Username must start with a letter, be 5-20 characters long, and contain only letters or numbers..
                 </div>
             </div>
-            <div>
-                <label for="password" class="block label font-medium text-gray-700 mb-2">Password</label>
-                <input formControlName="password" type="password" id="password" name="password" required [ngClass]="{
-                    'border-red-500 focus:ring-red-500': password?.invalid && (password?.dirty || password?.touched),
-                    'border-gray-300 focus:ring-blue-500': !(password?.invalid && (password?.dirty || password?.touched))
-                }"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+            <br>
+            <div class="relative w-full">
+                <!-- Password input -->
+                <input formControlName="password" [type]="hide ? 'password' : 'text'" id="password" name="password"
+                    required [ngClass]="{
+      'border-red-500 focus:ring-red-500': password?.invalid && (password?.dirty || password?.touched),
+      'border-gray-300 focus:ring-blue-500': !(password?.invalid && (password?.dirty || password?.touched))
+    }" class="w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:border-transparent transition duration-200"
+                    placeholder="Enter your password" />
+
+                <!-- Eye toggle button (inside input box) -->
+                <button type="button" (click)="toggle()"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <!-- Eye icon (show password) -->
+                    <ng-container *ngIf="hide; else eyeOff">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                 c4.477 0 8.268 2.943 9.542 7
+                 -1.274 4.057-5.065 7-9.542 7
+                 -4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </ng-container>
+
+                    <!-- Eye-off icon (hide password) -->
+                    <ng-template #eyeOff>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19
+                 c-4.477 0-8.268-2.943-9.542-7
+                 a9.956 9.956 0 012.411-3.662M6.18 6.18
+                 A9.956 9.956 0 0112 5
+                 c4.477 0 8.268 2.943 9.542 7
+                 a9.986 9.986 0 01-4.997 5.882M3 3l18 18" />
+                        </svg>
+                    </ng-template>
+                </button>
                 <div *ngIf="password?.touched && password?.invalid" class="error-messages">
                     Password should be 7-20 characters with 2 special characters, numbers, lowercase, and uppercase
                     letters.
                 </div>
             </div>
+
             <br>
             <button type="submit" [disabled]="form.invalid"
                 class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium">

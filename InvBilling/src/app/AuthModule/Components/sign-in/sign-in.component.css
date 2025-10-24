@@ -1,8 +1,16 @@
+.error-messages {
+    color: red;
+    font-size: var(--Validation-Font-size);
+}
 
-        .error-messages{
-            color: red;
-            font-size: var(--Validation-Font-size);
-        }
-        .label{
-            font-size: var(--input-Font-size);
-        }
+.label {
+    font-size: var(--input-Font-size);
+}
+
+.relative {
+    position: relative;
+}
+
+button {
+    cursor: pointer;
+}

@@ -13,7 +13,7 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
         popupService.popupState.set({
           showPopup: true,
           popupTitle: '4xx - Client Error Response',
-          popupMessage: error.message,
+          popupMessage: error.error.errors.UnAuthorized,
           popupFooterType: 'ok',
           popupWidth: '35%',
         });
