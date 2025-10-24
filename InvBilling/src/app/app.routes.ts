@@ -4,6 +4,8 @@ import { Dashboardlayout } from './DashboardModule/Components/dashboard-page/das
 import { MainLayout } from './main-layout/main-layout.layout';
 import { AuthGuard } from './AuthModule/Services/auth.guard';
 import { ProductListComponent } from './ProductModule/Components/product-list/product-list.component';
+import { CustomerListComponent } from './CustomerModule/Components/customer-list/customer-list.component';
+import { InvoiceListComponent } from './InvoiceModule/Components/invoice-list/invoice-list.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' }, // default route
@@ -16,8 +18,8 @@ export const routes: Routes = [
         { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         { path: 'dashboard', component: Dashboardlayout },
         { path: 'product', component: ProductListComponent },
-    //   { path: 'customer', component: CustomerComponent },
-    //   { path: 'invoice', component: InvoiceComponent },
+        { path: 'customer', component: CustomerListComponent },
+        { path: 'invoice', component: InvoiceListComponent },
     ]
   }
 ];
