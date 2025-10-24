@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 
 export interface PopupState {
   showPopup: boolean;
+  submitPopup?: boolean;
   popupTitle: string;
   popupMessage?: string;
   popupFooterType: 'ok' | 'confirm' | 'none' | 'Save';

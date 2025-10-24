@@ -4,6 +4,6 @@
         [message]="popupService.popupState().popupMessage ?? ''"
         [footerType]="popupService.popupState().popupFooterType" [width]="popupService.popupState().popupWidth ?? '50%'"
         [childComponent]="popupService.popupState().popupChild" [childData]="popupService.popupState().popupChildData"
-        (closed)="popupService.closePopup()">
+        (closed)="popupService.closePopup()" (submitted)="popupService.submitPopup()" >
     </app-popup>
 </router-outlet>

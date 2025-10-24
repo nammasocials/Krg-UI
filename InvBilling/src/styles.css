@@ -8,3 +8,11 @@
     --Validation-Font-size: 14px; 
     --input-Font-size: 16px; 
 }
+.error-messages {
+    color: red;
+    font-size: var(--Validation-Font-size);
+}
+
+.label {
+    font-size: var(--input-Font-size);
+}

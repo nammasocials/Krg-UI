@@ -19,8 +19,10 @@ import { CustomerAddEditComponent } from '../customer-add-edit/customer-add-edit
 export class CustomerListComponent {
   loading = true;
   headerData: customTableHeader[] = [
-    { headerLabel: 'Customer Name', field: 'CustomerName' },
-    { headerLabel: 'Address', field: 'CustomerAddress' },
+    { headerLabel: 'Customer Name', field: 'customerName' },
+    { headerLabel: 'Address', field: 'customerAddress' },
+    { headerLabel: 'Email', field: 'customerEmail' },
+    { headerLabel: 'Contact No.', field: 'contactNo' },
     { headerLabel: 'GST', field: 'GST' },
   ];
   customerData: VCustomer[] = [];

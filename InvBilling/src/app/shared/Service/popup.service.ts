@@ -40,5 +40,7 @@ export class PopupService {
   closePopup() {
     this.popupState.update(state => ({ ...state, showPopup: false }));
   }
-
+  submitPopup() {
+    this.popupState.update(state => ({ ...state, submitPopup: true }));
+  }
 }

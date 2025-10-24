@@ -17,6 +17,7 @@ export class PopupComponent implements OnDestroy {
   @Input() childComponent?: Type<any>;
   @Input() childData: any;
   @Output() closed = new EventEmitter<any>();
+  @Output() submitted = new EventEmitter<any>();
 
   @ViewChild('childContainer', { read: ViewContainerRef }) childContainer!: ViewContainerRef;
 
@@ -56,6 +57,10 @@ export class PopupComponent implements OnDestroy {
 
   onConfirm() {
     this.closed.emit(true);
+  }
+  
+  onSubmit(){
+    this.submitted.emit(true);
   }
 
   onCancel() {
