@@ -1,56 +1,75 @@
 <nav class="bg-white shadow-lg border-b">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center py-4">
-            <div class="flex items-center space-x-3">
-                <img [src]="Constant.LogoSrc" alt="App Logo" class="mx-auto mb-2 w-16 h-16 rounded-full self-end" />
-                <h1 class="text-xl md:text-2xl font-normal md:font-bold text-gray-800">Invoice Manager</h1>
-                <button id="mobileMenuBtn" onclick="toggleMobileMenu()"
-                    class="md:hidden ml-4 p-2 rounded-md text-gray-600 hover:text-blue-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="flex space-x-6 border-b border-gray-200">
-                <button class="tab-btn px-3 py-2 font-bold" routerLink="/dashboard"
-                    routerLinkActive="text-blue-600 border-b-2 border-blue-600"
-                    [routerLinkActiveOptions]="{ exact: true }" aria-current="page">
-                    Dashboard
-                </button>
-                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600" routerLink="/customer"
-                    routerLinkActive="text-blue-600 border-b-2 border-blue-600">
-                    Customers
-                </button>
-                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600" routerLink="/product"
-                    routerLinkActive="text-blue-600 border-b-2 border-blue-600">
-                    Products
-                </button>
-                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600" routerLink="/invoice"
-                    routerLinkActive="text-blue-600 border-b-2 border-blue-600">
-                    Invoices
-                </button>
-                <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600 focus:outline-none">
-                    Reports
-                </button>
-            </div>
-            <button (click)="SignOut()"
-                class="bg-red-500 text-white px-3 py-2 md:px-4 text-sm md:text-base rounded-lg hover:bg-red-600 transition duration-200">
-                Logout
-            </button>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="md:hidden border-t border-gray-200 py-4" style="display: none;">
-            <div class="flex flex-col space-y-2">
-                <button onclick="showPage('customers'); toggleMobileMenu()"
-                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Customers</button>
-                <button onclick="showPage('products'); toggleMobileMenu()"
-                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Products</button>
-                <button onclick="showPage('invoices'); toggleMobileMenu()"
-                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Invoices</button>
-                <button onclick="showPage('reports'); toggleMobileMenu()"
-                    class="nav-btn font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition duration-200">Reports</button>
-            </div>
-        </div>
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex justify-between items-center py-4">
+      <div class="flex items-center space-x-3">
+        <img [src]="Constant.LogoSrc" alt="App Logo" class="mx-auto mb-2 w-16 h-16 rounded-full self-end" />
+        <h1 class="text-xl md:text-2xl font-normal md:font-bold text-gray-800">Invoice Manager</h1>
+
+        <!-- Mobile menu button (visible on < md) -->
+        <button (click)="toggleMobileMenu()"
+                class="md:hidden ml-4 p-2 rounded-md text-gray-600 hover:text-blue-600"
+                aria-label="Toggle menu" [attr.aria-expanded]="isMobileOpen" >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Desktop tabs -->
+      <div class="hidden md:flex space-x-6 border-b border-gray-200">
+        <a class="tab-btn px-3 py-2 font-bold"
+           routerLink="/dashboard"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600"
+           [routerLinkActiveOptions]="{ exact: true }">
+          Dashboard
+        </a>
+        <a class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600"
+           routerLink="/customer"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600">
+          Customers
+        </a>
+        <a class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600"
+           routerLink="/product"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600">
+          Products
+        </a>
+        <a class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600"
+           routerLink="/invoice"
+           routerLinkActive="text-blue-600 border-b-2 border-blue-600">
+          Invoices
+        </a>
+        <button class="tab-btn px-3 py-2 font-bold text-gray-600 hover:text-blue-600">
+          Reports
+        </button>
+      </div>
+
+      <button (click)="SignOut()"
+              class="bg-red-500 text-white px-3 py-2 md:px-4 text-sm md:text-base rounded-lg hover:bg-red-600 transition duration-200">
+        Logout
+      </button>
     </div>
+
+    <!-- Mobile Menu (Angular-controlled) -->
+    <div *ngIf="isMobileOpen" class="md:hidden border-t border-gray-200 py-4">
+      <div class="flex flex-col space-y-2">
+        <a (click)="closeMobileMenu()" routerLink="/customer"
+           class="font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition">
+          Customers
+        </a>
+        <a (click)="closeMobileMenu()" routerLink="/product"
+           class="font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition">
+          Products
+        </a>
+        <a (click)="closeMobileMenu()" routerLink="/invoice"
+           class="font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition">
+          Invoices
+        </a>
+        <button (click)="closeMobileMenu()"
+                class="font-bold text-left text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md transition">
+          Reports
+        </button>
+      </div>
+    </div>
+  </div>
 </nav>
