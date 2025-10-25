@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { imageFileValidator } from './../../../shared/Service/custom-validators.service';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { VCustomer } from '../../Models/VCustomer';
+import { CustomerService } from '../../Services/customer.service';
 
 @Component({
   selector: 'app-customer-add-edit',
@@ -14,7 +15,7 @@ import { VCustomer } from '../../Models/VCustomer';
 })
 export class CustomerAddEditComponent {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private popupService : PopupService) {
+  constructor(private fb: FormBuilder, private popupService : PopupService,private customerService: CustomerService) {
     this.form = this.fb.group({
       customerName: ['', [Validators.required, Validators.pattern(/^[A-Za-z.]{5,50}$/)]],
       customerEmail: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
@@ -85,6 +86,7 @@ export class CustomerAddEditComponent {
     if (file) {
       formData.append('companyLogo', file);
     }
+    
   }
 
 }
