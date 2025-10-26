@@ -43,4 +43,10 @@ export class PopupService {
   submitPopup() {
     this.popupState.update(state => ({ ...state, submitPopup: true }));
   }
+  updateSubmitFalse(isSuccess : boolean) {
+    this.popupState.update(state => ({ ...state, submitPopup: false }));
+    if(isSuccess){
+      this.closePopup();
+    }
+  }
 }

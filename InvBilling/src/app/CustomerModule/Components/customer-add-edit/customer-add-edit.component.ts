@@ -5,24 +5,26 @@ import { imageFileValidator } from './../../../shared/Service/custom-validators.
 import { PopupService } from '../../../shared/Service/popup.service';
 import { VCustomer } from '../../Models/VCustomer';
 import { CustomerService } from '../../Services/customer.service';
+import { toast, NgxSonnerToaster } from 'ngx-sonner';
 
 @Component({
   selector: 'app-customer-add-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NgxSonnerToaster],
   templateUrl: './customer-add-edit.component.html',
   styleUrl: './customer-add-edit.component.css'
 })
 export class CustomerAddEditComponent {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private popupService : PopupService,private customerService: CustomerService) {
+  constructor(private fb: FormBuilder, private popupService: PopupService, private customerService: CustomerService) {
     this.form = this.fb.group({
-      customerName: ['', [Validators.required, Validators.pattern(/^[A-Za-z.]{5,50}$/)]],
+      companyLogo: [null, [imageFileValidator(5)]],
+      customerName: ['', [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       customerEmail: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
       contactNo: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       secnContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
       gst: ['', [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
-      companyLogo: ['', [imageFileValidator(5)]],
+      customerAddress: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
     });
 
     effect(() => {
@@ -58,35 +60,59 @@ export class CustomerAddEditComponent {
   get companyLogo() {
     return this.form.get('companyLogo');
   }
+  get customerAddress() {
+    return this.form.get('customerAddress');
+  }
 
-  onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.form.patchValue({ image: input.files[0] });
-      this.form.get('image')?.updateValueAndValidity();
-    } else {
-      this.form.patchValue({ image: null });
-    }
+  onFileChange(event: any) {
+    const file = event.target.files && event.target.files.length ? event.target.files[0] : null;
+    this.form.patchValue({ companyLogo: file });
+    this.form.get('companyLogo')?.updateValueAndValidity();
   }
 
   onSubmitAsync() {
-    if (!this.form.valid) return;
+    if (!this.form.valid) {
+      console.warn('Invalid controls:', this.getInvalidControls());
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const customer: VCustomer = this.form.value; // ✅ your object for internal use
 
     const formData = new FormData();
-    formData.append('customerName', customer.customerName);
-    formData.append('customerEmail', customer.customerEmail);
-    formData.append('contactNo', customer.contactNo);
-    formData.append('secnContactNo', customer.secnContactNo || '');
-    formData.append('gst', customer.gst);
+    formData.append('CustomerName', customer.customerName);
+    formData.append('CustomerEmail', customer.customerEmail);
+    formData.append('ContactNo', customer.contactNo);
+    formData.append('SecnContactNo', customer.secnContactNo || '');
+    formData.append('Gst', customer.gst);
+    formData.append('CustomerAddress', customer.customerAddress);
 
     // ✅ Add file only if exists
     const file = this.form.get('companyLogo')?.value;
     if (file) {
-      formData.append('companyLogo', file);
+      formData.append('CompanyLogo', file);
     }
-    
+    this.customerService.addCustomer(formData).subscribe({
+      next: (response) => {
+        toast.success('Customer saved successfully!');
+        this.popupService.updateSubmitFalse(true);
+      },
+      error: (error) => {
+        toast.error('Error Saving Customer!');
+        this.popupService.updateSubmitFalse(false);
+      }
+    });
   }
+  getInvalidControls() {
+    const invalid: string[] = [];
+    const controls = this.form.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
+  }
+
 
 }

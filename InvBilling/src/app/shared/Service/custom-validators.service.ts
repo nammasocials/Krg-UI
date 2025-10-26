@@ -4,28 +4,32 @@ export function imageFileValidator(maxSizeMB: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const file = control.value;
 
-    // if no file selected, don't validate
-    if (!file) {
+    // ✅ No file selected → skip validation
+    if (!file || file === '' || file === null || file === undefined) {
       return null;
     }
 
-    // If control value is not a File (Angular may store it differently), handle it
-    const selectedFile = file instanceof File ? file : file instanceof FileList ? file[0] : null;
+    // ✅ Support both File and FileList
+    const selectedFile =
+      file instanceof File ? file :
+      file instanceof FileList && file.length > 0 ? file.item(0) :
+      null;
+
     if (!selectedFile) {
       return null;
     }
 
-    // check file type
-    if (!selectedFile.type.startsWith('image/')) {
-      return { invalidFileType: true }; // ✅ This key must match your template
+    // ✅ Type check
+    if (selectedFile && !selectedFile.type.startsWith('image/')) {
+      return { invalidFileType: true };
     }
 
-    // check file size
+    // ✅ Size check
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
     if (selectedFile.size > maxSizeBytes) {
-      return { fileTooLarge: true }; // ✅ This one too
+      return { fileTooLarge: true };
     }
 
-    return null; // ✅ valid file
+    return null;
   };
 }

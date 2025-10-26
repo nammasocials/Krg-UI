@@ -7,11 +7,12 @@ import { PopupService } from './shared/Service/popup.service'
 import { PopupComponent } from './shared/Components/popup/popup.component';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from './shared/Components/loading-spinner/loading-spinner.component';
+import { NgxSonnerToaster } from 'ngx-sonner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule,PopupComponent,LoadingSpinnerComponent ],
+  imports: [RouterOutlet, CommonModule,PopupComponent,LoadingSpinnerComponent,NgxSonnerToaster ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
