@@ -15,20 +15,27 @@ export class CustomTableComponent {
   @Input() data: any[] = [];
   @Input() headerData: customTableHeader[] = [];
   @Input() title: string = "Records";
-  noOfRecords: number = 10;
+  noOfRecordsToDisplay: number = 10;
+  noOfRecords: number = 0;
 
   dataToDisplay: any[] = [];
   searchTerm: string = '';
 
   constructor() {
+    this.noOfRecordsToDisplay = this.assignValueBasedOnLength(this.noOfRecords);
+    console.log(this.noOfRecordsToDisplay);
     this.renderTable();
   }
-  renderTable(){
-    this.dataToDisplay = this.data.slice(0, this.noOfRecords);
+  renderTable() {
+    this.noOfRecords = this.data.length;
+    this.dataToDisplay = this.data.slice(0, this.noOfRecordsToDisplay);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['data'] && changes['data'].currentValue) {
+      this.noOfRecords = this.data.length;
+      this.noOfRecordsToDisplay = this.assignValueBasedOnLength(this.noOfRecords);
+      console.log(this.noOfRecordsToDisplay);
       this.renderTable();
     }
   }
@@ -48,6 +55,23 @@ export class CustomTableComponent {
     }
   }
   changeRowsPerPage() {
-    this.dataToDisplay = this.data.slice(0, this.noOfRecords);
+    this.renderTable();
   }
+  assignValueBasedOnLength(len: number): number {
+    console.log("len is ", len);
+    if (len <= 5) {
+      return 5;
+    } else if (len >= 6 && len <= 10) {
+      return 10;
+    } else if (len >= 11 && len < 15) {
+      return 15;
+    } else if (len >= 15 && len <= 20) {
+      return 20;
+    } else if (len > 20) {
+      return 20;
+    } else {
+      return 0; // default or fallback value
+    }
+  }
+
 }

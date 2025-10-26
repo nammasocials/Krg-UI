@@ -8,12 +8,12 @@
                 <input type="text" id="search" placeholder="Search {{title}}..." [(ngModel)]="searchTerm" [disabled]="data.length <= 0"
                     class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     (keyup)="filterTable()">
-                <select [disabled]="data.length <= 0" id="rowsPerPage" (change)="changeRowsPerPage()" [(ngModel)]="noOfRecords"
+                <select [disabled]="data.length <= 0" id="rowsPerPage" (change)="changeRowsPerPage()" [(ngModel)]="noOfRecordsToDisplay"
                     class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                     <option value="5">5 per page</option>
-                    <option value="10">10 per page</option>
-                    <option value="15">25 per page</option>
-                    <option value="20">50 per page</option>
+                    <option value="10" [disabled]="data.length <= 5">10 per page</option>
+                    <option value="15" [disabled]="data.length <= 10" >15 per page</option>
+                    <option value="20" [disabled]="data.length <= 20">20 per page</option>
                 </select>
             </div>
         </div>
@@ -125,9 +125,9 @@
                 Showing <span id="startRecord">
                     1
                 </span> to 
-                <span id="endRecord">{{noOfRecords}}</span> 
+                <span id="endRecord">{{this.dataToDisplay.length}}</span> 
                     of 
-                <span id="totalRecords">{{this.dataToDisplay.length}}</span>
+                <span id="totalRecords">{{noOfRecords}}</span>
                  results
             </div>
             <div class="flex items-center justify-center space-x-1 sm:space-x-2">
