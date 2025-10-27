@@ -92,7 +92,7 @@ export class CustomTableComponent {
     let startIndex = 0;
     for (let page = 1; page <= totalPages; page++) {
       let endIndex = Number(selectedPageSize) - Number(startIndex);
-      if(Number(startIndex) + Number(selectedPageSize) <  totalRecords){
+      if(Number(startIndex) + Number(selectedPageSize) <=  totalRecords){
         endIndex = Number(startIndex) + Number(selectedPageSize);
       }
       this.dataToDisplay[page] = tempData.slice(startIndex, endIndex);
