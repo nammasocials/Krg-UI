@@ -13,64 +13,104 @@ import { FormsModule } from '@angular/forms';
 export class CustomTableComponent {
 
   @Input() data: any[] = [];
+  tempData: any[] = [];
+  pageWiseData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
   @Input() title: string = "Records";
-  noOfRecordsToDisplay: number = 10;
-  noOfRecords: number = 0;
 
-  dataToDisplay: any[] = [];
+  defaultItemsPerPageArray: number[] = [5, 10, 15, 20, 30];
+  itemsPerPageArray: number[] = [5, 10, 15, 20, 30];
+  itemsPerPage: number = 5;
+  defaultItemsPerPage: number = 5;
+  defaultCurrentPage: number = 1;
+  currentPage: number = 1;
+
+  dataToDisplay: any[][] = [];
   searchTerm: string = '';
 
   constructor() {
-    this.noOfRecordsToDisplay = this.assignValueBasedOnLength(this.noOfRecords);
-    console.log(this.noOfRecordsToDisplay);
+    this.itemsPerPage = this.itemsPerPageArray[0];
     this.renderTable();
-  }
-  renderTable() {
-    this.noOfRecords = this.data.length;
-    this.dataToDisplay = this.data.slice(0, this.noOfRecordsToDisplay);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['data'] && changes['data'].currentValue) {
-      this.noOfRecords = this.data.length;
-      this.noOfRecordsToDisplay = this.assignValueBasedOnLength(this.noOfRecords);
-      console.log(this.noOfRecordsToDisplay);
       this.renderTable();
     }
+  }
+
+
+  renderTable() {
+    ///// Step 01 Filter with serach term
+    this.tempData = this.data;
+    this.dataToDisplay = [];
+    this.filterTable();
+    this.calculateItemsPerPage();
+    this.calculatePagination();
   }
 
 
   filterTable() {
     if (this.searchTerm.length > 0) {
       const lowerKeyword = this.searchTerm.toLowerCase();
-      this.dataToDisplay = this.data.filter(item =>
+      this.tempData = this.data.filter(item =>
         Object.values(item).some(value =>
           String(value).toLowerCase().includes(lowerKeyword)
         )
       );
     }
     else {
-      this.dataToDisplay = this.data;
+      this.tempData = this.data;
     }
   }
+  calculateItemsPerPage() {
+    const length = this.tempData.length;
+    let defaultItemsPerPageArray = this.defaultItemsPerPageArray.filter(x => x >= length);
+    const nextMaxValArray = defaultItemsPerPageArray.filter(x => x >= length);
+
+    let nextMaxVal: number;
+
+    // If no number in array is greater or equal, assign max value from array
+    if (nextMaxValArray.length === 0) {
+      nextMaxVal = Math.max(...defaultItemsPerPageArray);
+    } else {
+      nextMaxVal = Math.min(...nextMaxValArray);
+    }
+    defaultItemsPerPageArray = this.defaultItemsPerPageArray;
+    const index = defaultItemsPerPageArray.indexOf(nextMaxVal);
+    this.itemsPerPageArray = defaultItemsPerPageArray.slice(0, index + 1);
+    
+  }
+  calculatePagination() {
+    const tempData = this.tempData; // array with records
+    const selectedPageSize = this.itemsPerPage;    // for example, selected pagination size (must be from defaultItemsPerPageArray)
+
+    this.dataToDisplay = [];
+
+    const totalRecords = tempData.length;
+    const totalPages = Math.ceil(totalRecords / selectedPageSize);
+    let startIndex = 0;
+    for (let page = 1; page <= totalPages; page++) {
+      let endIndex = Number(selectedPageSize) - Number(startIndex);
+      if(Number(startIndex) + Number(selectedPageSize) <  totalRecords){
+        endIndex = Number(startIndex) + Number(selectedPageSize);
+      }
+      this.dataToDisplay[page] = tempData.slice(startIndex, endIndex);
+      startIndex = startIndex + selectedPageSize;
+    }
+    console.log(this.dataToDisplay);
+  }
+
+
   changeRowsPerPage() {
     this.renderTable();
   }
-  assignValueBasedOnLength(len: number): number {
-    console.log("len is ", len);
-    if (len <= 5) {
-      return 5;
-    } else if (len >= 6 && len <= 10) {
-      return 10;
-    } else if (len >= 11 && len < 15) {
-      return 15;
-    } else if (len >= 15 && len <= 20) {
-      return 20;
-    } else if (len > 20) {
-      return 20;
-    } else {
-      return 0; // default or fallback value
+  changePage(isPrev : boolean){
+    if(isPrev){
+      this.currentPage = this.currentPage - 1;
+    }
+    else{
+      this.currentPage = this.currentPage + 1;
     }
   }
 

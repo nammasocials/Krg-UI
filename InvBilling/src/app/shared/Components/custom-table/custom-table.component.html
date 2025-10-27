@@ -8,19 +8,16 @@
                 <input type="text" id="search" placeholder="Search {{title}}..." [(ngModel)]="searchTerm" [disabled]="data.length <= 0"
                     class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     (keyup)="filterTable()">
-                <select [disabled]="data.length <= 0" id="rowsPerPage" (change)="changeRowsPerPage()" [(ngModel)]="noOfRecordsToDisplay"
+                <select [disabled]="dataToDisplay.length <= 0" id="rowsPerPage" (change)="changeRowsPerPage()" [(ngModel)]="itemsPerPage"
                     class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                    <option value="5">5 per page</option>
-                    <option value="10" [disabled]="data.length <= 5">10 per page</option>
-                    <option value="15" [disabled]="data.length <= 10" >15 per page</option>
-                    <option value="20" [disabled]="data.length <= 20">20 per page</option>
+                    <option *ngFor="let ip of itemsPerPageArray" [value]="ip">{{ ip }} per page</option>
                 </select>
             </div>
         </div>
     </div>
     <!-- Mobile Card View -->
     <div id="customersMobileView" class="md:hidden">
-        @for (row of dataToDisplay; track row.id) {
+        @for (row of dataToDisplay[currentPage]; track row.id) {
         <div class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
             <div class="flex justify-between items-start mb-3">
                 <h3 class="text-lg font-semibold text-gray-900"></h3>
@@ -79,7 +76,7 @@
             </div>
         </div>
         }
-        <div *ngIf="dataToDisplay.length <= 0" class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+        <div *ngIf="dataToDisplay[currentPage].length <= 0" class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
             <p>No Record found</p>
         </div>
     </div>
@@ -106,7 +103,7 @@
                 </tr>
             </thead>
             <tbody id="customersTableBody" class="bg-white divide-y divide-gray-200">
-                @for (row of dataToDisplay; track row.id) {
+                @for (row of dataToDisplay[currentPage]; track row.id) {
                 <tr class="hover:bg-gray-50">
                     @for (col of headerData; track col.field) {
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -123,17 +120,17 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
             <div class="text-sm text-gray-700 text-center sm:text-left">
                 Showing <span id="startRecord">
-                    1
+                    {{currentPage}}
                 </span> to 
-                <span id="endRecord">{{this.dataToDisplay.length}}</span> 
+                <span id="endRecord">{{this.dataToDisplay[currentPage].length}}</span> 
                     of 
-                <span id="totalRecords">{{noOfRecords}}</span>
+                <span id="totalRecords">{{this.tempData.length}}</span>
                  results
             </div>
             <div class="flex items-center justify-center space-x-1 sm:space-x-2">
-                <button id="prevBtn" onclick="previousPage()"
+                <button id="prevBtn" (click)="changePage(true)"
                     class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    disabled>
+                    >
                     <span class="hidden sm:inline">Previous</span>
                     <span class="sm:hidden">Prev</span>
                 </button>
@@ -142,7 +139,7 @@
                     <!-- Page numbers will be populated by JavaScript -->
                 </div>
 
-                <button id="nextBtn" onclick="nextPage()"
+                <button id="nextBtn" (click)="changePage(false)"
                     class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                     Next
                 </button>
