@@ -22,9 +22,9 @@
 
     <!-- Desktop Table View -->
     <div class="hidden md:block overflow-x-auto">
-        <table mat-table [dataSource]="dataSource" class="w-full">
+        <table mat-table [dataSource]="dataSource" matSort class="w-full">
             <ng-container *ngFor="let header of headerData" [matColumnDef]="header.field">
-                <th mat-header-cell *matHeaderCellDef
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by {{header.headerLabel}}"
                     class="px-6 py-4 text-left text-sm font-medium text-blue-900 uppercase tracking-wider">
                     {{ header.headerLabel }}
                 </th>

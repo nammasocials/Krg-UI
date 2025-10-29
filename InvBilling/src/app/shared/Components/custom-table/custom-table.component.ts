@@ -7,6 +7,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-custom-table',
@@ -16,7 +17,8 @@ import { MatInputModule } from '@angular/material/input';
     MatPaginatorModule,
     MatSelectModule,
     MatFormFieldModule, 
-    MatInputModule 
+    MatInputModule,
+    MatSortModule
   ],
   templateUrl: './custom-table.component.html',
   styleUrl: './custom-table.component.css'
@@ -38,8 +40,12 @@ export class CustomTableComponent implements AfterViewInit {
   displayedColumns: string[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
+  @ViewChild(MatSort) sort: MatSort | undefined;
 
   ngAfterViewInit() {
+    if(this.sort){
+      this.dataSource.sort = this.sort;
+    }
     this.refreshTable();
   }
 
