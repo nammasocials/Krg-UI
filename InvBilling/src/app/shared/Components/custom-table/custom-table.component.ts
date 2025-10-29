@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-custom-table',
@@ -39,28 +40,37 @@ export class CustomTableComponent implements AfterViewInit {
   startRecord: number = 0;
   endRecord: number = 0;
   searchTerm: string = "";
-  mobilePageSize = 3;
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [];
 
+  isMobileView: boolean = false;
+  mobileCurrentIndex = 0;
+  mobilePageSize = 3;
+
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver, private zone: NgZone) {
     this.breakpointObserver.observe([
-      '(max-width: 768px)'
+      '(max-width: 480px)'
     ]).subscribe(result => {
       if (result.matches) {
-        // Mobile view detected
-        this.refreshTable();
-      } 
+        this.isMobileView = true;
+      }
+      else {
+        this.isMobileView = false;
+      }
+      this.refreshTable();
     });
   }
 
   ngAfterViewInit() {
     if (this.sort) {
       this.dataSource.sort = this.sort;
+    }
+    if(this.isMobileView){
+      setTimeout(() => this.loadMore());
     }
     this.refreshTable();
   }
@@ -76,6 +86,7 @@ export class CustomTableComponent implements AfterViewInit {
 
     this.displayedColumns = this.headerData.map(h => h.field);
     this.updatePagedData();
+    
   }
 
   updatePagedData() {
@@ -140,13 +151,16 @@ export class CustomTableComponent implements AfterViewInit {
 
   ////////////////////////////// For Mobile Devices ////////////////////////////////////////////
   loadMore() {
-    const nextChunk = this.data.slice(this.filteredData.length, this.filteredData.length + this.mobilePageSize);
-    this.filteredData = [...this.filteredData, ...nextChunk];
+    if (this.filteredData.length > 0) {
+      const nextItems = this.filteredData.slice(this.mobileCurrentIndex, this.mobileCurrentIndex + this.mobilePageSize);
+      this.mobileData = [...this.mobileData, ...nextItems];
+      this.mobileCurrentIndex += this.mobilePageSize;
+    }
   }
 
   onScrollDown() {
-    if (this.filteredData.length < this.data.length) {
-      this.loadMore();
+    if (this.mobileData.length <= this.filteredData.length) {
+      this.zone.run(() => this.loadMore());
     }
   }
 }

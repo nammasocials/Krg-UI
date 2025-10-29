@@ -1,6 +1,6 @@
-<main class="bg-white rounded-lg shadow-lg overflow-hidden">
+<main class="bg-white rounded-lg shadow-lg overflow-hidden" >
     <!-- Table Header with Search -->
-    <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
+    <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50" *ngIf="!isMobileView">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <h2 class="text-lg font-semibold text-gray-800">{{ title }}</h2>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
@@ -18,29 +18,46 @@
     </div>
     <!----Mobile Part infinite Scrolling has to be done please re-check this---->
     <!-- Mobile Card View -->
-    <!-- <div id="customersMobileView" class="md:hidden">
-        <div *ngIf="filteredData.length <= 0"
+    <div id="customersMobileView" class="md:hidden">
+        <div *ngIf="filteredData.length <= 0">
             class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
             <p>No Record found</p>
         </div>
-        <div class="flex flex-col bg-white shadow rounded-lg overflow-hidden h-[500px]">
-            
+        <div *ngIf="filteredData.length > 0" class="flex flex-col bg-white shadow rounded-lg overflow-hidden h-[500px]">
+
             <div class="sticky top-0 bg-gray-100 p-4 border-b flex justify-between items-center z-10">
                 <h2 class="font-semibold">{{ title }}</h2>
                 <span class="text-sm text-gray-600">{{ mobileData.length }} / {{ filteredData.length }}</span>
             </div>
             <div class="overflow-y-auto p-4 space-y-3" infiniteScroll [infiniteScrollDistance]="3"
-                [infiniteScrollThrottle]="200" (scrolled)="onScrollDown()">
-                <div *ngFor="let item of mobileData" class="border border-gray-200 p-3 rounded-lg hover:bg-gray-50">
-                    <div *ngFor="let header of headerData" class="flex justify-between text-sm">
-                        <span class="font-medium text-gray-600">{{ header.headerLabel }}:</span>
-                        <span class="text-gray-800">{{ item[header.field] }}</span>
+                [infiniteScrollThrottle]="200" (scrolled)="onScrollDown()" [scrollWindow]="false">
+                <div *ngFor="let item of mobileData" class="bg-white border border-gray-200 rounded-lg 
+                    p-4 m-4 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-semibold text-gray-900"></h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button
+                                class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">View</button>
+                            <button
+                                class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs hover:bg-indigo-200">Edit</button>
+                            <button
+                                class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">Delete</button>
+                        </div>
                     </div>
+                    <div class="grid grid-cols-1 gap-2 text-sm">
+                        <div *ngFor="let header of headerData" class="flex justify-between py-1 
+                            border-b border-gray-100">
+                            <span class="font-medium text-gray-600">{{ header.headerLabel }}</span>
+                            <span class="text-gray-900">{{ item[header.field] }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="mobileCurrentIndex >= filteredData.length" class="text-center text-gray-400 py-2">
+                    No more records
                 </div>
             </div>
         </div>
-
-    </div> -->
+    </div>
 
     <!-- Desktop Table View -->
     <div class="hidden md:block">
