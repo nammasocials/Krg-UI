@@ -15,43 +15,69 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
-    MatFormFieldModule, // ✅ Add this
-    MatInputModule      // ✅ Add this
+    MatFormFieldModule, 
+    MatInputModule 
   ],
   templateUrl: './custom-table.component.html',
   styleUrl: './custom-table.component.css'
 })
 export class CustomTableComponent implements AfterViewInit {
   @Input() data: any[] = [];
+  filteredData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
   @Input() title: string = "Records";
-  @ViewChild('overlayHost', { static: true }) overlayHost!: ElementRef;
 
   pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20];
-  
-  startRecord : number = 0;
-  endRecord : number = 0;
+  startRecord: number = 0;
+  endRecord: number = 0;
+  searchTerm: string = "";
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  elementData = ELEMENT_DATA;
+  dataSource = new MatTableDataSource<any>([]);
+  displayedColumns: string[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngAfterViewInit() {
+    this.refreshTable();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] || changes['headerData']) {
+      this.refreshTable();
+    }
+  }
+
+  refreshTable() {
+    if (!this.data || !this.headerData) return;
+
+    this.displayedColumns = this.headerData.map(h => h.field);
     this.updatePagedData();
   }
 
-
   updatePagedData() {
+    this.filterTable();
     const startIndex = this.pageIndex * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.dataSource.data = this.elementData.slice(startIndex, endIndex);
+    this.dataSource.data = this.filteredData.slice(startIndex, endIndex);
     this.getRangeLabel();
   }
 
+
+  filterTable() {
+    if (this.searchTerm.length > 0) {
+      const lowerKeyword = this.searchTerm.toLowerCase();
+      this.filteredData = this.data.filter(item =>
+        Object.values(item).some(value =>
+          String(value).toLowerCase().includes(lowerKeyword)
+        )
+      );
+    }
+    else {
+      this.filteredData = this.data;
+    }
+  }
 
   onPageSizeChange(event: Event) {
     const newSize = +(event.target as HTMLSelectElement).value;
@@ -62,7 +88,7 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   nextPage() {
-    if ((this.pageIndex + 1) * this.pageSize < this.elementData.length) {
+    if ((this.pageIndex + 1) * this.pageSize < this.filteredData.length) {
       this.pageIndex++;
       this.updatePagedData();
     }
@@ -81,7 +107,7 @@ export class CustomTableComponent implements AfterViewInit {
     const start = this.pageIndex * this.pageSize + 1;
     const end = Math.min(
       (this.pageIndex + 1) * this.pageSize,
-      this.elementData.length
+      this.filteredData.length
     );
     this.startRecord = start;
     this.endRecord = end;
