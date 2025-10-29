@@ -5,8 +5,8 @@
             <h2 class="text-lg font-semibold text-gray-800">{{ title }}</h2>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <label for="search" class="sr-only">Search {{ title }}</label>
-                <input type="text" id="search" placeholder="Search {{ title }}..." [(ngModel)]="searchTerm" [disabled]="data.length <= 0" 
-                (input)="updatePagedData()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none 
+                <input type="text" id="search" placeholder="Search {{ title }}..." [(ngModel)]="searchTerm"
+                    [disabled]="data.length <= 0" (input)="updatePagedData()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none 
                 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" />
                 <select [disabled]="filteredData.length <= 0" id="rowsPerPage" (change)="onPageSizeChange($event)"
                     [(ngModel)]="pageSize"
@@ -16,54 +16,78 @@
             </div>
         </div>
     </div>
-
+    <!----Mobile Part infinite Scrolling has to be done please re-check this---->
     <!-- Mobile Card View -->
-    <div id="customersMobileView" class="md:hidden"></div>
+    <!-- <div id="customersMobileView" class="md:hidden">
+        <div *ngIf="filteredData.length <= 0"
+            class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+            <p>No Record found</p>
+        </div>
+        <div class="flex flex-col bg-white shadow rounded-lg overflow-hidden h-[500px]">
+            
+            <div class="sticky top-0 bg-gray-100 p-4 border-b flex justify-between items-center z-10">
+                <h2 class="font-semibold">{{ title }}</h2>
+                <span class="text-sm text-gray-600">{{ mobileData.length }} / {{ filteredData.length }}</span>
+            </div>
+            <div class="overflow-y-auto p-4 space-y-3" infiniteScroll [infiniteScrollDistance]="3"
+                [infiniteScrollThrottle]="200" (scrolled)="onScrollDown()">
+                <div *ngFor="let item of mobileData" class="border border-gray-200 p-3 rounded-lg hover:bg-gray-50">
+                    <div *ngFor="let header of headerData" class="flex justify-between text-sm">
+                        <span class="font-medium text-gray-600">{{ header.headerLabel }}:</span>
+                        <span class="text-gray-800">{{ item[header.field] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
 
     <!-- Desktop Table View -->
-    <div class="hidden md:block overflow-x-auto">
-        <table mat-table [dataSource]="dataSource" matSort class="w-full">
-            <ng-container *ngFor="let header of headerData" [matColumnDef]="header.field">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    class="px-6 py-4 text-left text-sm font-medium text-blue-900 uppercase tracking-wider">
-                    {{ header.headerLabel }}
-                </th>
-                <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-gray-700">
-                    {{ element[header.field] }}
-                </td>
-            </ng-container>
+    <div class="hidden md:block">
+        <div class="overflow-x-auto">
+            <table mat-table [dataSource]="dataSource" matSort class="w-full">
+                <ng-container *ngFor="let header of headerData" [matColumnDef]="header.field">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header
+                        class="px-6 py-4 text-left text-sm font-medium text-blue-900 uppercase tracking-wider">
+                        {{ header.headerLabel }}
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-gray-700">
+                        {{ element[header.field] }}
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-100"></tr>
-        </table>
-    </div>
-    <!-- Pagination Controls -->
-    <div class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-            <div class="text-sm text-gray-700 text-center sm:text-left">
-                Showing <span id="startRecord">
-                    {{startRecord}}
-                </span> to
-                <span id="endRecord">{{endRecord}}</span>
-                of
-                <span id="totalRecords">{{filteredData.length}}</span>
-                result<span *ngIf="filteredData.length > 1">s</span>
-            </div>
-            <div class="flex items-center justify-center space-x-1 sm:space-x-2">
-                <button id="prevBtn" (click)="prevPage()" [disabled]="paginator?.hasPreviousPage() === false"
-                    class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    <span class="hidden sm:inline">Previous</span>
-                    <span class="sm:hidden">Prev</span>
-                </button>
-
-                <div id="pageNumbers" class="flex space-x-1">
-                    <!-- Page numbers will be populated by JavaScript -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-100"></tr>
+            </table>
+        </div>
+        <!-- Pagination Controls -->
+        <div class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                <div class="text-sm text-gray-700 text-center sm:text-left">
+                    Showing <span id="startRecord">
+                        {{startRecord}}
+                    </span> to
+                    <span id="endRecord">{{endRecord}}</span>
+                    of
+                    <span id="totalRecords">{{filteredData.length}}</span>
+                    result<span *ngIf="filteredData.length > 1">s</span>
                 </div>
+                <div class="flex items-center justify-center space-x-1 sm:space-x-2">
+                    <button id="prevBtn" (click)="prevPage()" [disabled]="paginator?.hasPreviousPage() === false"
+                        class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <span class="hidden sm:inline">Previous</span>
+                        <span class="sm:hidden">Prev</span>
+                    </button>
 
-                <button id="nextBtn" (click)="nextPage()" [disabled]="paginator?.hasNextPage() === false"
-                    class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    Next
-                </button>
+                    <div id="pageNumbers" class="flex space-x-1">
+                        <!-- Page numbers will be populated by JavaScript -->
+                    </div>
+
+                    <button id="nextBtn" (click)="nextPage()" [disabled]="paginator?.hasNextPage() === false"
+                        class="px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     </div>
