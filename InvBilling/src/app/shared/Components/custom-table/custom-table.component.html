@@ -1,4 +1,4 @@
-<main class="bg-white rounded-lg shadow-lg overflow-hidden" >
+<main class="bg-white rounded-lg shadow-lg overflow-hidden">
     <!-- Table Header with Search -->
     <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50" *ngIf="!isMobileView">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
@@ -19,8 +19,23 @@
     <!----Mobile Part infinite Scrolling has to be done please re-check this---->
     <!-- Mobile Card View -->
     <div id="customersMobileView" class="md:hidden">
-        <div *ngIf="filteredData.length <= 0">
-            class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
+        <div class="border-b border-slate-200" *ngIf="filteredData.length > 0">
+            <button (click)="toggleMobileOptions()"
+                class="w-full flex justify-between items-center py-5 text-slate-800">
+                <h2 class="text-lg font-semibold text-gray-800">
+                        Options</h2>
+            </button>
+
+            <div class="overflow-hidden transition-all duration-300 ease-in-out"
+                [ngStyle]="{ 'max-height': isMobileOptionsOpen ? '200px' : '0' }">
+                <div class="bg-white border border-gray-200 rounded-lg 
+                    p-4 m-4 shadow-sm">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="filteredData.length <= 0" class="bg-white border border-gray-200 rounded-lg p-4 m-4 shadow-sm">
             <p>No Record found</p>
         </div>
         <div *ngIf="filteredData.length > 0" class="flex flex-col bg-white shadow rounded-lg overflow-hidden h-[500px]">

@@ -47,6 +47,7 @@ export class CustomTableComponent implements AfterViewInit {
   isMobileView: boolean = false;
   mobileCurrentIndex = 0;
   mobilePageSize = 3;
+  isMobileOptionsOpen = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
@@ -69,7 +70,7 @@ export class CustomTableComponent implements AfterViewInit {
     if (this.sort) {
       this.dataSource.sort = this.sort;
     }
-    if(this.isMobileView){
+    if (this.isMobileView) {
       setTimeout(() => this.loadMore());
     }
     this.refreshTable();
@@ -86,7 +87,7 @@ export class CustomTableComponent implements AfterViewInit {
 
     this.displayedColumns = this.headerData.map(h => h.field);
     this.updatePagedData();
-    
+
   }
 
   updatePagedData() {
@@ -163,4 +164,8 @@ export class CustomTableComponent implements AfterViewInit {
       this.zone.run(() => this.loadMore());
     }
   }
+  toggleMobileOptions(): void {
+    this.isMobileOptionsOpen = !this.isMobileOptionsOpen;
+  }
+
 }
