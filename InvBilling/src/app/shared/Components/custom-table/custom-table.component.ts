@@ -104,6 +104,7 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   getRangeLabel() {
+    console.log(this.filteredData.length);
     const start = this.pageIndex * this.pageSize + 1;
     const end = Math.min(
       (this.pageIndex + 1) * this.pageSize,
