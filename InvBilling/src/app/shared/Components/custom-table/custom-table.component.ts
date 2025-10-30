@@ -84,10 +84,12 @@ export class CustomTableComponent implements AfterViewInit {
 
   refreshTable() {
     if (!this.data || !this.headerData) return;
+    
+    this.headerData.push({field :"options",headerLabel : "Options"});
 
     this.displayedColumns = this.headerData.map(h => h.field);
-    this.updatePagedData();
 
+    this.updatePagedData();
   }
 
   updatePagedData() {
