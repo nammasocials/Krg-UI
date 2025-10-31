@@ -2,7 +2,7 @@ import { Component, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CustomerService } from '../../Services/customer.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
-import { customTableHeader } from '../../../shared/Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
 import { VCustomer } from '../../Models/VCustomer';
 import { switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -50,8 +50,23 @@ export class CustomerListComponent {
         },
       });
   }
+  OpenOptions(action: customTableOptionsEmitter){
+    if(action.type === optionsEnum.View){
 
+    }
+    if(action.type === optionsEnum.Edit){
+      this.EditCustomerPopup(action.data);
+    }
+  }
   AddCustomerPopup() {
+    this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '60%');
+  }
+
+  EditCustomerPopup(selectedCustomer : VCustomer) {
+    this.popupService.openComponentPopup(CustomerAddEditComponent, selectedCustomer, `Edit - ${selectedCustomer.customerName}`, 'Save', '60%');
+  }
+
+  ViewCustomerPopup() {
     this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
   }
 }

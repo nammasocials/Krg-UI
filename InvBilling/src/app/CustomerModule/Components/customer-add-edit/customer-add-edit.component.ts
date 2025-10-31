@@ -17,16 +17,19 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 export class CustomerAddEditComponent {
   form: FormGroup;
   constructor(private fb: FormBuilder, private popupService: PopupService, private customerService: CustomerService) {
+
+    var signalData = this.popupService.popupState();
+    var customerData : VCustomer = signalData.popupChildData;
+
     this.form = this.fb.group({
       companyLogo: [null, [imageFileValidator(5)]],
-      customerName: ['', [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
-      customerEmail: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
-      contactNo: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      secnContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
-      gst: ['', [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
-      customerAddress: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
+      customerName: [signalData.popupChildData ? customerData.customerName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
+      customerEmail: [signalData.popupChildData ? customerData.customerEmail : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
+      contactNo: [signalData.popupChildData ? customerData.contactNo : "", [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+      secnContactNo: [signalData.popupChildData ? customerData.secnContactNo : "", [Validators.pattern(/^[6-9]\d{9}$/)]],
+      gst: [signalData.popupChildData ? customerData.gst : "", [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
+      customerAddress: [signalData.popupChildData ? customerData.customerAddress : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
     });
-
     effect(() => {
       const state = this.popupService.popupState();
 

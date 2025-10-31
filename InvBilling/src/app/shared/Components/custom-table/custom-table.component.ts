@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
-import { customTableHeader } from '../../Models/custom-table';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../Models/custom-table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -51,6 +51,8 @@ export class CustomTableComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
+
+  @Output() OptionsClicked = new EventEmitter<customTableOptionsEmitter>();
 
   constructor(private breakpointObserver: BreakpointObserver, private zone: NgZone) {
     this.breakpointObserver.observe([
@@ -168,4 +170,27 @@ export class CustomTableComponent implements AfterViewInit {
     this.isMobileOptionsOpen = !this.isMobileOptionsOpen;
   }
 
+
+  ////////////////////////////// Data Functions ////////////////////////////////////////////
+  ViewData(data: any) {
+    var emittedData : customTableOptionsEmitter = {
+      type : optionsEnum.View,
+      data : data,
+    }
+    this.OptionsClicked.emit(emittedData);
+  }
+  EditData(data: any) {
+    var emittedData : customTableOptionsEmitter = {
+      type : optionsEnum.Edit,
+      data : data,
+    }
+    this.OptionsClicked.emit(emittedData);
+  }
+  DeleteData(data: any) {
+    var emittedData : customTableOptionsEmitter = {
+      type : optionsEnum.Delete,
+      data : data,
+    }
+    this.OptionsClicked.emit(emittedData);
+  }
 }

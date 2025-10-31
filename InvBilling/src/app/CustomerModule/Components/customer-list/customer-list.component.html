@@ -19,7 +19,9 @@
                     </div>
                     }
                 </div>
-                <app-custom-table *ngIf="!loading" [data]="customerData" [headerData]="headerData"></app-custom-table>
+                <app-custom-table *ngIf="!loading" [data]="customerData" [headerData]="headerData" (OptionsClicked)="OpenOptions($event)">
+                    
+                </app-custom-table>
             </div>
         </div>
     </div>
