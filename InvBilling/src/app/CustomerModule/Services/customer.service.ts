@@ -22,4 +22,8 @@ export class CustomerService {
     const url = `/${Constant.apiName}/Customer/AddCustomer`;
     return this.http.post<ApiResponse<VCustomer>>(url,customer);
   }
+  editCustomer(customer : FormData): Observable<ApiResponse<VCustomer>> {
+    const url = `/${Constant.apiName}/Customer/EditCustomer`;
+    return this.http.post<ApiResponse<VCustomer>>(url,customer);
+  }
 }

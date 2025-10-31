@@ -16,19 +16,20 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 })
 export class CustomerAddEditComponent {
   form: FormGroup;
+  customerData: VCustomer = new VCustomer();
   constructor(private fb: FormBuilder, private popupService: PopupService, private customerService: CustomerService) {
 
     var signalData = this.popupService.popupState();
-    var customerData : VCustomer = signalData.popupChildData;
+    this.customerData = signalData.popupChildData;
 
     this.form = this.fb.group({
       companyLogo: [null, [imageFileValidator(5)]],
-      customerName: [signalData.popupChildData ? customerData.customerName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
-      customerEmail: [signalData.popupChildData ? customerData.customerEmail : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
-      contactNo: [signalData.popupChildData ? customerData.contactNo : "", [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      secnContactNo: [signalData.popupChildData ? customerData.secnContactNo : "", [Validators.pattern(/^[6-9]\d{9}$/)]],
-      gst: [signalData.popupChildData ? customerData.gst : "", [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
-      customerAddress: [signalData.popupChildData ? customerData.customerAddress : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
+      customerName: [signalData.popupChildData ? this.customerData.customerName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
+      customerEmail: [signalData.popupChildData ? this.customerData.customerEmail : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
+      contactNo: [signalData.popupChildData ? this.customerData.contactNo : "", [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+      secnContactNo: [signalData.popupChildData ? this.customerData.secnContactNo : "", [Validators.pattern(/^[6-9]\d{9}$/)]],
+      gst: [signalData.popupChildData ? this.customerData.gst : "", [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
+      customerAddress: [signalData.popupChildData ? this.customerData.customerAddress : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
     });
     effect(() => {
       const state = this.popupService.popupState();
@@ -83,6 +84,7 @@ export class CustomerAddEditComponent {
     const customer: VCustomer = this.form.value; // ✅ your object for internal use
 
     const formData = new FormData();
+
     formData.append('CustomerName', customer.customerName);
     formData.append('CustomerEmail', customer.customerEmail);
     formData.append('ContactNo', customer.contactNo);
@@ -95,16 +97,32 @@ export class CustomerAddEditComponent {
     if (file) {
       formData.append('CompanyLogo', file);
     }
-    this.customerService.addCustomer(formData).subscribe({
-      next: (response) => {
-        toast.success('Customer saved successfully!');
-        this.popupService.updateSubmitFalse(true);
-      },
-      error: (error) => {
-        toast.error('Error Saving Customer!');
-        this.popupService.updateSubmitFalse(false);
-      }
-    });
+    if (this.customerData.customerCode > 0) {
+      formData.append('CustomerCode', this.customerData.customerCode.toString());
+      this.customerService.editCustomer(formData).subscribe({
+        next: (response) => {
+          toast.success('Customer details updated successfully!');
+          this.popupService.updateSubmitFalse(true);
+        },
+        error: (error) => {
+          toast.error('Error Saving Customer!');
+          this.popupService.updateSubmitFalse(false);
+        }
+      });
+    }
+    else {
+      this.customerService.addCustomer(formData).subscribe({
+        next: (response) => {
+          toast.success('Customer saved successfully!');
+          this.popupService.updateSubmitFalse(true);
+        },
+        error: (error) => {
+          toast.error('Error Saving Customer!');
+          this.popupService.updateSubmitFalse(false);
+        }
+      });
+    }
+
   }
   getInvalidControls() {
     const invalid: string[] = [];
