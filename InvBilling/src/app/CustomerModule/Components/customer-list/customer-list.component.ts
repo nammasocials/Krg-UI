@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CustomerService } from '../../Services/customer.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
@@ -20,17 +20,26 @@ export class CustomerListComponent {
   loading = true;
   headerData: customTableHeader[] = [
     { headerLabel: 'Customer Name', field: 'customerName' },
-    { headerLabel: 'Address', field: 'customerAddress' },
     { headerLabel: 'Email', field: 'customerEmail' },
     { headerLabel: 'Contact No.', field: 'contactNo' },
-    { headerLabel: 'GST', field: 'GST' },
+    { headerLabel: 'GST', field: 'gst' },
+    { headerLabel: 'Options', field: 'options' },
   ];
   customerData: VCustomer[] = [];
   constructor(private customerService: CustomerService, private popupService: PopupService) {
     this.fetchCustomers();
+    effect(() => {
+      const state = this.popupService.popupState();
+
+      if (state.submitPopup === false) {
+        this.fetchCustomers();
+      }
+    });
   }
 
+
   fetchCustomers() {
+    this.loading = true;
     timer(5000)
       .pipe(switchMap(() => this.customerService.fetchCustomerLists()))
       .subscribe({
@@ -43,6 +52,6 @@ export class CustomerListComponent {
   }
 
   AddCustomerPopup() {
-    this.popupService.openComponentPopup(CustomerAddEditComponent,{}, 'Add Customer Details', 'Save', '80%');
+    this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
   }
 }

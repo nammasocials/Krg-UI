@@ -10,7 +10,7 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 @Component({
   selector: 'app-customer-add-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgxSonnerToaster],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './customer-add-edit.component.html',
   styleUrl: './customer-add-edit.component.css'
 })
