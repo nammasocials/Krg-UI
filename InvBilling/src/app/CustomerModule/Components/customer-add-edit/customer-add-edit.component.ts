@@ -16,19 +16,22 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 })
 export class CustomerAddEditComponent {
   form: FormGroup;
+  loading = true;
   customerData: VCustomer = new VCustomer();
   constructor(private fb: FormBuilder, private popupService: PopupService, private customerService: CustomerService) {
 
     var signalData = this.popupService.popupState();
     this.customerData = signalData.popupChildData;
-
+    if (this.customerData.customerCode === undefined || this.customerData.customerCode === 0) {
+      this.loading = false;
+    }
     this.form = this.fb.group({
       companyLogo: [null, [imageFileValidator(5)]],
       customerName: [signalData.popupChildData ? this.customerData.customerName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       customerEmail: [signalData.popupChildData ? this.customerData.customerEmail : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
       contactNo: [signalData.popupChildData ? this.customerData.contactNo : "", [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       secnContactNo: [signalData.popupChildData ? this.customerData.secnContactNo : "", [Validators.pattern(/^[6-9]\d{9}$/)]],
-      gst: [signalData.popupChildData ? this.customerData.gst : "", [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
+      gst: [signalData.popupChildData ? this.customerData.gst : "", [Validators.required, Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
       customerAddress: [signalData.popupChildData ? this.customerData.customerAddress : "", [Validators.required, Validators.pattern(/^[A-Za-z0-9\s,.\-\/\\()#&]{5,200}/)]],
     });
     effect(() => {
@@ -46,6 +49,14 @@ export class CustomerAddEditComponent {
     });
 
   }
+  ngAfterViewInit() {
+    if (this.loading) {
+      setTimeout(() => {
+        this.loading = false;
+      }, 2000); // 3 seconds
+    }
+  }
+
   get customerName() {
     return this.form.get('customerName');
   }

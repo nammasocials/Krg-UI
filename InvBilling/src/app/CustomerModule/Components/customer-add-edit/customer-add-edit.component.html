@@ -2,12 +2,17 @@
     <div class="p-6">
         <form [formGroup]="form">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="customerName" class="block label font-medium text-gray-700 mb-2">Customer Name 
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
+                    <label for="customerName" class="block label font-medium text-gray-700 mb-2">Customer Name
                         <span class="error-messages">*</span></label>
                     <input formControlName="customerName" type="text" id="customerName" name="customerName" required
-                    placeholder="Customer / Company Name"
-                        [ngClass]="{'border-red-500 focus:ring-red-500': customerName?.invalid && (customerName?.dirty 
+                        placeholder="Customer / Company Name" [ngClass]="{'border-red-500 focus:ring-red-500': customerName?.invalid && (customerName?.dirty 
                      || customerName?.touched),'border-gray-300 focus:ring-blue-500': !(customerName?.invalid 
                      && (customerName?.dirty || customerName?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition duration-200">
@@ -15,13 +20,18 @@
                         Customer Name should be 5-50 characters long and contain only letters and dot.
                     </div>
                 </div>
-                <div>
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
                     <label for="customerEmail" class="block label font-medium text-gray-700 mb-2">Email
                         <span class="error-messages">*</span>
                     </label>
                     <input formControlName="customerEmail" type="text" id="customerEmail" name="customerEmail" required
-                    placeholder="Customer / Company Email"
-                        [ngClass]="{'border-red-500 focus:ring-red-500': customerEmail?.invalid && (customerEmail?.dirty 
+                        placeholder="Customer / Company Email" [ngClass]="{'border-red-500 focus:ring-red-500': customerEmail?.invalid && (customerEmail?.dirty 
                      || customerEmail?.touched),'border-gray-300 focus:ring-blue-500': !(customerEmail?.invalid 
                      && (customerEmail?.dirty || customerEmail?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition duration-200">
@@ -29,12 +39,17 @@
                         Please enter valid email.
                     </div>
                 </div>
-                <div>
-                    <label for="contactNo" class="block label font-medium text-gray-700 mb-2">Contact No. 
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
+                    <label for="contactNo" class="block label font-medium text-gray-700 mb-2">Contact No.
                         <span class="error-messages">*</span></label>
-                    <input formControlName="contactNo" type="text" id="contactNo" name="contactNo" required 
-                    placeholder="Primary / Official Contact No"
-                    [ngClass]="{'border-red-500 focus:ring-red-500': contactNo?.invalid && (contactNo?.dirty 
+                    <input formControlName="contactNo" type="text" id="contactNo" name="contactNo" required
+                        placeholder="Primary / Official Contact No" [ngClass]="{'border-red-500 focus:ring-red-500': contactNo?.invalid && (contactNo?.dirty 
                      || contactNo?.touched),'border-gray-300 focus:ring-blue-500': !(contactNo?.invalid 
                      && (contactNo?.dirty || contactNo?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
                      focus:border-transparent transition duration-200">
@@ -42,12 +57,17 @@
                         Please enter valid Contact No.
                     </div>
                 </div>
-                <div>
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
                     <label for="secnContactNo" class="block label font-medium text-gray-700 mb-2">Alternate Contact
                         No.</label>
                     <input formControlName="secnContactNo" type="text" id="secnContactNo" name="secnContactNo"
-                    placeholder="Alternative Contact No"
-                        [ngClass]="{'border-red-500 focus:ring-red-500': contactNo?.invalid && (contactNo?.dirty),
+                        placeholder="Alternative Contact No" [ngClass]="{'border-red-500 focus:ring-red-500': contactNo?.invalid && (contactNo?.dirty),
                         'border-gray-300 focus:ring-blue-500': !(secnContactNo?.invalid 
                      && (secnContactNo?.dirty))}" class="w-full px-4 py-3 border border-gray-300 
                      rounded-lg focus:ring-2 focus:ring-blue-500 
@@ -56,13 +76,19 @@
                         Please enter valid Contact No.
                     </div>
                 </div>
-                <div>
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
                     <label for="gst" class="block label font-medium text-gray-700 mb-2">GST No.
                         <span class="error-messages">*</span>
                     </label>
-                    <input formControlName="gst" type="text" id="gst" name="gst" required 
-                    placeholder="GST No. Format : NNAAAAA9999A1Z1 First 2 digits (NN),Next 10 characters (AAAAA9999A) – PAN number of the business or individual"
-                    [ngClass]="{'border-red-500 focus:ring-red-500': gst?.invalid && (gst?.dirty 
+                    <input formControlName="gst" type="text" id="gst" name="gst" required
+                        placeholder="GST No. Format : NNAAAAA9999A1Z1 First 2 digits (NN),Next 10 characters (AAAAA9999A) – PAN number of the business or individual"
+                        [ngClass]="{'border-red-500 focus:ring-red-500': gst?.invalid && (gst?.dirty 
                      || gst?.touched),'border-gray-300 focus:ring-blue-500': !(gst?.invalid 
                      && (gst?.dirty || gst?.touched))}" class="w-full px-4 py-3 border border-gray-300 
                      rounded-lg focus:ring-2 focus:ring-blue-500 
@@ -71,28 +97,39 @@
                         Please enter valid GSTIN.
                     </div>
                 </div>
-                <div>
+                <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
                     <label for="companyLogo" class="block label font-medium text-gray-700 mb-2">Company Logo</label>
-                    <input formControlName="companyLogo" type="file" (change)="onFileChange($event)" id="companyLogo" name="companyLogo"
-                    placeholder="Customer / Company Logo"
-                        [ngClass]="{'border-red-500 focus:ring-red-500': companyLogo?.invalid && (companyLogo?.dirty),'border-gray-300 focus:ring-blue-500': !(companyLogo?.invalid 
+                    <input formControlName="companyLogo" type="file" (change)="onFileChange($event)" id="companyLogo"
+                        name="companyLogo" placeholder="Customer / Company Logo" [ngClass]="{'border-red-500 focus:ring-red-500': companyLogo?.invalid && (companyLogo?.dirty),'border-gray-300 focus:ring-blue-500': !(companyLogo?.invalid 
                      && (companyLogo?.dirty))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-transparent
                      focus:border-transparent transition duration-200" accept="image/*">
-                    <div *ngIf="companyLogo?.invalid"
-                        class="error-messages text-red-600 text-sm mt-1">
+                    <div *ngIf="companyLogo?.invalid" class="error-messages text-red-600 text-sm mt-1">
                         <div *ngIf="companyLogo?.errors?.['invalidFileType']">Only image files are allowed (jpg, png,
                             webp...)</div>
                         <div *ngIf="companyLogo?.errors?.['fileTooLarge']">File size must be under 5 MB</div>
                     </div>
                 </div>
-                <div class="md:col-span-2">
+                 <div *ngIf="loading" class="p-4 space-y-4">
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div *ngIf="!loading" class="md:col-span-2">
                     <label for="customerAddress" class="block label font-medium text-gray-700 mb-2">Address
                         <span class="error-messages">*</span>
                     </label>
                     <textarea formControlName="customerAddress" name="address" rows="3" required [ngClass]="{'border-red-500 focus:ring-red-500': customerAddress?.invalid && (customerAddress?.dirty 
                      || customerAddress?.touched),'border-gray-300 focus:ring-blue-500': !(customerAddress?.invalid 
-                     && (customerAddress?.dirty || customerAddress?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                     && (customerAddress?.dirty || customerAddress?.touched))}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </textarea>
                     <div *ngIf="customerAddress?.touched && customerAddress?.invalid" class="error-messages">
                         Please enter valid Address.
