@@ -4,7 +4,7 @@ import { CustomerService } from '../../Services/customer.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
 import { VCustomer } from '../../Models/VCustomer';
-import { switchMap, timer } from 'rxjs';
+import { firstValueFrom, switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { CustomerAddEditComponent } from '../customer-add-edit/customer-add-edit.component';
@@ -50,11 +50,11 @@ export class CustomerListComponent {
         },
       });
   }
-  OpenOptions(action: customTableOptionsEmitter){
-    if(action.type === optionsEnum.View){
+  OpenOptions(action: customTableOptionsEmitter) {
+    if (action.type === optionsEnum.View) {
 
     }
-    if(action.type === optionsEnum.Edit){
+    if (action.type === optionsEnum.Edit) {
       this.EditCustomerPopup(action.data);
     }
   }
@@ -62,11 +62,34 @@ export class CustomerListComponent {
     this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '60%');
   }
 
-  EditCustomerPopup(selectedCustomer : VCustomer) {
+  EditCustomerPopup(selectedCustomer: VCustomer) {
     this.popupService.openComponentPopup(CustomerAddEditComponent, selectedCustomer, `Edit - ${selectedCustomer.customerName}`, 'Save', '60%');
   }
 
   ViewCustomerPopup() {
     this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
+  }
+  async DeleteCustomerPopup(selectedCustomer: VCustomer) {
+    this.popupService.popupState.set({
+      showPopup: true,
+      popupTitle: 'Confrimation',
+      popupMessage: `Are you sure you want to delete this customer - ${selectedCustomer.customerName} ? This action cannot be undone.`,
+      popupFooterType: 'ok',
+      popupWidth: '35%',
+    });
+  }
+  async onDeleteCustomerAsync(id: number) {
+    try {
+      const res = await firstValueFrom(this.customerService.deleteCustomer(id));
+
+      if (res.code === 200) {
+        console.log(res.message);
+        // refresh list here
+      } else {
+        console.error(res.message);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

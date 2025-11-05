@@ -84,7 +84,6 @@ export class CustomerAddEditComponent {
     this.form.patchValue({ companyLogo: file });
     this.form.get('companyLogo')?.updateValueAndValidity();
   }
-
   onSubmitAsync() {
     if (!this.form.valid) {
       console.warn('Invalid controls:', this.getInvalidControls());
@@ -145,6 +144,4 @@ export class CustomerAddEditComponent {
     }
     return invalid;
   }
-
-
 }
