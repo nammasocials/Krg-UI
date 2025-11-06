@@ -1,13 +1,124 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { VProduct } from '../../Models/VProduct';
+import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
+import { ProductService } from '../../Services/product.service';
+import { PopupService } from '../../../shared/Service/popup.service';
+import { firstValueFrom, switchMap, timer } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CustomTableComponent, CommonModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
+  loading = true;
+  productForDelete?: VProduct = new VProduct();
+  headerData: customTableHeader[] = [
+    { headerLabel: 'Product Name', field: 'productName' },
+    { headerLabel: 'Unit-Stock', field: 'unitName' },
+    { headerLabel: 'Stock', field: 'stockCount' },
+    { headerLabel: 'Unit-Cost', field: 'unitCost' },
+    { headerLabel: 'Options', field: 'options' },
+  ];
+  productData: VProduct[] = [];
 
+  constructor(private productService: ProductService, private popupService: PopupService) {
+      this.fetchProducts();
+      effect(() => {
+        const state = this.popupService.popupState();
+  
+        if (state.submitPopup === false) {
+          this.fetchProducts();
+        }
+        if (state.isConfirmed === true) {
+          this.productForDelete = state.popupChildData;
+          this.onDeleteProductAsync();
+        }
+        else {
+          this.productForDelete = undefined;
+        }
+      });
+    }
+  
+  
+    fetchProducts() {
+      this.loading = true;
+      timer(5000)
+        .pipe(switchMap(() => this.productService.fetchProductLists()))
+        .subscribe({
+          next: (response) => {
+            this.productData = response.data;
+            console.log(this.productData);
+            this.loading = false;
+          },
+        });
+    }
+    OpenOptions(action: customTableOptionsEmitter) {
+      if (action.type === optionsEnum.View) {
+  
+      }
+      if (action.type === optionsEnum.Delete) {
+        this.DeleteProductPopup(action.data);
+      }
+      if (action.type === optionsEnum.Edit) {
+        this.EditProductPopup(action.data);
+      }
+    }
+    AddProductPopup() {
+      //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '60%');
+    }
+  
+    EditProductPopup(selectedCustomer: VProduct) {
+      //this.popupService.openComponentPopup(CustomerAddEditComponent, selectedCustomer, `Edit - ${selectedCustomer.customerName}`, 'Save', '60%');
+    }
+  
+    ViewProductPopup() {
+      //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
+    }
+    DeleteProductPopup(selectedCustomer: VProduct) {
+      this.popupService.popupState.set({
+        showPopup: true,
+        popupChildData : selectedCustomer,
+        popupTitle: 'Confrimation',
+        popupMessage: `Are you sure you want to delete this customer - ${selectedCustomer.productName} ? This action cannot be undone.`,
+        popupFooterType: 'confirm',
+        popupWidth: '35%',
+      });
+    }
+    async onDeleteProductAsync() {
+      try {
+        if (this.productForDelete) {
+          const res = await firstValueFrom(this.productService.deleteProduct(this.productForDelete?.productCode));
+  
+          if (res.code === 200) {
+            this.popupService.popupState.set({
+              showPopup: true,
+              popupTitle: 'Information',
+              popupMessage: `Record for - ${this.productForDelete.productName} deleted successfully`,
+              popupFooterType: 'ok',
+              popupWidth: '35%',
+            });
+          } else {
+            this.popupService.popupState.set({
+              showPopup: true,
+              popupTitle: 'Error',
+              popupMessage: `unable to delete customer details for - ${this.productForDelete.productName}`,
+              popupFooterType: 'ok',
+              popupWidth: '35%',
+            });
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      finally{
+        this.fetchProducts();
+        this.productForDelete = undefined;
+      }
+    }
 }
