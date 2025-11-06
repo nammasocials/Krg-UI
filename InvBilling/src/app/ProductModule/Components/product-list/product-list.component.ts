@@ -7,6 +7,7 @@ import { PopupService } from '../../../shared/Service/popup.service';
 import { firstValueFrom, switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
+import { ProductAddEditComponent } from '../product-add-edit/product-add-edit.component';
 
 @Component({
   selector: 'app-product-list',
@@ -70,22 +71,22 @@ export class ProductListComponent {
       }
     }
     AddProductPopup() {
-      //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '60%');
+      this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '60%');
     }
   
-    EditProductPopup(selectedCustomer: VProduct) {
-      //this.popupService.openComponentPopup(CustomerAddEditComponent, selectedCustomer, `Edit - ${selectedCustomer.customerName}`, 'Save', '60%');
+    EditProductPopup(selectedProduct: VProduct) {
+      this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productCode}`, 'Save', '60%');
     }
   
     ViewProductPopup() {
       //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
     }
-    DeleteProductPopup(selectedCustomer: VProduct) {
+    DeleteProductPopup(selectedProduct: VProduct) {
       this.popupService.popupState.set({
         showPopup: true,
-        popupChildData : selectedCustomer,
+        popupChildData : selectedProduct,
         popupTitle: 'Confrimation',
-        popupMessage: `Are you sure you want to delete this customer - ${selectedCustomer.productName} ? This action cannot be undone.`,
+        popupMessage: `Are you sure you want to delete this customer - ${selectedProduct.productName} ? This action cannot be undone.`,
         popupFooterType: 'confirm',
         popupWidth: '35%',
       });
