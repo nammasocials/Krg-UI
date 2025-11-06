@@ -28,7 +28,7 @@ export class CustomerService {
   }
   deleteCustomer(id: number): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(
-      `${Constant.apiName}/DeleteCustomer/${id}`
+      `/${Constant.apiName}/Customer/DeleteCustomer/${id}`
     );
   }
 

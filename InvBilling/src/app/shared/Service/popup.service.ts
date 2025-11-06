@@ -37,8 +37,14 @@ export class PopupService {
     });
   }
 
-  closePopup() {
-    this.popupState.update(state => ({ ...state, showPopup: false }));
+  closePopup(event : any) {
+    if(typeof event === 'boolean'){
+      var isConfirmed : boolean = event;
+      this.popupState.update(state => ({ ...state, showPopup: false, isConfirmed : isConfirmed }));
+    }
+    else{
+      this.popupState.update(state => ({ ...state, showPopup: false }));
+    }
   }
   submitPopup() {
     this.popupState.update(state => ({ ...state, submitPopup: true }));
@@ -46,7 +52,7 @@ export class PopupService {
   updateSubmitFalse(isSuccess : boolean) {
     this.popupState.update(state => ({ ...state, submitPopup: false }));
     if(isSuccess){
-      this.closePopup();
+      this.closePopup(false);
     }
   }
 }

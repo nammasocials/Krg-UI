@@ -18,6 +18,7 @@ import { CustomerAddEditComponent } from '../customer-add-edit/customer-add-edit
 })
 export class CustomerListComponent {
   loading = true;
+  customerForDelete?: VCustomer = new VCustomer();
   headerData: customTableHeader[] = [
     { headerLabel: 'Customer Name', field: 'customerName' },
     { headerLabel: 'Email', field: 'customerEmail' },
@@ -33,6 +34,13 @@ export class CustomerListComponent {
 
       if (state.submitPopup === false) {
         this.fetchCustomers();
+      }
+      if (state.isConfirmed === true) {
+        this.customerForDelete = state.popupChildData;
+        this.onDeleteCustomerAsync();
+      }
+      else {
+        this.customerForDelete = undefined;
       }
     });
   }
@@ -54,6 +62,9 @@ export class CustomerListComponent {
     if (action.type === optionsEnum.View) {
 
     }
+    if (action.type === optionsEnum.Delete) {
+      this.DeleteCustomerPopup(action.data);
+    }
     if (action.type === optionsEnum.Edit) {
       this.EditCustomerPopup(action.data);
     }
@@ -69,27 +80,45 @@ export class CustomerListComponent {
   ViewCustomerPopup() {
     this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
   }
-  async DeleteCustomerPopup(selectedCustomer: VCustomer) {
+  DeleteCustomerPopup(selectedCustomer: VCustomer) {
     this.popupService.popupState.set({
       showPopup: true,
+      popupChildData : selectedCustomer,
       popupTitle: 'Confrimation',
       popupMessage: `Are you sure you want to delete this customer - ${selectedCustomer.customerName} ? This action cannot be undone.`,
-      popupFooterType: 'ok',
+      popupFooterType: 'confirm',
       popupWidth: '35%',
     });
   }
-  async onDeleteCustomerAsync(id: number) {
+  async onDeleteCustomerAsync() {
     try {
-      const res = await firstValueFrom(this.customerService.deleteCustomer(id));
+      if (this.customerForDelete) {
+        const res = await firstValueFrom(this.customerService.deleteCustomer(this.customerForDelete?.customerCode));
 
-      if (res.code === 200) {
-        console.log(res.message);
-        // refresh list here
-      } else {
-        console.error(res.message);
+        if (res.code === 200) {
+          this.popupService.popupState.set({
+            showPopup: true,
+            popupTitle: 'Information',
+            popupMessage: `Record for - ${this.customerForDelete.customerName} deleted successfully`,
+            popupFooterType: 'ok',
+            popupWidth: '35%',
+          });
+        } else {
+          this.popupService.popupState.set({
+            showPopup: true,
+            popupTitle: 'Error',
+            popupMessage: `unable to delete customer details for - ${this.customerForDelete.customerName}`,
+            popupFooterType: 'ok',
+            popupWidth: '35%',
+          });
+        }
       }
     } catch (err) {
       console.error(err);
+    }
+    finally{
+      this.fetchCustomers();
+      this.customerForDelete = undefined;
     }
   }
 }
