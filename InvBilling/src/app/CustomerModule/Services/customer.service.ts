@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
 import { VMAuthResponse } from '../../AuthModule/Models/AuthModels';
 import { Constant } from '../../constants';
@@ -25,6 +25,11 @@ export class CustomerService {
   editCustomer(customer: FormData): Observable<ApiResponse<VCustomer>> {
     const url = `/${Constant.apiName}/Customer/EditCustomer`;
     return this.http.post<ApiResponse<VCustomer>>(url, customer);
+  }
+  fetchCustomerImage(customerCode: number): Observable<string> {
+    return this.http
+      .get(`/${Constant.apiName}/Customer/getCustomerPhoto/${customerCode}`, { responseType: 'blob' })
+      .pipe(map(blob => URL.createObjectURL(blob)));
   }
   deleteCustomer(id: number): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(

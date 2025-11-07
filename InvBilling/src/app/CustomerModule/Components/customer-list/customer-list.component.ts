@@ -1,5 +1,5 @@
 import { Component, effect } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CustomerService } from '../../Services/customer.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
@@ -27,7 +27,8 @@ export class CustomerListComponent {
     { headerLabel: 'Options', field: 'options' },
   ];
   customerData: VCustomer[] = [];
-  constructor(private customerService: CustomerService, private popupService: PopupService) {
+  constructor(private customerService: CustomerService, 
+    private router: Router,private popupService: PopupService) {
     this.fetchCustomers();
     effect(() => {
       const state = this.popupService.popupState();
@@ -48,7 +49,7 @@ export class CustomerListComponent {
 
   fetchCustomers() {
     this.loading = true;
-    timer(5000)
+    timer(1500)
       .pipe(switchMap(() => this.customerService.fetchCustomerLists()))
       .subscribe({
         next: (response) => {
@@ -60,7 +61,7 @@ export class CustomerListComponent {
   }
   OpenOptions(action: customTableOptionsEmitter) {
     if (action.type === optionsEnum.View) {
-
+      this.ViewCustomer(action.data);
     }
     if (action.type === optionsEnum.Delete) {
       this.DeleteCustomerPopup(action.data);
@@ -77,13 +78,14 @@ export class CustomerListComponent {
     this.popupService.openComponentPopup(CustomerAddEditComponent, selectedCustomer, `Edit - ${selectedCustomer.customerName}`, 'Save', '60%');
   }
 
-  ViewCustomerPopup() {
-    this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
+  ViewCustomer(selectedCustomer: VCustomer) {
+    this.router.navigate([`/customer/${selectedCustomer.customerCode}`]);
+
   }
   DeleteCustomerPopup(selectedCustomer: VCustomer) {
     this.popupService.popupState.set({
       showPopup: true,
-      popupChildData : selectedCustomer,
+      popupChildData: selectedCustomer,
       popupTitle: 'Confrimation',
       popupMessage: `Are you sure you want to delete this customer - ${selectedCustomer.customerName} ? This action cannot be undone.`,
       popupFooterType: 'confirm',
@@ -116,7 +118,7 @@ export class CustomerListComponent {
     } catch (err) {
       console.error(err);
     }
-    finally{
+    finally {
       this.fetchCustomers();
       this.customerForDelete = undefined;
     }
