@@ -28,10 +28,8 @@
                         }
                     </div>
                     <div *ngIf="!loading">
-                        <!-- <img data-bs-toggle="tooltip" [src]="empPersonalDetails.photolocation"
-                            (error)="empPersonalDetails.photolocation='assets/images/default.png'" alt="Profile Image"
-                            class="imagemax" /> -->
-                        <img [src]="customerImageUrl" />
+                        <img data-bs-toggle="tooltip" [src]="customerImageUrl"
+                            (error)="customerImageUrl='assets/images/no_image_found.png'" alt="Profile Image"/>
                     </div>
                 </div>
                 <div class="bg-white rounded-lg shadow-md overflow-hidden w-full md:w-3/4">
