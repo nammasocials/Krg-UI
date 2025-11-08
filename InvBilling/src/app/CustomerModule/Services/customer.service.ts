@@ -31,6 +31,10 @@ export class CustomerService {
       .get(`/${Constant.apiName}/Customer/getCustomerPhoto/${customerCode}`, { responseType: 'blob' })
       .pipe(map(blob => URL.createObjectURL(blob)));
   }
+  fetchCustomerDetails(customerCode: number): Observable<ApiResponse<VCustomer>> {
+    const url = `/${Constant.apiName}/Customer/getAllCustomerDetails/${customerCode}`;
+    return this.http.get<ApiResponse<VCustomer>>(url);
+  }
   deleteCustomer(id: number): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(
       `/${Constant.apiName}/Customer/DeleteCustomer/${id}`

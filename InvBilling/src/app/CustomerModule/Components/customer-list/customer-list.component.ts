@@ -49,7 +49,7 @@ export class CustomerListComponent {
 
   fetchCustomers() {
     this.loading = true;
-    timer(1500)
+    timer(1000)
       .pipe(switchMap(() => this.customerService.fetchCustomerLists()))
       .subscribe({
         next: (response) => {

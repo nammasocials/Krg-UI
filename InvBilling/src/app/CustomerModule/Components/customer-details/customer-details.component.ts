@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-customer-details',
   standalone: true,
-  imports: [RouterModule, CommonModule,FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './customer-details.component.html',
   styleUrl: './customer-details.component.css'
 })
@@ -27,9 +27,10 @@ export class CustomerDetailsComponent {
     const nav = this.router.getCurrentNavigation();
     const stateData = nav?.extras.state;
     if (stateData) {
+      this.customerDetailsLoading = false;
       this.customerDetails = stateData['customerDetails'];
     } else {
-      // Data isn't available (page refreshed)
+      this.fetchCustomerData();
     }
     this.customerId = idParam !== null ? Number(idParam) : 0;
     this.fetchCustomerImageData();
@@ -49,6 +50,20 @@ export class CustomerDetailsComponent {
         });
     }
   }
+  fetchCustomerData() {
+    this.customerDetailsLoading = true;
+    if (this.customerId != null) {
+      timer(500)
+        .pipe(switchMap(() => this.customerService.fetchCustomerDetails(this.customerId)))
+        .subscribe({
+          next: (response) => {
+            this.customerDetails = response.data;
+            this.customerDetailsLoading = false;
+          },
+        });
+    }
+  }
+
   goBack(): void {
     this.router.navigate(['/customer']); // Navigate to customer list page
   }
