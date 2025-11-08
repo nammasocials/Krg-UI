@@ -3,37 +3,48 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { CustomerService } from '../../Services/customer.service';
 import { switchMap, timer } from 'rxjs';
+import { VCustomer } from '../../Models/VCustomer';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-customer-details',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule,FormsModule],
   templateUrl: './customer-details.component.html',
   styleUrl: './customer-details.component.css'
 })
 export class CustomerDetailsComponent {
-  loading: boolean = true;
+  logoLoading: boolean = true;
+  customerDetailsLoading: boolean = true;
   customerId: number = 0;
   customerImageUrl: string | null = null;
+  customerDetails: VCustomer = new VCustomer();
 
   constructor(private router: Router, private route: ActivatedRoute,
     private customerService: CustomerService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
+    const nav = this.router.getCurrentNavigation();
+    const stateData = nav?.extras.state;
+    if (stateData) {
+      this.customerDetails = stateData['customerDetails'];
+    } else {
+      // Data isn't available (page refreshed)
+    }
     this.customerId = idParam !== null ? Number(idParam) : 0;
     this.fetchCustomerImageData();
   }
 
 
   fetchCustomerImageData() {
-    this.loading = true;
+    this.logoLoading = true;
     if (this.customerId != null) {
       timer(500)
         .pipe(switchMap(() => this.customerService.fetchCustomerImage(this.customerId)))
         .subscribe({
           next: (response) => {
             this.customerImageUrl = response;
-            this.loading = false;
+            this.logoLoading = false;
           },
         });
     }

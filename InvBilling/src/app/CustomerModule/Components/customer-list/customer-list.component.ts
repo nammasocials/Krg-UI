@@ -79,7 +79,7 @@ export class CustomerListComponent {
   }
 
   ViewCustomer(selectedCustomer: VCustomer) {
-    this.router.navigate([`/customer/${selectedCustomer.customerCode}`]);
+    this.router.navigate([`/customer/${selectedCustomer.customerCode}`],{ state: { customerDetails: selectedCustomer } });
 
   }
   DeleteCustomerPopup(selectedCustomer: VCustomer) {
