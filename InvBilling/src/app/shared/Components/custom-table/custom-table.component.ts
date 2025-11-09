@@ -104,11 +104,23 @@ export class CustomTableComponent implements AfterViewInit {
   filterTable() {
     if (this.searchTerm.length > 0) {
       const lowerKeyword = this.searchTerm.toLowerCase();
+
+      const searchFields = this.headerData.map(h => h.field);
+
       this.filteredData = this.data.filter(item =>
-        Object.values(item).some(value =>
-          String(value).toLowerCase().includes(lowerKeyword)
+        searchFields.some(field =>
+          String(item[field] ?? '')
+            .toLowerCase()
+            .includes(lowerKeyword)
         )
       );
+
+
+      // this.filteredData = this.data.filter(item =>
+      //   Object.values(item).some(value =>
+      //     String(value).toLowerCase().includes(lowerKeyword)
+      //   )
+      // );
     }
     else {
       this.filteredData = this.data;
@@ -173,23 +185,23 @@ export class CustomTableComponent implements AfterViewInit {
 
   ////////////////////////////// Data Functions ////////////////////////////////////////////
   ViewData(data: any) {
-    var emittedData : customTableOptionsEmitter = {
-      type : optionsEnum.View,
-      data : data,
+    var emittedData: customTableOptionsEmitter = {
+      type: optionsEnum.View,
+      data: data,
     }
     this.OptionsClicked.emit(emittedData);
   }
   EditData(data: any) {
-    var emittedData : customTableOptionsEmitter = {
-      type : optionsEnum.Edit,
-      data : data,
+    var emittedData: customTableOptionsEmitter = {
+      type: optionsEnum.Edit,
+      data: data,
     }
     this.OptionsClicked.emit(emittedData);
   }
   DeleteData(data: any) {
-    var emittedData : customTableOptionsEmitter = {
-      type : optionsEnum.Delete,
-      data : data,
+    var emittedData: customTableOptionsEmitter = {
+      type: optionsEnum.Delete,
+      data: data,
     }
     this.OptionsClicked.emit(emittedData);
   }
