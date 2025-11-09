@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from "@angular/router";
+import { DashboardService } from '../../Services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,5 +10,7 @@ import { RouterModule } from "@angular/router";
   styleUrl: './dashboard.component.css'
 })
 export class Dashboardlayout {
+  constructor(private dashboardService : DashboardService){
 
+  }
 }
