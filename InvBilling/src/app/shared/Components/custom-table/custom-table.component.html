@@ -51,12 +51,17 @@
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-lg font-semibold text-gray-900"></h3>
                         <div class="flex flex-wrap gap-2">
-                            <button
-                                class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200" (click)="ViewData(item)">View</button>
-                            <button
-                                class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs hover:bg-amber-200"(click)="EditData(item)">Edit</button>
-                            <button
-                                class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200"(click)="DeleteData(item)">Delete</button>
+                            <button *ngFor="let option of options"
+                                class="bg-{{option.theme}}-100 text-{{option.theme}}-700 px-2 py-1 rounded text-sm 
+                                hover:bg-{{option.theme}}-200"
+                                (click)="emitSelectedActions({type : option.actions, element : item})">{{option.label}}</button>
+<!-- 
+                            <button class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200"
+                                (click)="ViewData(item)">View</button>
+                            <button class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs hover:bg-amber-200"
+                                (click)="EditData(item)">Edit</button>
+                            <button class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200"
+                                (click)="DeleteData(item)">Delete</button> -->
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-2 text-sm">
@@ -94,10 +99,18 @@
                             class="px-6 py-4 text-left text-sm font-medium text-blue-900 uppercase tracking-wider">
                             Options
                         </th>
-                        <td mat-cell *matCellDef="let element" class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                            <button class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm hover:bg-blue-200" (click)="ViewData(element)">View</button>
-                            <button class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-sm hover:bg-amber-200" (click)="EditData(element)">Edit</button>
-                            <button class="bg-red-100 text-red-700 px-2 py-1 rounded text-sm hover:bg-red-200" (click)="DeleteData(element)">Delete</button>
+                        <td mat-cell *matCellDef="let element"
+                            class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <button *ngFor="let option of options"
+                                class="bg-{{option.theme}}-100 text-{{option.theme}}-700 px-2 py-1 rounded text-sm hover:bg-{{option.theme}}-200"
+                                (click)="emitSelectedActions({type : option.actions, element : element})">{{option.label}}</button>
+
+                            <!-- <button class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm hover:bg-blue-200"
+                                (click)="ViewData(element)">View</button>
+                            <button class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-sm hover:bg-amber-200"
+                                (click)="EditData(element)">Edit</button>
+                            <button class="bg-red-100 text-red-700 px-2 py-1 rounded text-sm hover:bg-red-200"
+                                (click)="DeleteData(element)">Delete</button> -->
                         </td>
                     </ng-container>
                 </ng-container>

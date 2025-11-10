@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
 import { VDashboardStats } from '../Models/CustomerModels';
 import { Constant } from '../../constants';
+import { VactivityLog } from '../Models/ActivityLog';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,10 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {
 
+  }
+  fetchRecentActivityLogs(): Observable<ApiResponse<VactivityLog>> {
+    const url = `/${Constant.apiName}/ActivityLog/getRecentActivityLogs`;
+    return this.http.get<ApiResponse<VactivityLog>>(url);
   }
   fetchCustomerDashboardStats(): Observable<ApiResponse<VDashboardStats>> {
     const url = `/${Constant.apiName}/Customer/getCustomerStats`;

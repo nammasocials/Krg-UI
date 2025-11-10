@@ -2,7 +2,7 @@ import { Component, effect } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CustomerService } from '../../Services/customer.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
-import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, options, optionsEnum } from '../../../shared/Models/custom-table';
 import { VCustomer } from '../../Models/VCustomer';
 import { firstValueFrom, switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -19,16 +19,21 @@ import { CustomerAddEditComponent } from '../customer-add-edit/customer-add-edit
 export class CustomerListComponent {
   loading = true;
   customerForDelete?: VCustomer = new VCustomer();
+  options: options[]= [
+    { label: "View", actions: optionsEnum.View, theme:"blue" },
+    { label: "Edit", actions: optionsEnum.Edit, theme:"amber" },
+    { label: "Delete", actions: optionsEnum.Delete, theme:"red" }
+  ]
   headerData: customTableHeader[] = [
-    { headerLabel: 'Customer Name', field: 'customerName' },
+    { headerLabel: 'Customer Name', field: 'customerName', },
     { headerLabel: 'Email', field: 'customerEmail' },
     { headerLabel: 'Contact No.', field: 'contactNo' },
     { headerLabel: 'GST', field: 'gst' },
     { headerLabel: 'Options', field: 'options' },
   ];
   customerData: VCustomer[] = [];
-  constructor(private customerService: CustomerService, 
-    private router: Router,private popupService: PopupService) {
+  constructor(private customerService: CustomerService,
+    private router: Router, private popupService: PopupService) {
     this.fetchCustomers();
     effect(() => {
       const state = this.popupService.popupState();
@@ -79,7 +84,7 @@ export class CustomerListComponent {
   }
 
   ViewCustomer(selectedCustomer: VCustomer) {
-    this.router.navigate([`/customer/${selectedCustomer.customerCode}`],{ state: { customerDetails: selectedCustomer } });
+    this.router.navigate([`/customer/${selectedCustomer.customerCode}`], { state: { customerDetails: selectedCustomer } });
 
   }
   DeleteCustomerPopup(selectedCustomer: VCustomer) {

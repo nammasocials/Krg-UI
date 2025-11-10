@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, options, optionsData, optionsEnum } from '../../Models/custom-table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -32,6 +32,7 @@ export class CustomTableComponent implements AfterViewInit {
   filteredData: any[] = [];
   mobileData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
+  @Input() options: options[] = [];
   @Input() title: string = "Records";
 
   pageSize = 5;
@@ -184,25 +185,32 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   ////////////////////////////// Data Functions ////////////////////////////////////////////
-  ViewData(data: any) {
+  emitSelectedActions(data: optionsData) {
     var emittedData: customTableOptionsEmitter = {
-      type: optionsEnum.View,
-      data: data,
+      type: data.type,
+      data: data.element,
     }
     this.OptionsClicked.emit(emittedData);
   }
-  EditData(data: any) {
-    var emittedData: customTableOptionsEmitter = {
-      type: optionsEnum.Edit,
-      data: data,
-    }
-    this.OptionsClicked.emit(emittedData);
-  }
-  DeleteData(data: any) {
-    var emittedData: customTableOptionsEmitter = {
-      type: optionsEnum.Delete,
-      data: data,
-    }
-    this.OptionsClicked.emit(emittedData);
-  }
+  // ViewData(data: any) {
+  //   var emittedData: customTableOptionsEmitter = {
+  //     type: optionsEnum.View,
+  //     data: data,
+  //   }
+  //   this.OptionsClicked.emit(emittedData);
+  // }
+  // EditData(data: any) {
+  //   var emittedData: customTableOptionsEmitter = {
+  //     type: optionsEnum.Edit,
+  //     data: data,
+  //   }
+  //   this.OptionsClicked.emit(emittedData);
+  // }
+  // DeleteData(data: any) {
+  //   var emittedData: customTableOptionsEmitter = {
+  //     type: optionsEnum.Delete,
+  //     data: data,
+  //   }
+  //   this.OptionsClicked.emit(emittedData);
+  // }
 }
