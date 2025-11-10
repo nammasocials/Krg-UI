@@ -17,4 +17,12 @@ export class DashboardService {
     const url = `/${Constant.apiName}/Customer/getCustomerStats`;
     return this.http.get<ApiResponse<VDashboardStats>>(url);
   }
+  getCutomerPercentage(totalCustomer: number, currentCustomer: number) {
+
+    if (!totalCustomer || totalCustomer === 0) {
+      return 0; // Avoid division by zero
+    }
+    return (currentCustomer / totalCustomer) * 100
+
+  }
 }

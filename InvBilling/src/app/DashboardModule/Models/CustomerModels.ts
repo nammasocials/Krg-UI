@@ -1,5 +1,5 @@
 export class VDashboardStats
 {
-    overallCustomerCount : number = 0;
-    recentAddedCustomersCount : number = 0;
+    overallCount : number = 0;
+    recentAddedCount : number = 0;
 }
