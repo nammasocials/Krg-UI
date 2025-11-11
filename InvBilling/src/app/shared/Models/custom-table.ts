@@ -2,20 +2,25 @@ export interface customTableHeader{
     headerLabel: string;
     field: string;
 }
-export interface options{
+export class CustomTableOptions{
+    isSearch : boolean = true;
+    isPagination : boolean = true;
+    isItemsPerPage : boolean = true;
+}
+export interface RowOptions{
     label: string;
-    actions: optionsEnum;
+    actions: RowOptionsEnum;
     theme : string;
 }
-export interface optionsData{
-    type : optionsEnum;
+export interface RowOptionsData{
+    type : RowOptionsEnum;
     element : any;
 }
 export interface customTableOptionsEmitter{
-    type : optionsEnum;
+    type : RowOptionsEnum;
     data : any;
 }
-export enum optionsEnum {
+export enum RowOptionsEnum {
   View = 'View',
   Edit = 'Edit',
   Delete = 'Delete'

@@ -3,12 +3,12 @@
     <div class="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50" *ngIf="!isMobileView">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <h2 class="text-lg font-semibold text-gray-800">{{ title }}</h2>
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <label for="search" class="sr-only">Search {{ title }}</label>
-                <input type="text" id="search" placeholder="Search {{ title }}..." [(ngModel)]="searchTerm"
+            <div *ngIf="tableOptions.isSearch || tableOptions.isItemsPerPage" class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                <label *ngIf="tableOptions.isSearch" for="search" class="sr-only">Search {{ title }}</label>
+                <input *ngIf="tableOptions.isSearch" type="text" id="search" placeholder="Search {{ title }}..." [(ngModel)]="searchTerm"
                     [disabled]="data.length <= 0" (input)="updatePagedData()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none 
                 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" />
-                <select [disabled]="filteredData.length <= 0" id="rowsPerPage" (change)="onPageSizeChange($event)"
+                <select *ngIf="tableOptions.isItemsPerPage" [disabled]="filteredData.length <= 0" id="rowsPerPage" (change)="onPageSizeChange($event)"
                     [(ngModel)]="pageSize"
                     class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                     <option *ngFor="let ip of pageSizeOptions" [value]="ip">{{ ip }} per page</option>
@@ -120,7 +120,7 @@
             </table>
         </div>
         <!-- Pagination Controls -->
-        <div class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div *ngIf="tableOptions.isPagination" class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                 <div class="text-sm text-gray-700 text-center sm:text-left">
                     Showing <span id="startRecord">

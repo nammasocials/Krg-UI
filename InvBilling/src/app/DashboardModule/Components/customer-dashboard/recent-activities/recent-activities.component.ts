@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CustomTableComponent } from '../../../../shared/Components/custom-table/custom-table.component';
-import { customTableHeader, customTableOptionsEmitter, options, optionsEnum } from '../../../../shared/Models/custom-table';
+import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../../shared/Models/custom-table';
 import { VactivityLog } from '../../../Models/ActivityLog';
 import { DashboardService } from '../../../Services/dashboard.service';
 import { CommonModule } from '@angular/common';
@@ -17,9 +17,14 @@ export class RecentActivitiesComponent {
 
   RecentActLoading: boolean = true;
   activityTitle: string = "Recent Activities";
-  recentActivityOptions: options[] = [
-    { label: "View", actions: optionsEnum.View, theme: "blue" },
-  ]
+  recentActivityOptions: RowOptions[] = [
+    { label: "View", actions: RowOptionsEnum.View, theme: "blue" },
+  ];
+  tableOptions: CustomTableOptions = {
+    isSearch: false,
+    isPagination: false,
+    isItemsPerPage: false
+  };
   activityheaderData: customTableHeader[] = [
     { headerLabel: 'Type', field: 'entityType', },
     { headerLabel: 'Description', field: 'description' },
@@ -42,7 +47,7 @@ export class RecentActivitiesComponent {
       });
   }
   ActivityActions(action: customTableOptionsEmitter) {
-    if (action.type === optionsEnum.View) {
+    if (action.type === RowOptionsEnum.View) {
       //this.ViewCustomer(action.data);
     }
   }

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { customTableHeader, customTableOptionsEmitter, options, optionsData, optionsEnum } from '../../Models/custom-table';
+import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowOptions, RowOptionsData, RowOptionsEnum } from '../../Models/custom-table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -29,10 +29,11 @@ import { NgZone } from '@angular/core';
 })
 export class CustomTableComponent implements AfterViewInit {
   @Input() data: any[] = [];
+  @Input() tableOptions : CustomTableOptions = new CustomTableOptions();
   filteredData: any[] = [];
   mobileData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
-  @Input() options: options[] = [];
+  @Input() options: RowOptions[] = [];
   @Input() title: string = "Records";
 
   pageSize = 5;
@@ -185,7 +186,7 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   ////////////////////////////// Data Functions ////////////////////////////////////////////
-  emitSelectedActions(data: optionsData) {
+  emitSelectedActions(data: RowOptionsData) {
     var emittedData: customTableOptionsEmitter = {
       type: data.type,
       data: data.element,
@@ -194,21 +195,21 @@ export class CustomTableComponent implements AfterViewInit {
   }
   // ViewData(data: any) {
   //   var emittedData: customTableOptionsEmitter = {
-  //     type: optionsEnum.View,
+  //     type: RowOptionsEnum.View,
   //     data: data,
   //   }
   //   this.OptionsClicked.emit(emittedData);
   // }
   // EditData(data: any) {
   //   var emittedData: customTableOptionsEmitter = {
-  //     type: optionsEnum.Edit,
+  //     type: RowOptionsEnum.Edit,
   //     data: data,
   //   }
   //   this.OptionsClicked.emit(emittedData);
   // }
   // DeleteData(data: any) {
   //   var emittedData: customTableOptionsEmitter = {
-  //     type: optionsEnum.Delete,
+  //     type: RowOptionsEnum.Delete,
   //     data: data,
   //   }
   //   this.OptionsClicked.emit(emittedData);

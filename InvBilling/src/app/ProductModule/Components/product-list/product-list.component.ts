@@ -1,7 +1,7 @@
 import { Component, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { VProduct } from '../../Models/VProduct';
-import { customTableHeader, customTableOptionsEmitter, optionsEnum } from '../../../shared/Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, RowOptionsEnum } from '../../../shared/Models/custom-table';
 import { ProductService } from '../../Services/product.service';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { firstValueFrom, switchMap, timer } from 'rxjs';
@@ -60,13 +60,13 @@ export class ProductListComponent {
         });
     }
     OpenOptions(action: customTableOptionsEmitter) {
-      if (action.type === optionsEnum.View) {
+      if (action.type === RowOptionsEnum.View) {
   
       }
-      if (action.type === optionsEnum.Delete) {
+      if (action.type === RowOptionsEnum.Delete) {
         this.DeleteProductPopup(action.data);
       }
-      if (action.type === optionsEnum.Edit) {
+      if (action.type === RowOptionsEnum.Edit) {
         this.EditProductPopup(action.data);
       }
     }

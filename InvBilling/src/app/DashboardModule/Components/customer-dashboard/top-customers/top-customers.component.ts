@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { customTableHeader, options } from '../../../../shared/Models/custom-table';
+import { customTableHeader, CustomTableOptions, RowOptions } from '../../../../shared/Models/custom-table';
 import { VCustomer } from '../../../../CustomerModule/Models/VCustomer';
 import { CustomerService } from '../../../../CustomerModule/Services/customer.service';
 import { switchMap, timer } from 'rxjs';
@@ -9,14 +9,21 @@ import { CustomTableComponent } from '../../../../shared/Components/custom-table
 @Component({
   selector: 'app-top-customers',
   standalone: true,
-  imports: [CustomTableComponent,CommonModule],
+  imports: [CustomTableComponent, CommonModule],
   templateUrl: './top-customers.component.html',
   styleUrl: './top-customers.component.css'
 })
 export class TopCustomersComponent {
   loading = true;
   customerForDelete?: VCustomer = new VCustomer();
-  options: options[] = []
+  options: RowOptions[] = [];
+  tableOptions: CustomTableOptions = {
+      isSearch: false,
+      isPagination: false,
+      isItemsPerPage: false
+    };
+
+
   headerData: customTableHeader[] = [
     { headerLabel: 'Customer Name', field: 'customerName', },
     { headerLabel: 'Email', field: 'customerEmail' },
