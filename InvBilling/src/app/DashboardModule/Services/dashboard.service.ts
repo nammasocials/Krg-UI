@@ -14,9 +14,9 @@ export class DashboardService {
   constructor(private http: HttpClient) {
 
   }
-  fetchRecentActivityLogs(): Observable<ApiResponse<VactivityLog>> {
+  fetchRecentActivityLogs(): Observable<ApiResponse<VactivityLog[]>> {
     const url = `/${Constant.apiName}/ActivityLog/getRecentActivityLogs`;
-    return this.http.get<ApiResponse<VactivityLog>>(url);
+    return this.http.get<ApiResponse<VactivityLog[]>>(url);
   }
   fetchCustomerDashboardStats(): Observable<ApiResponse<VDashboardStats>> {
     const url = `/${Constant.apiName}/Customer/getCustomerStats`;
