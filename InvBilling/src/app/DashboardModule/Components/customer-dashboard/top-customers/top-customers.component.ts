@@ -40,7 +40,6 @@ export class TopCustomersComponent {
       .subscribe({
         next: (response) => {
           this.customerData = response.data;
-          console.log(this.customerData);
           this.loading = false;
         },
       });

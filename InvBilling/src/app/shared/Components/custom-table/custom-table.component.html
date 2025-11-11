@@ -90,7 +90,7 @@
                             class="px-6 py-4 text-left text-sm font-medium text-blue-900 uppercase tracking-wider">
                             {{ header.headerLabel }}
                         </th>
-                        <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-gray-700">
+                        <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-{{getRowColor(element)}}-700">
                             {{ element[header.field] }}
                         </td>
                     </ng-container>

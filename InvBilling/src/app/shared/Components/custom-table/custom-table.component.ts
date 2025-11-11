@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowOptions, RowOptionsData, RowOptionsEnum } from '../../Models/custom-table';
+import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowColorOptions, RowOptions, RowOptionsData, RowOptionsEnum } from '../../Models/custom-table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -34,6 +34,7 @@ export class CustomTableComponent implements AfterViewInit {
   mobileData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
   @Input() options: RowOptions[] = [];
+  @Input() RowColors: RowColorOptions = new RowColorOptions();
   @Input() title: string = "Records";
 
   pageSize = 5;
@@ -154,7 +155,6 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   getRangeLabel() {
-    console.log(this.filteredData.length);
     const start = this.pageIndex * this.pageSize + 1;
     const end = Math.min(
       (this.pageIndex + 1) * this.pageSize,
@@ -186,6 +186,17 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   ////////////////////////////// Data Functions ////////////////////////////////////////////
+  getRowColor(colValue : any) : string{
+    const color = "gray";
+    console.log(this.RowColors.isDisabled);
+    if(!this.RowColors.isDisabled){
+      const colorList = this.RowColors.colorDetails;
+      const rowColor = colorList.filter(C => C.colVal === colValue[this.RowColors.colName]);
+      console.log(rowColor[0].color);
+      return rowColor.length ? rowColor[0].color : color;
+    }
+    return color;
+  }
   emitSelectedActions(data: RowOptionsData) {
     var emittedData: customTableOptionsEmitter = {
       type: data.type,
@@ -193,25 +204,4 @@ export class CustomTableComponent implements AfterViewInit {
     }
     this.OptionsClicked.emit(emittedData);
   }
-  // ViewData(data: any) {
-  //   var emittedData: customTableOptionsEmitter = {
-  //     type: RowOptionsEnum.View,
-  //     data: data,
-  //   }
-  //   this.OptionsClicked.emit(emittedData);
-  // }
-  // EditData(data: any) {
-  //   var emittedData: customTableOptionsEmitter = {
-  //     type: RowOptionsEnum.Edit,
-  //     data: data,
-  //   }
-  //   this.OptionsClicked.emit(emittedData);
-  // }
-  // DeleteData(data: any) {
-  //   var emittedData: customTableOptionsEmitter = {
-  //     type: RowOptionsEnum.Delete,
-  //     data: data,
-  //   }
-  //   this.OptionsClicked.emit(emittedData);
-  // }
 }

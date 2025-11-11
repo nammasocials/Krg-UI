@@ -7,6 +7,6 @@
     }
 </div>
 <app-custom-table *ngIf="!RecentActLoading" [data]="activityLogs" [headerData]="activityheaderData"
-    [options]="recentActivityOptions"
+    [options]="recentActivityOptions" [RowColors]="RowColors"
     [tableOptions]="tableOptions" [title]="activityTitle" (OptionsClicked)="ActivityActions($event)">
 </app-custom-table>

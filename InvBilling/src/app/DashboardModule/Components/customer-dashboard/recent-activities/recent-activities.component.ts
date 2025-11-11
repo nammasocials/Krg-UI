@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CustomTableComponent } from '../../../../shared/Components/custom-table/custom-table.component';
-import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../../shared/Models/custom-table';
+import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowColorOptions, RowOptions, RowOptionsEnum } from '../../../../shared/Models/custom-table';
 import { VactivityLog } from '../../../Models/ActivityLog';
 import { DashboardService } from '../../../Services/dashboard.service';
 import { CommonModule } from '@angular/common';
@@ -20,6 +20,14 @@ export class RecentActivitiesComponent {
   recentActivityOptions: RowOptions[] = [
     { label: "View", actions: RowOptionsEnum.View, theme: "blue" },
   ];
+  RowColors: RowColorOptions = {
+    isDisabled: false,
+    colName: "actionType",
+    colorDetails: [ 
+      {colVal: 'Insert', color: 'green' },
+      {colVal: 'Update', color: 'amber' },
+    ]
+  };
   tableOptions: CustomTableOptions = {
     isSearch: false,
     isPagination: false,

@@ -7,6 +7,11 @@ export class CustomTableOptions{
     isPagination : boolean = true;
     isItemsPerPage : boolean = true;
 }
+export class RowColorOptions{
+    isDisabled : boolean = true;
+    colName : string = "";
+    colorDetails : { colVal : string, color : string}[] = []; 
+}
 export interface RowOptions{
     label: string;
     actions: RowOptionsEnum;
