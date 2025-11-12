@@ -22,7 +22,7 @@ export class ProductAddEditComponent {
 
     var signalData = this.popupService.popupState();
     this.productData = signalData.popupChildData;
-    if (this.productData.productCode === undefined || this.productData.productCode === 0) {
+    if (this.productData.productCode === undefined || this.productData.productCode.length <= 0) {
       this.loading = false;
     }
     this.form = this.fb.group({
@@ -97,7 +97,7 @@ export class ProductAddEditComponent {
     if (file) {
       formData.append('ProductLogo', file);
     }
-    if (this.productData.productCode > 0) {
+    if (this.productData.productCode.length > 0) {
       formData.append('ProductCode', this.productData.productCode.toString());
       this.productService.editProduct(formData).subscribe({
         next: (response) => {

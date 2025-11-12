@@ -1,5 +1,5 @@
 export class VCustomer {
-    customerCode : number = 0;
+    customerCode : string = ""; 
     customerName : string = ""; 
     customerAddress : string = ""; 
     customerEmail : string = ""; 

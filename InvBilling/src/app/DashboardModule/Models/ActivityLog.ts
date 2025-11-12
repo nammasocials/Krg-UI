@@ -2,7 +2,7 @@ export class VactivityLog
 {
     activityId : number = 0;
     entityType : string = "";
-    entityId : number = 0;
+    entityId : string = ""; 
     actionType : string = "";
     description : string = "";
     createdBy : string = "";

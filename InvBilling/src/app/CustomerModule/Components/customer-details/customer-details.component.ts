@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 export class CustomerDetailsComponent {
   logoLoading: boolean = true;
   customerDetailsLoading: boolean = true;
-  customerId: number = 0;
+  customerId: string = "";
   customerImageUrl: string | null = null;
   customerDetails: VCustomer = new VCustomer();
 
@@ -32,7 +32,7 @@ export class CustomerDetailsComponent {
     } else {
       this.fetchCustomerData();
     }
-    this.customerId = idParam !== null ? Number(idParam) : 0;
+    this.customerId = idParam !== null ? idParam.toString() : "";
     this.fetchCustomerImageData();
   }
 

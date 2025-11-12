@@ -25,9 +25,9 @@ export class ProductService {
     const url = `/${Constant.apiName}/Product/EditProduct`;
     return this.http.post<ApiResponse<VProduct>>(url, product);
   }
-  deleteProduct(id: number): Observable<ApiResponse<boolean>> {
+  deleteProduct(productCode: string): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(
-      `/${Constant.apiName}/Product/DeleteProduct/${id}`
+      `/${Constant.apiName}/Product/DeleteProduct/${productCode}`
     );
   }
 }

@@ -1,5 +1,5 @@
 export class VProduct {
-    productCode: number = 0;
+    productCode: string = ""; 
     productName: string = "";
     stockCount: number = 0;
     unitName: string = "";

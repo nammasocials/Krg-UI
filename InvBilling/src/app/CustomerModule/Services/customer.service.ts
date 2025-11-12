@@ -31,18 +31,18 @@ export class CustomerService {
     const url = `/${Constant.apiName}/Customer/EditCustomer`;
     return this.http.post<ApiResponse<VCustomer>>(url, customer);
   }
-  fetchCustomerImage(customerCode: number): Observable<string> {
+  fetchCustomerImage(customerCode: string): Observable<string> {
     return this.http
       .get(`/${Constant.apiName}/Customer/getCustomerPhoto/${customerCode}`, { responseType: 'blob' })
       .pipe(map(blob => URL.createObjectURL(blob)));
   }
-  fetchCustomerDetails(customerCode: number): Observable<ApiResponse<VCustomer>> {
+  fetchCustomerDetails(customerCode: string): Observable<ApiResponse<VCustomer>> {
     const url = `/${Constant.apiName}/Customer/getAllCustomerDetails/${customerCode}`;
     return this.http.get<ApiResponse<VCustomer>>(url);
   }
-  deleteCustomer(id: number): Observable<ApiResponse<boolean>> {
+  deleteCustomer(customerCode: string): Observable<ApiResponse<boolean>> {
     return this.http.delete<ApiResponse<boolean>>(
-      `/${Constant.apiName}/Customer/DeleteCustomer/${id}`
+      `/${Constant.apiName}/Customer/DeleteCustomer/${customerCode}`
     );
   }
 

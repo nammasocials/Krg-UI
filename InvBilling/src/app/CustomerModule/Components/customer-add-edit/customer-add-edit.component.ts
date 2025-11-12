@@ -22,7 +22,7 @@ export class CustomerAddEditComponent {
 
     var signalData = this.popupService.popupState();
     this.customerData = signalData.popupChildData;
-    if (this.customerData.customerCode === undefined || this.customerData.customerCode === 0) {
+    if (this.customerData.customerCode === undefined || this.customerData?.customerCode?.length > 0) {
       this.loading = false;
     }
     this.form = this.fb.group({
@@ -107,7 +107,7 @@ export class CustomerAddEditComponent {
     if (file) {
       formData.append('CompanyLogo', file);
     }
-    if (this.customerData.customerCode > 0) {
+    if (this.customerData?.customerCode?.length > 0) {
       formData.append('CustomerCode', this.customerData.customerCode.toString());
       this.customerService.editCustomer(formData).subscribe({
         next: (response) => {
