@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { VProduct } from '../../Models/VProduct';
+import { VProduct, VProductInput } from '../../Models/VProduct';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { ProductService } from '../../Services/product.service';
 import { imageFileValidator } from '../../../shared/Service/custom-validators.service';
 import { toast } from 'ngx-sonner';
+import { VConstant } from '../../../shared/Models/commonModels';
+import { CommonApiService } from '../../../shared/Service/common-api.service';
 
 @Component({
   selector: 'app-product-add-edit',
@@ -17,19 +19,24 @@ import { toast } from 'ngx-sonner';
 export class ProductAddEditComponent {
   form: FormGroup;
   loading = true;
-  productData: VProduct = new VProduct();
-  constructor(private fb: FormBuilder, private popupService: PopupService, private productService: ProductService) {
+  unitListLoading = true;
+  productData: VProductInput = new VProductInput();
+  productUnitLists: VConstant[] = [];
+  constructor(private fb: FormBuilder, private popupService: PopupService,
+    private productService: ProductService, private commonService: CommonApiService) {
 
     var signalData = this.popupService.popupState();
     this.productData = signalData.popupChildData;
+
     if (this.productData.productCode === undefined || this.productData.productCode.length <= 0) {
       this.loading = false;
     }
+    this.fetchUnitList();
     this.form = this.fb.group({
       productLogo: [null, [imageFileValidator(5)]],
       productName: [signalData.popupChildData ? this.productData.productName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
-      stockCount: [signalData.popupChildData ? this.productData.stockCount : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      unitName: [signalData.popupChildData ? this.productData.unitName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
+      currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      unitType: [signalData.popupChildData ? this.productData.unitType : "", [Validators.required, Validators.min(1)]],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
     });
     effect(() => {
@@ -54,21 +61,35 @@ export class ProductAddEditComponent {
       }, 2000); // 3 seconds
     }
   }
-
+  
   get productName() {
     return this.form.get('productName');
   }
-  get stockCount() {
-    return this.form.get('stockCount');
+  get currentStock() {
+    return this.form.get('currentStock');
   }
-  get unitName() {
-    return this.form.get('unitName');
+  get unitType() {
+    return this.form.get('unitType');
   }
   get unitCost() {
     return this.form.get('unitCost');
   }
   get productLogo() {
     return this.form.get('productLogo');
+  }
+
+  fetchUnitList() {
+    this.unitListLoading = true;
+    this.commonService.fetchProductUnitLists().subscribe({
+      next: (response) => {
+        this.unitListLoading = false;
+        this.productUnitLists = response.data;
+      },
+      error: (error) => {
+        this.unitListLoading = false;
+        toast.error('Error fetching unit types!');
+      }
+    });
   }
 
   onFileChange(event: any) {
@@ -83,13 +104,13 @@ export class ProductAddEditComponent {
       return;
     }
 
-    const product: VProduct = this.form.value; // ✅ your object for internal use
+    const product: VProductInput = this.form.value; // ✅ your object for internal use
 
     const formData = new FormData();
 
     formData.append('ProductName', product.productName);
-    formData.append('StockCount', product.stockCount.toString());
-    formData.append('UnitName', product.unitName);
+    formData.append('CurrentStock', product.currentStock.toString());
+    formData.append('UnitType', product.unitType.toString());
     formData.append('UnitCost', product.unitCost.toString());
 
     // ✅ Add file only if exists
@@ -97,7 +118,7 @@ export class ProductAddEditComponent {
     if (file) {
       formData.append('ProductLogo', file);
     }
-    if (this.productData.productCode.length > 0) {
+    if (this.productData?.productCode?.length > 0) {
       formData.append('ProductCode', this.productData.productCode.toString());
       this.productService.editProduct(formData).subscribe({
         next: (response) => {

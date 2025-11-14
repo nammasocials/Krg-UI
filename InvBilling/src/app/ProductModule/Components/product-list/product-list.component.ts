@@ -21,9 +21,9 @@ export class ProductListComponent {
   productForDelete?: VProduct = new VProduct();
   headerData: customTableHeader[] = [
     { headerLabel: 'Product Name', field: 'productName' },
-    { headerLabel: 'Unit-Stock', field: 'unitName' },
-    { headerLabel: 'Stock', field: 'stockCount' },
-    { headerLabel: 'Unit-Cost', field: 'unitCost' },
+    { headerLabel: 'Available Stock', field: 'currentStock' },
+    { headerLabel: 'Unit Type', field: 'unitNameDetail' },
+    { headerLabel: 'Cost per Unit', field: 'unitCost' },
     { headerLabel: 'Options', field: 'options' },
   ];
   productData: VProduct[] = [];
