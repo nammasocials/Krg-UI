@@ -2,6 +2,7 @@ export class VProduct {
     productCode: string = "";
     productName: string = "";
     currentStock: number = 0;
+    unitType : number = 0;
     unitName: string = "";
     shortName: string = "";
     unitNameDetail: string = "";

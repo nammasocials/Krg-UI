@@ -22,6 +22,7 @@
                 <app-custom-table *ngIf="!loading" 
                 [data]="productData" 
                 [headerData]="headerData" 
+                [options]="options"
                 (OptionsClicked)="OpenOptions($event)">
                 </app-custom-table>
             </div>

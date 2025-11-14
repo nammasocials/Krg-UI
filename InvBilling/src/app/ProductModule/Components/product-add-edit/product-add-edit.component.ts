@@ -31,12 +31,13 @@ export class ProductAddEditComponent {
     if (this.productData.productCode === undefined || this.productData.productCode.length <= 0) {
       this.loading = false;
     }
+    this.unitListLoading = true;
     this.fetchUnitList();
     this.form = this.fb.group({
       productLogo: [null, [imageFileValidator(5)]],
       productName: [signalData.popupChildData ? this.productData.productName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      unitType: [signalData.popupChildData ? this.productData.unitType : "", [Validators.required, Validators.min(1)]],
+      unitType: [signalData.popupChildData ? this.productData.unitType : 0, [Validators.required, Validators.min(1)]],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
     });
     effect(() => {

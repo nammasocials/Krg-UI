@@ -1,7 +1,7 @@
 import { Component, effect } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { VProduct } from '../../Models/VProduct';
-import { customTableHeader, customTableOptionsEmitter, RowOptionsEnum } from '../../../shared/Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
 import { ProductService } from '../../Services/product.service';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { firstValueFrom, switchMap, timer } from 'rxjs';
@@ -26,100 +26,106 @@ export class ProductListComponent {
     { headerLabel: 'Cost per Unit', field: 'unitCost' },
     { headerLabel: 'Options', field: 'options' },
   ];
+  options: RowOptions[] = [
+    { label: "View", actions: RowOptionsEnum.View, theme: "blue" },
+    { label: "Add Stock", actions: RowOptionsEnum.AddChild, theme: "purple" },
+    { label: "Edit", actions: RowOptionsEnum.Edit, theme: "amber" },
+    { label: "Delete", actions: RowOptionsEnum.Delete, theme: "red" }
+  ]
   productData: VProduct[] = [];
 
   constructor(private productService: ProductService, private popupService: PopupService) {
-      this.fetchProducts();
-      effect(() => {
-        const state = this.popupService.popupState();
-  
-        if (state.submitPopup === false) {
-          this.fetchProducts();
-        }
-        if (state.isConfirmed === true) {
-          this.productForDelete = state.popupChildData;
-          this.onDeleteProductAsync();
-        }
-        else {
-          this.productForDelete = undefined;
-        }
-      });
-    }
-  
-  
-    fetchProducts() {
-      this.loading = true;
-      timer(5000)
-        .pipe(switchMap(() => this.productService.fetchProductLists()))
-        .subscribe({
-          next: (response) => {
-            this.productData = response.data;
-            console.log(this.productData);
-            this.loading = false;
-          },
-        });
-    }
-    OpenOptions(action: customTableOptionsEmitter) {
-      if (action.type === RowOptionsEnum.View) {
-  
-      }
-      if (action.type === RowOptionsEnum.Delete) {
-        this.DeleteProductPopup(action.data);
-      }
-      if (action.type === RowOptionsEnum.Edit) {
-        this.EditProductPopup(action.data);
-      }
-    }
-    AddProductPopup() {
-      this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '60%');
-    }
-  
-    EditProductPopup(selectedProduct: VProduct) {
-      this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productCode}`, 'Save', '60%');
-    }
-  
-    ViewProductPopup() {
-      //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
-    }
-    DeleteProductPopup(selectedProduct: VProduct) {
-      this.popupService.popupState.set({
-        showPopup: true,
-        popupChildData : selectedProduct,
-        popupTitle: 'Confrimation',
-        popupMessage: `Are you sure you want to delete this customer - ${selectedProduct.productName} ? This action cannot be undone.`,
-        popupFooterType: 'confirm',
-        popupWidth: '35%',
-      });
-    }
-    async onDeleteProductAsync() {
-      try {
-        if (this.productForDelete) {
-          const res = await firstValueFrom(this.productService.deleteProduct(this.productForDelete?.productCode));
-  
-          if (res.code === 200) {
-            this.popupService.popupState.set({
-              showPopup: true,
-              popupTitle: 'Information',
-              popupMessage: `Record for - ${this.productForDelete.productName} deleted successfully`,
-              popupFooterType: 'ok',
-              popupWidth: '35%',
-            });
-          } else {
-            this.popupService.popupState.set({
-              showPopup: true,
-              popupTitle: 'Error',
-              popupMessage: `unable to delete customer details for - ${this.productForDelete.productName}`,
-              popupFooterType: 'ok',
-              popupWidth: '35%',
-            });
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-      finally{
+    this.fetchProducts();
+    effect(() => {
+      const state = this.popupService.popupState();
+
+      if (state.submitPopup === false) {
         this.fetchProducts();
+      }
+      if (state.isConfirmed === true) {
+        this.productForDelete = state.popupChildData;
+        this.onDeleteProductAsync();
+      }
+      else {
         this.productForDelete = undefined;
       }
+    });
+  }
+
+
+  fetchProducts() {
+    this.loading = true;
+    timer(5000)
+      .pipe(switchMap(() => this.productService.fetchProductLists()))
+      .subscribe({
+        next: (response) => {
+          this.productData = response.data;
+          console.log(this.productData);
+          this.loading = false;
+        },
+      });
+  }
+  OpenOptions(action: customTableOptionsEmitter) {
+    if (action.type === RowOptionsEnum.View) {
+
     }
+    if (action.type === RowOptionsEnum.Delete) {
+      this.DeleteProductPopup(action.data);
+    }
+    if (action.type === RowOptionsEnum.Edit) {
+      this.EditProductPopup(action.data);
+    }
+  }
+  AddProductPopup() {
+    this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '60%');
+  }
+
+  EditProductPopup(selectedProduct: VProduct) {
+    this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productName}`, 'Save', '60%');
+  }
+
+  ViewProductPopup() {
+    //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
+  }
+  DeleteProductPopup(selectedProduct: VProduct) {
+    this.popupService.popupState.set({
+      showPopup: true,
+      popupChildData: selectedProduct,
+      popupTitle: 'Confrimation',
+      popupMessage: `Are you sure you want to delete this customer - ${selectedProduct.productName} ? This action cannot be undone.`,
+      popupFooterType: 'confirm',
+      popupWidth: '35%',
+    });
+  }
+  async onDeleteProductAsync() {
+    try {
+      if (this.productForDelete) {
+        const res = await firstValueFrom(this.productService.deleteProduct(this.productForDelete?.productCode));
+
+        if (res.code === 200) {
+          this.popupService.popupState.set({
+            showPopup: true,
+            popupTitle: 'Information',
+            popupMessage: `Record for - ${this.productForDelete.productName} deleted successfully`,
+            popupFooterType: 'ok',
+            popupWidth: '35%',
+          });
+        } else {
+          this.popupService.popupState.set({
+            showPopup: true,
+            popupTitle: 'Error',
+            popupMessage: `unable to delete customer details for - ${this.productForDelete.productName}`,
+            popupFooterType: 'ok',
+            popupWidth: '35%',
+          });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    finally {
+      this.fetchProducts();
+      this.productForDelete = undefined;
+    }
+  }
 }

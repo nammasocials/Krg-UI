@@ -188,7 +188,6 @@ export class CustomTableComponent implements AfterViewInit {
   ////////////////////////////// Data Functions ////////////////////////////////////////////
   getRowColor(colValue : any) : string{
     const color = "gray";
-    console.log(this.RowColors.isDisabled);
     if(!this.RowColors.isDisabled){
       const colorList = this.RowColors.colorDetails;
       const rowColor = colorList.filter(C => C.colVal === colValue[this.RowColors.colName]);

@@ -27,6 +27,7 @@ export interface customTableOptionsEmitter{
 }
 export enum RowOptionsEnum {
   View = 'View',
+  AddChild = 'AddChild',
   Edit = 'Edit',
   Delete = 'Delete'
 }
