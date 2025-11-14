@@ -7,6 +7,7 @@ import { ProductListComponent } from './ProductModule/Components/product-list/pr
 import { CustomerListComponent } from './CustomerModule/Components/customer-list/customer-list.component';
 import { InvoiceListComponent } from './InvoiceModule/Components/invoice-list/invoice-list.component';
 import { CustomerDetailsComponent } from './CustomerModule/Components/customer-details/customer-details.component';
+import { ProductDetailsComponent } from './ProductModule/Components/product-details/product-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' }, // default route
@@ -21,10 +22,11 @@ export const routes: Routes = [
 
       // Customer routes
       { path: 'customer', component: CustomerListComponent }, // List page
-      { path: 'customer/:id', component: CustomerDetailsComponent }, // Detail pa
+      { path: 'customer/:id', component: CustomerDetailsComponent }, // Detail page
 
       // Product routes
       { path: 'product', component: ProductListComponent },
+      { path: 'product/:id', component: ProductDetailsComponent }, // Detail page
 
       // Invoice routes
       { path: 'invoice', component: InvoiceListComponent },

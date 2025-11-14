@@ -37,7 +37,7 @@ export class CustomerService {
       .pipe(map(blob => URL.createObjectURL(blob)));
   }
   fetchCustomerDetails(customerCode: string): Observable<ApiResponse<VCustomer>> {
-    const url = `/${Constant.apiName}/Customer/getAllCustomerDetails/${customerCode}`;
+    const url = `/${Constant.apiName}/Customer/getCustomerDetails/${customerCode}`;
     return this.http.get<ApiResponse<VCustomer>>(url);
   }
   deleteCustomer(customerCode: string): Observable<ApiResponse<boolean>> {

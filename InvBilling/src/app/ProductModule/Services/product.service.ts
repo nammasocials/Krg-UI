@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
 import { Constant } from '../../constants';
 import { VProduct } from '../Models/VProduct';
@@ -16,6 +16,15 @@ export class ProductService {
   fetchProductLists(): Observable<ApiResponse<VProduct[]>> {
     const url = `/${Constant.apiName}/Product/getAllProductList`;
     return this.http.get<ApiResponse<VProduct[]>>(url);
+  }
+  fetchProductImage(productCode: string): Observable<string> {
+    return this.http
+      .get(`/${Constant.apiName}/Product/getProductPhoto/${productCode}`, { responseType: 'blob' })
+      .pipe(map(blob => URL.createObjectURL(blob)));
+  }
+  fetchProductDetails(productCode: string): Observable<ApiResponse<VProduct>> {
+    const url = `/${Constant.apiName}/Product/getProductDetails/${productCode}`;
+    return this.http.get<ApiResponse<VProduct>>(url);
   }
   addProduct(product: FormData): Observable<ApiResponse<VProduct>> {
     const url = `/${Constant.apiName}/Product/AddProduct`;
