@@ -1,5 +1,5 @@
 import { Component, effect } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { VProduct } from '../../Models/VProduct';
 import { customTableHeader, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
 import { ProductService } from '../../Services/product.service';
@@ -34,7 +34,8 @@ export class ProductListComponent {
   ]
   productData: VProduct[] = [];
 
-  constructor(private productService: ProductService, private popupService: PopupService) {
+  constructor(private productService: ProductService,
+    private router: Router, private popupService: PopupService) {
     this.fetchProducts();
     effect(() => {
       const state = this.popupService.popupState();
@@ -67,7 +68,7 @@ export class ProductListComponent {
   }
   OpenOptions(action: customTableOptionsEmitter) {
     if (action.type === RowOptionsEnum.View) {
-
+      this.ViewProduct(action.data);
     }
     if (action.type === RowOptionsEnum.Delete) {
       this.DeleteProductPopup(action.data);
@@ -84,8 +85,8 @@ export class ProductListComponent {
     this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productName}`, 'Save', '60%');
   }
 
-  ViewProductPopup() {
-    //this.popupService.openComponentPopup(CustomerAddEditComponent, {}, 'Add Customer Details', 'Save', '80%');
+  ViewProduct(selectedProduct: VProduct) {
+    this.router.navigate([`/product/${selectedProduct.productCode}`], { state: { productDetails: selectedProduct } });
   }
   DeleteProductPopup(selectedProduct: VProduct) {
     this.popupService.popupState.set({
