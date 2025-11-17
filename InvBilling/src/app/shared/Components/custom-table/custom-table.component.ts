@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { customTableHeader, CustomTableOptions, customTableOptionsEmitter, RowColorOptions, RowOptions, RowOptionsData, RowOptionsEnum } from '../../Models/custom-table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -29,7 +29,7 @@ import { NgZone } from '@angular/core';
 })
 export class CustomTableComponent implements AfterViewInit {
   @Input() data: any[] = [];
-  @Input() tableOptions : CustomTableOptions = new CustomTableOptions();
+  @Input() tableOptions: CustomTableOptions = new CustomTableOptions();
   filteredData: any[] = [];
   mobileData: any[] = [];
   @Input() headerData: customTableHeader[] = [];
@@ -70,7 +70,14 @@ export class CustomTableComponent implements AfterViewInit {
       this.refreshTable();
     });
   }
-
+  applyPipe(value: any, pipeName?: string): any {
+    switch (pipeName) {
+      case 'titlecase': return new TitleCasePipe().transform(value);
+      case 'currency': return new CurrencyPipe('en').transform(value);
+      case 'date': return new DatePipe('en').transform(value, 'mediumDate');
+      default: return value;
+    }
+  }
   ngAfterViewInit() {
     if (this.sort) {
       this.dataSource.sort = this.sort;
@@ -186,9 +193,9 @@ export class CustomTableComponent implements AfterViewInit {
 
 
   ////////////////////////////// Data Functions ////////////////////////////////////////////
-  getRowColor(colValue : any) : string{
+  getRowColor(colValue: any): string {
     const color = "gray";
-    if(!this.RowColors.isDisabled){
+    if (!this.RowColors.isDisabled) {
       const colorList = this.RowColors.colorDetails;
       const rowColor = colorList.filter(C => C.colVal === colValue[this.RowColors.colName]);
       console.log(rowColor[0].color);
@@ -203,4 +210,9 @@ export class CustomTableComponent implements AfterViewInit {
     }
     this.OptionsClicked.emit(emittedData);
   }
+
 }
+function applyPipe(value: any, any: any, arg2: any) {
+  throw new Error('Function not implemented.');
+}
+

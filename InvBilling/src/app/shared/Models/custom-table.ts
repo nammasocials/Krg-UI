@@ -1,6 +1,7 @@
 export interface customTableHeader{
     headerLabel: string;
     field: string;
+    fieldPipe?: string;
 }
 export class CustomTableOptions{
     isSearch : boolean = true;

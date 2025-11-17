@@ -91,7 +91,7 @@
                             {{ header.headerLabel }}
                         </th>
                         <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-{{getRowColor(element)}}-700">
-                            {{ element[header.field] }}
+                            {{ applyPipe(element[header.field], header.fieldPipe) }}
                         </td>
                     </ng-container>
                     <ng-container *ngIf="header?.field === 'options'">

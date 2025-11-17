@@ -24,7 +24,3 @@ export class VProductInput {
     unitType : number = 0;
     unitCost : number = 0;
 }
-export class VProductAddStock {
-    productCode: string = "";
-    quantity : number = 0;
-}

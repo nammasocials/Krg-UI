@@ -1,6 +1,7 @@
 import { Component, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { VProductAddStock, VProductInput } from '../../Models/VProduct';
+import { VProductInput } from '../../Models/VProduct';
+import { VProductAddStock } from '../../Models/VProductStock';
 import { ProductService } from '../../Services/product.service';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { CommonModule } from '@angular/common';

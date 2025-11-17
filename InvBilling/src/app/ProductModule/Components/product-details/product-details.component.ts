@@ -5,20 +5,32 @@ import { ProductService } from '../../Services/product.service';
 import { switchMap, timer } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { VProductStockHistory } from '../../Models/VProductStock';
+import { customTableHeader, RowOptions } from '../../../shared/Models/custom-table';
+import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule,CustomTableComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
   logoLoading: boolean = true;
   productDetailsLoading: boolean = true;
+  productHistoryLoading: boolean = true;
   productId: string = "";
   productImageUrl: string | null = null;
   productDetails: VProduct = new VProduct();
+  productHistory: VProductStockHistory[] = [];
+  productHistoryHeaderData: customTableHeader[] = [
+    { headerLabel: 'Product Name', field: 'productName' },
+    { headerLabel: 'Transaction Type', field: 'transactionType' },
+    { headerLabel: 'Quantity', field: 'stockDisplay' },
+    { headerLabel: 'Date', field: 'createdOn', fieldPipe: 'date'},
+  ];
+  productHistoryOptions: RowOptions[] = []
 
   constructor(private router: Router, private route: ActivatedRoute,
     private productService: ProductService
@@ -34,6 +46,7 @@ export class ProductDetailsComponent {
     }
     this.productId = idParam !== null ? idParam.toString() : "";
     this.fetchProductImageData();
+    this.fetchProductHistory();
   }
 
 
@@ -46,6 +59,19 @@ export class ProductDetailsComponent {
           next: (response) => {
             this.productImageUrl = response;
             this.logoLoading = false;
+          },
+        });
+    }
+  }
+  fetchProductHistory() {
+    this.productHistoryLoading = true;
+    if (this.productId != null) {
+      timer(1000)
+        .pipe(switchMap(() => this.productService.fetchStockHistory(this.productId)))
+        .subscribe({
+          next: (response) => {
+            this.productHistory = response.data;
+            this.productHistoryLoading = false;
           },
         });
     }
