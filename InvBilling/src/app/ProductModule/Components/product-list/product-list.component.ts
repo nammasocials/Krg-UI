@@ -8,6 +8,7 @@ import { firstValueFrom, switchMap, timer } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 import { ProductAddEditComponent } from '../product-add-edit/product-add-edit.component';
+import { ProductAddStockComponent } from '../product-add-stock/product-add-stock.component';
 
 @Component({
   selector: 'app-product-list',
@@ -56,7 +57,7 @@ export class ProductListComponent {
 
   fetchProducts() {
     this.loading = true;
-    timer(5000)
+    timer(1000)
       .pipe(switchMap(() => this.productService.fetchProductLists()))
       .subscribe({
         next: (response) => {
@@ -70,6 +71,9 @@ export class ProductListComponent {
     if (action.type === RowOptionsEnum.View) {
       this.ViewProduct(action.data);
     }
+    if (action.type === RowOptionsEnum.AddChild) {
+      this.AddProductStockPopup(action.data);
+    }
     if (action.type === RowOptionsEnum.Delete) {
       this.DeleteProductPopup(action.data);
     }
@@ -79,6 +83,9 @@ export class ProductListComponent {
   }
   AddProductPopup() {
     this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '60%');
+  }
+  AddProductStockPopup(selectedProduct: VProduct) {
+    this.popupService.openComponentPopup(ProductAddStockComponent, selectedProduct, `Add Stock - ${selectedProduct.productName}`, 'Save', '60%');
   }
 
   EditProductPopup(selectedProduct: VProduct) {
