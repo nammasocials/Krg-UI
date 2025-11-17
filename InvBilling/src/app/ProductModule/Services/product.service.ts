@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
 import { Constant } from '../../constants';
-import { VProduct } from '../Models/VProduct';
+import { VProduct, VProductAddStock } from '../Models/VProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,10 @@ export class ProductService {
   addProduct(product: FormData): Observable<ApiResponse<VProduct>> {
     const url = `/${Constant.apiName}/Product/AddProduct`;
     return this.http.post<ApiResponse<VProduct>>(url, product);
+  }
+  addStock(product: FormData): Observable<ApiResponse<VProductAddStock>> {
+    const url = `/${Constant.apiName}/Product/AddStockEntry`;
+    return this.http.post<ApiResponse<VProductAddStock>>(url, product);
   }
   editProduct(product: FormData): Observable<ApiResponse<VProduct>> {
     const url = `/${Constant.apiName}/Product/EditProduct`;
