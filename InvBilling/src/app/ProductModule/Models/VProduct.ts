@@ -9,6 +9,7 @@ export class VProduct {
     pluralShortName: string = "";
     unitNameDetail: string = "";
     unitCost: number = 0;
+    hsncode : string = "";
     isActive : boolean = true;
     createdOn : string = "";
     createdBy : string = "";
@@ -23,4 +24,5 @@ export class VProductInput {
     currentStock : number = 0;
     unitType : number = 0;
     unitCost : number = 0;
+    hsncode : string = "";
 }

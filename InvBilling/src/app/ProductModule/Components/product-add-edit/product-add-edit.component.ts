@@ -36,6 +36,7 @@ export class ProductAddEditComponent {
     this.form = this.fb.group({
       productLogo: [null, [imageFileValidator(5)]],
       productName: [signalData.popupChildData ? this.productData.productName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
+      hsncode: [signalData.popupChildData ? this.productData.hsncode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
       unitType: [signalData.popupChildData ? this.productData.unitType : 0, [Validators.required, Validators.min(1)]],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
@@ -62,7 +63,7 @@ export class ProductAddEditComponent {
       }, 2000); // 3 seconds
     }
   }
-  
+
   get productName() {
     return this.form.get('productName');
   }
@@ -74,6 +75,9 @@ export class ProductAddEditComponent {
   }
   get unitCost() {
     return this.form.get('unitCost');
+  }
+  get hsncode() {
+    return this.form.get('hsncode');
   }
   get productLogo() {
     return this.form.get('productLogo');
@@ -112,6 +116,7 @@ export class ProductAddEditComponent {
     formData.append('ProductName', product.productName);
     formData.append('CurrentStock', product.currentStock.toString());
     formData.append('UnitType', product.unitType.toString());
+    formData.append('hsncode', product.hsncode.toString());
     formData.append('UnitCost', product.unitCost.toString());
 
     // ✅ Add file only if exists
