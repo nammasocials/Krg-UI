@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { VProductStockHistory } from '../../Models/VProductStock';
 import { customTableHeader, RowOptions } from '../../../shared/Models/custom-table';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
+import { PopupService } from '../../../shared/Service/popup.service';
+import { ProductAddStockComponent } from '../product-add-stock/product-add-stock.component';
 
 @Component({
   selector: 'app-product-details',
@@ -33,7 +35,7 @@ export class ProductDetailsComponent {
   productHistoryOptions: RowOptions[] = []
 
   constructor(private router: Router, private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService, private popupService: PopupService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     const nav = this.router.getCurrentNavigation();
@@ -88,6 +90,10 @@ export class ProductDetailsComponent {
           },
         });
     }
+  }
+
+  AddStock(){
+    this.popupService.openComponentPopup(ProductAddStockComponent, this.productDetails, `Add Stock - ${this.productDetails.productName}`, 'Save', '60%');
   }
 
   goBack(): void {
