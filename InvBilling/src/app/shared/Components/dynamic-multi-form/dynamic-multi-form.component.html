@@ -6,7 +6,7 @@
 
     <!-- Loop through FormArray controls -->
     <div *ngFor="let row of formArray.controls; let i = index" [formGroupName]="i"
-      class="p-4 border rounded-lg shadow bg-gray-50">
+      class="p-4 border rounded-lg shadow bg-gray-50 relative">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Render all controls dynamically -->
         <ng-container *ngFor="let c of controls">
@@ -58,14 +58,14 @@
         <!-- Remove Button -->
 
       </div>
-      <div class="flex justify-end mt-2">
-        <button type="button" (click)="removeRow(i)" *ngIf="formArray.length > 1" class="text-red-600 font-bold">
-          X
-        </button>
-      </div>
-<!-- 
+      <button type="button" (click)="removeRow(i)" *ngIf="formArray.length > 1"
+        class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center shadow hover:bg-red-700">
+        ✕
+      </button>
+    </div>
+    <!-- 
        Add Row 
       <button type="button" (click)="addRow()">+ Add</button> -->
 
-    </div>
   </div>
+</div>

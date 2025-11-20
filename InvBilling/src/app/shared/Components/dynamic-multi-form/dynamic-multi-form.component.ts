@@ -11,7 +11,7 @@ import { FormControlConfig } from '../../Models/dynamic-forms-structure';
   styleUrls: ['./dynamic-multi-form.component.css']
 })
 export class DynamicMultiFormComponent implements OnInit {
-
+  @Input() title: string = 'Dynamic Multi Form';
   @Input() controls: FormControlConfig[] = [];
   @Output() valueChange = new EventEmitter();
 

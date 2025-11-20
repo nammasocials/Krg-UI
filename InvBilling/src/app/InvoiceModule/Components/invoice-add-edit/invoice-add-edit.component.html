@@ -7,7 +7,17 @@
                 Add Product
             </button>
         </div>
-        <app-dynamic-multi-form #dynamicForm [controls]="formControlsConfig">
-        </app-dynamic-multi-form>
+
+    </div>
+    <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-blue-600 text-white font-semibold text-lg p-4">
+            Item Details
+        </div>
+        <div>
+            <app-dynamic-multi-form #dynamicForm [controls]="formControlsConfig" [title]="'Invoice Items'">
+            </app-dynamic-multi-form>
+        </div>
     </div>
 </router-outlet>
