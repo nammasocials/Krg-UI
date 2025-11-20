@@ -4,6 +4,7 @@ export class Vinvoice{
     customerName : string = "";
     totalCost : number = 0;
     gst : string = "";
+    isEwayBillAvailable : boolean = false;
     createdOn  : string = "";
     createdBy : string = "";
     modifiedOn : string = "";

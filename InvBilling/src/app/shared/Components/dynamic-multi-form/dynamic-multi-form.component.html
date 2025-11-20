@@ -1,0 +1,71 @@
+<!-- Wrap everything in a parent FormGroup -->
+<div [formGroup]="parentForm" class="bg-white rounded-lg shadow-xl w-full max-h-screen max-h-screen overflow-y-auto">
+
+  <!-- Bind FormArray -->
+  <div formArrayName="formArray" class="flex flex-col gap-6">
+
+    <!-- Loop through FormArray controls -->
+    <div *ngFor="let row of formArray.controls; let i = index" [formGroupName]="i"
+      class="p-4 border rounded-lg shadow bg-gray-50">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Render all controls dynamically -->
+        <ng-container *ngFor="let c of controls">
+          <div class="col-span-1">
+            <!-- SELECT -->
+            <ng-container *ngIf="c.type === 'select'">
+              <label [htmlFor]="c.name" class="block label font-medium text-gray-700 mb-2">{{ c.label }}
+                <span class="error-messages">*</span></label>
+              <select [id]="c.name" [name]="c.name" required [formControlName]="c.name" [ngClass]="{'border-red-500 focus:ring-red-500': row.get(c.name)?.invalid && (row.get(c.name)?.dirty 
+                     || row.get(c.name)?.touched),'border-gray-300 focus:ring-blue-500': !(row.get(c.name)?.invalid 
+                     && (row.get(c.name)?.dirty || row.get(c.name)?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
+                     focus:border-transparent transition duration-200">
+                <option value="0" [disabled]="true">-- Select --</option>
+                <option *ngFor="let opt of c.options" [value]="opt.id">{{opt.name}}</option>
+              </select>
+              <div *ngIf="row.get(c.name)?.touched && row.get(c.name)?.invalid" class="error-messages">
+                Please select valid Unit Type.
+              </div>
+            </ng-container>
+
+            <!-- NUMBER -->
+            <ng-container *ngIf="c.type === 'number'">
+              <label [htmlFor]="c.name" class="block label font-medium text-gray-700 mb-2">{{ c.label }}
+                <span class="error-messages">*</span></label>
+              <input [formControlName]="c.name" type="number" [id]="c.name" [name]="c.name" [ngClass]="{'border-red-500 focus:ring-red-500': row.get(c.name)?.invalid && (row.get(c.name)?.dirty 
+                     || row.get(c.name)?.touched),'border-gray-300 focus:ring-blue-500': !(row.get(c.name)?.invalid 
+                     && (row.get(c.name)?.dirty || row.get(c.name)?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
+                     focus:border-transparent transition duration-200">
+              <div *ngIf="row.get(c.name)?.touched && row.get(c.name)?.invalid" class="error-messages">
+                {{ c.errorMessage || 'Invalid format' }}
+              </div>
+            </ng-container>
+
+            <!-- TEXT WITH REGEX -->
+            <ng-container *ngIf="c.type === 'text'">
+              <label [htmlFor]="c.name" class="block label font-medium text-gray-700 mb-2">{{ c.label }}
+                <span class="error-messages">*</span></label>
+              <input [formControlName]="c.name" type="text" [id]="c.name" [name]="c.name" [ngClass]="{'border-red-500 focus:ring-red-500': row.get(c.name)?.invalid && (row.get(c.name)?.dirty 
+                     || row.get(c.name)?.touched),'border-gray-300 focus:ring-blue-500': !(row.get(c.name)?.invalid 
+                     && (row.get(c.name)?.dirty || row.get(c.name)?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
+                     focus:border-transparent transition duration-200">
+              <div *ngIf="row.get(c.name)?.touched && row.get(c.name)?.invalid" class="error-messages">
+                {{ c.errorMessage || 'Invalid format' }}
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <!-- Remove Button -->
+
+      </div>
+      <div class="flex justify-end mt-2">
+        <button type="button" (click)="removeRow(i)" *ngIf="formArray.length > 1" class="text-red-600 font-bold">
+          X
+        </button>
+      </div>
+
+      <!-- Add Row -->
+      <button type="button" (click)="addRow()">+ Add</button>
+
+    </div>
+  </div>
