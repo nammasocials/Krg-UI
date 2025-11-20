@@ -1,5 +1,5 @@
 import { Component, effect } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { Vinvoice } from '../../Models/Invoice';
 import { customTableHeader, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
@@ -31,7 +31,9 @@ export class InvoiceListComponent {
   ]
   invoiceList: Vinvoice[] = [];
 
-  constructor(private invoiceService: InvoiceServiceService, private popupService: PopupService) {
+  constructor(private invoiceService: InvoiceServiceService, private popupService: PopupService,
+    private router: Router,
+  ) {
     this.fetchInvoices();
     effect(() => {
       const state = this.popupService.popupState();
@@ -52,5 +54,8 @@ export class InvoiceListComponent {
           this.loading = false;
         },
       });
+  }
+  AddInvoice(){
+    this.router.navigate(['/new-invoice']);
   }
 }

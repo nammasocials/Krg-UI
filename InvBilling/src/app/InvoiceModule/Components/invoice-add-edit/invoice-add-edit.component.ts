@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { invoiceInput } from '../../Models/InvoiceInput';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
@@ -46,6 +46,7 @@ export class InvoiceAddEditComponent {
       errorMessage: 'Only alphanumeric values allowed'
     }
   ];
+  @ViewChild('dynamicForm') dynamicForm!: DynamicMultiFormComponent;
   form: FormGroup;
   loading = true;
   unitListLoading = true;
@@ -75,5 +76,7 @@ export class InvoiceAddEditComponent {
       currentStock: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
     });
   }
-
+  AddProduct() {
+    this.dynamicForm.addRow();
+  }
 }
