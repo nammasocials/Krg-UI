@@ -7,6 +7,7 @@ import { imageFileValidator } from '../../../shared/Service/custom-validators.se
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DynamicMultiFormComponent } from '../../../shared/Components/dynamic-multi-form/dynamic-multi-form.component';
 import { FormControlConfig } from '../../../shared/Models/dynamic-forms-structure';
+import { FORM_CONTROLS_CONFIG } from '../../Constants/form-control-config';
 
 @Component({
   selector: 'app-invoice-add-edit',
@@ -16,36 +17,9 @@ import { FormControlConfig } from '../../../shared/Models/dynamic-forms-structur
   styleUrl: './invoice-add-edit.component.css'
 })
 export class InvoiceAddEditComponent {
-  formControlsConfig: FormControlConfig[] = [
-    {
-      type: 'select',
-      name: 'product',
-      label: 'Product',
-      options: [
-        { id: 1, name: 'Tea' },
-        { id: 2, name: 'Coffee' }
-      ],
-      validators: [Validators.required]
-    },
-    {
-      type: 'number',
-      name: 'qty',
-      label: 'Quantity',
-      validators: [
-        Validators.required,
-        Validators.min(1)
-      ]
-    },
-    {
-      type: 'text',
-      name: 'remarks',
-      label: 'Remarks',
-      validators: [
-        Validators.pattern(/^[A-Za-z0-9 ]+$/)
-      ],
-      errorMessage: 'Only alphanumeric values allowed'
-    }
-  ];
+  addedInvoiceItems: number = 0;
+  addedInvoiceItemsWithError: Number = 0;
+  formControlsConfig: FormControlConfig[] = FORM_CONTROLS_CONFIG;
   @ViewChild('dynamicForm') dynamicForm!: DynamicMultiFormComponent;
   form: FormGroup;
   loading = true;
@@ -78,5 +52,11 @@ export class InvoiceAddEditComponent {
   }
   AddProduct() {
     this.dynamicForm.addRow();
+  }
+  onRowCountChange(count: number) {
+    this.addedInvoiceItems = count;
+  }
+  onInvalidRowCountChange(count: number) {
+    this.addedInvoiceItemsWithError = count;
   }
 }
