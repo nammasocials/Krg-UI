@@ -59,4 +59,18 @@ export class InvoiceAddEditComponent {
   onInvalidRowCountChange(count: number) {
     this.addedInvoiceItemsWithError = count;
   }
+  clearall(){
+    this.dynamicForm.clearAll();
+  }
+  onSave() {
+    const formState = this.dynamicForm.getFormState();
+
+    if (!formState.valid) {
+      console.log("Form invalid");
+      return;
+    }
+
+    console.log("Form Data:", formState.data);
+    // call API here
+  }
 }

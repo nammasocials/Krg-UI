@@ -11,6 +11,7 @@ import { FormControlConfig } from '../../Models/dynamic-forms-structure';
   styleUrls: ['./dynamic-multi-form.component.css']
 })
 export class DynamicMultiFormComponent implements OnInit {
+  @Output() formSubmit = new EventEmitter<{ data: any; valid: boolean }>();
   @Output() rowCountChange = new EventEmitter<number>();
   @Output() invalidRowCountChange = new EventEmitter<number>();
   @Input() title: string = 'Dynamic Multi Form';
@@ -22,11 +23,15 @@ export class DynamicMultiFormComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.clearAll();
+    this.formArray.valueChanges.subscribe(() => this.emitChanges());
+  }
+
+  clearAll() {
     this.parentForm = this.fb.group({
       formArray: this.fb.array([])
     });
     this.addRow(); // create first row
-    this.formArray.valueChanges.subscribe(() => this.emitChanges());
   }
 
   get formArray(): FormArray {
@@ -62,5 +67,14 @@ export class DynamicMultiFormComponent implements OnInit {
   }
   isRequired(c: FormControlConfig): boolean {
     return !!c.validators?.some(v => v === Validators.required);
+  }
+  getFormState() {
+    this.parentForm.markAllAsTouched();
+    this.parentForm.updateValueAndValidity();
+
+    return {
+      data: this.parentForm.getRawValue(),
+      valid: this.parentForm.valid
+    };
   }
 }
