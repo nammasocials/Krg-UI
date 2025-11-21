@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { invoiceInput } from '../../Models/InvoiceInput';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { CommonApiService } from '../../../shared/Service/common-api.service';
@@ -8,11 +8,12 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DynamicMultiFormComponent } from '../../../shared/Components/dynamic-multi-form/dynamic-multi-form.component';
 import { FormControlConfig } from '../../../shared/Models/dynamic-forms-structure';
 import { FORM_CONTROLS_CONFIG } from '../../Constants/form-control-config';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-invoice-add-edit',
   standalone: true,
-  imports: [RouterOutlet, DynamicMultiFormComponent],
+  imports: [RouterOutlet, DynamicMultiFormComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './invoice-add-edit.component.html',
   styleUrl: './invoice-add-edit.component.css'
 })
@@ -23,7 +24,6 @@ export class InvoiceAddEditComponent {
   @ViewChild('dynamicForm') dynamicForm!: DynamicMultiFormComponent;
   form: FormGroup;
   loading = true;
-  unitListLoading = true;
   invoiceFormData: invoiceInput = new invoiceInput();
   invoiceCode: string = "";
 
@@ -42,14 +42,31 @@ export class InvoiceAddEditComponent {
         //this.fetchProductData();
       }
     }
-
     this.form = this.fb.group({
       EWayBillLogo: [null, [imageFileValidator(5)]],
       invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
-      currentStock: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
     });
   }
+  ngAfterViewInit() {
+    if (this.loading) {
+      setTimeout(() => {
+        this.loading = false;
+      }, 2000); // 3 seconds
+    }
+  }
+  get invoiceNo() {
+    return this.form.get('invoiceNo');
+  }
+  get customerCode() {
+    return this.form.get('customerCode');
+  }
+  get isEwayBillAvailable() {
+    return this.form.get('isEwayBillAvailable');
+  }
+
+
   AddProduct() {
     this.dynamicForm.addRow();
   }
@@ -59,7 +76,7 @@ export class InvoiceAddEditComponent {
   onInvalidRowCountChange(count: number) {
     this.addedInvoiceItemsWithError = count;
   }
-  clearall(){
+  clearall() {
     this.dynamicForm.clearAll();
   }
   onSave() {
@@ -72,5 +89,9 @@ export class InvoiceAddEditComponent {
 
     console.log("Form Data:", formState.data);
     // call API here
+  }
+
+  async fetchCustomerData(){
+    
   }
 }

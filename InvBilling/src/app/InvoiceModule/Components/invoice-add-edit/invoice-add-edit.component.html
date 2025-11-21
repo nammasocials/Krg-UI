@@ -7,6 +7,35 @@
                 Back To Invoices
             </button>
         </div>
+        <div class="bg-white rounded-lg shadow-xl w-full max-h-screen max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <form [formGroup]="form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div *ngIf="loading" class="p-4 space-y-4">
+                            <div class="animate-pulse space-y-2">
+                                <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                        </div>
+                        <div *ngIf="!loading">
+                            <label for="invoiceNo" class="block label font-medium text-gray-700 mb-2">Invoice No.
+                                <span class="error-messages">*</span></label>
+                            <input formControlName="invoiceNo" type="text" id="invoiceNo" name="invoiceNo" required
+                                placeholder="Invoice No" [ngClass]="{'border-red-500 focus:ring-red-500': invoiceNo?.invalid 
+                                && (invoiceNo?.dirty 
+                                || invoiceNo?.touched),'border-gray-300 focus:ring-blue-500': !(invoiceNo?.invalid 
+                                && (invoiceNo?.dirty || invoiceNo?.touched))}" class="w-full px-4 py-3 border border-gray-300 
+                                rounded-lg focus:ring-2 focus:ring-blue-500 
+                                focus:border-transparent transition duration-200">
+                            <div *ngIf="invoiceNo?.touched && invoiceNo?.invalid" class="error-messages">
+                                Please enter valid invoice no.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
             <button (click)="AddProduct()"
                 class="w-full sm:w-auto bg-green-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-green-700 transition duration-200 font-medium text-sm md:text-base">
