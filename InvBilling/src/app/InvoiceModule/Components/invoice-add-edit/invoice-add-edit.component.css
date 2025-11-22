@@ -1,0 +1,4 @@
+.mat-button-toggle-group.ng-invalid.ng-touched {
+  border: 1px solid #dc2626 !important; /* red */
+  border-radius: 8px;
+}

@@ -9,11 +9,15 @@ import { DynamicMultiFormComponent } from '../../../shared/Components/dynamic-mu
 import { FormControlConfig } from '../../../shared/Models/dynamic-forms-structure';
 import { FORM_CONTROLS_CONFIG } from '../../Constants/form-control-config';
 import { CommonModule } from '@angular/common';
+import { CustomerService } from '../../../CustomerModule/Services/customer.service';
+import { VCustomer } from '../../../CustomerModule/Models/VCustomer';
+import { switchMap, timer } from 'rxjs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-invoice-add-edit',
   standalone: true,
-  imports: [RouterOutlet, DynamicMultiFormComponent, ReactiveFormsModule, CommonModule],
+  imports: [RouterOutlet, DynamicMultiFormComponent, ReactiveFormsModule, CommonModule, MatButtonToggleModule],
   templateUrl: './invoice-add-edit.component.html',
   styleUrl: './invoice-add-edit.component.css'
 })
@@ -22,13 +26,16 @@ export class InvoiceAddEditComponent {
   addedInvoiceItemsWithError: Number = 0;
   formControlsConfig: FormControlConfig[] = FORM_CONTROLS_CONFIG;
   @ViewChild('dynamicForm') dynamicForm!: DynamicMultiFormComponent;
+  customerListLoading: boolean = true;
+  customerData: VCustomer[] = [];
   form: FormGroup;
   loading = true;
   invoiceFormData: invoiceInput = new invoiceInput();
   invoiceCode: string = "";
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute,
-    private invoiceService: InvoiceServiceService, private commonService: CommonApiService) {
+    private invoiceService: InvoiceServiceService, private commonService: CommonApiService,
+    private customerService: CustomerService) {
 
     const idParam = this.route.snapshot.paramMap.get('id');
     this.invoiceCode = idParam !== null ? idParam.toString() : "";
@@ -44,10 +51,11 @@ export class InvoiceAddEditComponent {
     }
     this.form = this.fb.group({
       EWayBillLogo: [null, [imageFileValidator(5)]],
-      invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
+      invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^(?=[A-Za-z][A-Za-z0-9@#$%^&*._-]*$)(?=(?:.*\d){4,})(?=(?:.*[A-Z]){2,})[A-Za-z][A-Za-z0-9@#$%^&*._-]+$/)]],
       customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
-      isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required]],
     });
+    this.fetchCustomerList();
   }
   ngAfterViewInit() {
     if (this.loading) {
@@ -71,11 +79,17 @@ export class InvoiceAddEditComponent {
     this.dynamicForm.addRow();
   }
   onRowCountChange(count: number) {
-    this.addedInvoiceItems = count;
+    setTimeout(() => {
+      this.addedInvoiceItems = count;
+    });
   }
-  onInvalidRowCountChange(count: number) {
-    this.addedInvoiceItemsWithError = count;
+
+  onInvalidRowCountChange(invalidCount: number) {
+    setTimeout(() => {
+      this.addedInvoiceItemsWithError = invalidCount;
+    });
   }
+
   clearall() {
     this.dynamicForm.clearAll();
   }
@@ -87,11 +101,20 @@ export class InvoiceAddEditComponent {
       return;
     }
 
-    console.log("Form Data:", formState.data);
+    console.log("Form Data:", formState.data.formArray);
     // call API here
   }
 
-  async fetchCustomerData(){
-    
+  async fetchCustomerList() {
+    this.customerListLoading = true;
+    timer(500)
+      .pipe(switchMap(() => this.customerService.fetchCustomerLists()))
+      .subscribe({
+        next: (response) => {
+          this.customerData = response.data;
+          console.log(this.customerData);
+          this.customerListLoading = false;
+        },
+      });
   }
 }
