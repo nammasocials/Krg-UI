@@ -55,7 +55,7 @@ export class InvoiceAddEditComponent {
       }
     }
     this.form = this.fb.group({
-      EWayBillQR: [null, [imageFileValidator(5)]],
+      EWayBillQR: [{value : null, disabled : true}, [imageFileValidator(5)]],
       invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^(?=(?:.*\d){2,})[A-Za-z0-9\-\[\]\(\)#]{3,24}$/)]],
       customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required]],
       isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : null, [Validators.required]],
@@ -108,6 +108,13 @@ export class InvoiceAddEditComponent {
 
   clearall() {
     this.dynamicForm.clearAll();
+  }
+  QuantityValidation(quantity : number, productCode : number) : boolean{
+    const selectedProduct = this.productList.filter(p => p.productCode)[0];
+    if(quantity > selectedProduct.currentStock){
+      return false;
+    }
+    return true;
   }
   onSave() {
     const formState = this.dynamicForm.getFormState();
