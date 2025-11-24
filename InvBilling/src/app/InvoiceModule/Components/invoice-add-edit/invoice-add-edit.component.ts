@@ -6,13 +6,15 @@ import { CommonApiService } from '../../../shared/Service/common-api.service';
 import { imageFileValidator } from '../../../shared/Service/custom-validators.service';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { DynamicMultiFormComponent } from '../../../shared/Components/dynamic-multi-form/dynamic-multi-form.component';
-import { FormControlConfig } from '../../../shared/Models/dynamic-forms-structure';
+import { FormControlConfig, SelectOption } from '../../../shared/Models/dynamic-forms-structure';
 import { FORM_CONTROLS_CONFIG } from '../../Constants/form-control-config';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../CustomerModule/Services/customer.service';
 import { VCustomer } from '../../../CustomerModule/Models/VCustomer';
 import { switchMap, timer } from 'rxjs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { VProduct } from '../../../ProductModule/Models/VProduct';
+import { ProductService } from '../../../ProductModule/Services/product.service';
 
 @Component({
   selector: 'app-invoice-add-edit',
@@ -27,7 +29,9 @@ export class InvoiceAddEditComponent {
   formControlsConfig: FormControlConfig[] = FORM_CONTROLS_CONFIG;
   @ViewChild('dynamicForm') dynamicForm!: DynamicMultiFormComponent;
   customerListLoading: boolean = true;
+  productsLoading: boolean = true;
   customerData: VCustomer[] = [];
+  productList: VProduct[] = [];
   form: FormGroup;
   loading = true;
   invoiceFormData: invoiceInput = new invoiceInput();
@@ -35,6 +39,7 @@ export class InvoiceAddEditComponent {
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute,
     private invoiceService: InvoiceServiceService, private commonService: CommonApiService,
+    private productService: ProductService,
     private customerService: CustomerService) {
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -50,12 +55,13 @@ export class InvoiceAddEditComponent {
       }
     }
     this.form = this.fb.group({
-      EWayBillLogo: [null, [imageFileValidator(5)]],
-      invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^(?=[A-Za-z][A-Za-z0-9@#$%^&*._-]*$)(?=(?:.*\d){4,})(?=(?:.*[A-Z]){2,})[A-Za-z][A-Za-z0-9@#$%^&*._-]+$/)]],
-      customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
-      isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : "", [Validators.required]],
+      EWayBillQR: [null, [imageFileValidator(5)]],
+      invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^(?=(?:.*\d){2,})[A-Za-z0-9\-\[\]\(\)#]{3,24}$/)]],
+      customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required]],
+      isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : null, [Validators.required]],
     });
     this.fetchCustomerList();
+    this.fetchProducts();
   }
   ngAfterViewInit() {
     if (this.loading) {
@@ -70,10 +76,20 @@ export class InvoiceAddEditComponent {
   get customerCode() {
     return this.form.get('customerCode');
   }
+  get EWayBillQR() {
+    return this.form.get('EWayBillQR');
+  }
   get isEwayBillAvailable() {
     return this.form.get('isEwayBillAvailable');
   }
 
+  EWayBillAvailabilityOnchange() {
+    const IsEWaybillAvailable = this.isEwayBillAvailable?.value;
+    this.EWayBillQR?.disable();
+    if (IsEWaybillAvailable) {
+      this.EWayBillQR?.enable();
+    }
+  }
 
   AddProduct() {
     this.dynamicForm.addRow();
@@ -112,9 +128,41 @@ export class InvoiceAddEditComponent {
       .subscribe({
         next: (response) => {
           this.customerData = response.data;
-          console.log(this.customerData);
           this.customerListLoading = false;
         },
       });
+  }
+  async fetchProducts() {
+    this.productsLoading = true;
+    timer(1000)
+      .pipe(switchMap(() => this.productService.fetchProductLists()))
+      .subscribe({
+        next: (response) => {
+          var productsSelection: SelectOption[] = [];
+          this.productList = response.data;
+          productsSelection = this.productList.map(p => ({
+            id: p.productCode,   // or p.productName or p.id depending on what you want
+            name: p.productName
+          }));
+          console.log(productsSelection);
+          this.productList = response.data;
+          this.formControlsConfig = this.formControlsConfig.map(control => {
+            if (control.type === 'select' && control.name === 'product') {
+              return {
+                ...control,                 // copy other fields
+                options: productsSelection  // updated value
+              };
+            }
+            return control;
+          });
+
+          this.productsLoading = false;
+        },
+      });
+  }
+  onFileChange(event: any) {
+    const file = event.target.files && event.target.files.length ? event.target.files[0] : null;
+    this.form.patchValue({ EWayBillLogo: file });
+    this.form.get('EWayBillQR')?.updateValueAndValidity();
   }
 }

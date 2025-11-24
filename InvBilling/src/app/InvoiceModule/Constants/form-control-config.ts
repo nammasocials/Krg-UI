@@ -7,8 +7,6 @@ export const FORM_CONTROLS_CONFIG: FormControlConfig[] = [
     name: 'product',
     label: 'Product',
     options: [
-      { id: 1, name: 'Tea' },
-      { id: 2, name: 'Coffee' }
     ],
     validators: [Validators.required]
   },
