@@ -17,7 +17,8 @@ export const FORM_CONTROLS_CONFIG: FormControlConfig[] = [
     validators: [
       Validators.required,
       Validators.min(1)
-    ]
+    ],
+    errorMessage : "Invalid Quantity / exceeds available stock"
   },
   {
     type: 'text',
