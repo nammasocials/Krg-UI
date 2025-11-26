@@ -63,7 +63,11 @@ export class DynamicMultiFormComponent implements OnInit {
 
     this.rowCountChange.emit(rows);
     this.invalidRowCountChange.emit(invalidRows);
-    this.valueChange.emit(this.formArray.value);
+    this.valueChange.emit({
+      form: this.formArray,         // or index, or unique id
+      value: this.formArray.value
+    });
+
   }
   isRequired(c: FormControlConfig): boolean {
     return !!c.validators?.some(v => v === Validators.required);

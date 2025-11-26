@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { invoiceInput } from '../../Models/InvoiceInput';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { CommonApiService } from '../../../shared/Service/common-api.service';
@@ -55,7 +55,7 @@ export class InvoiceAddEditComponent {
       }
     }
     this.form = this.fb.group({
-      EWayBillQR: [{value : null, disabled : true}, [imageFileValidator(5)]],
+      EWayBillQR: [{ value: null, disabled: true }, [imageFileValidator(5)]],
       invoiceNo: [this.invoiceFormData ? this.invoiceFormData.invoiceNo : "", [Validators.required, Validators.pattern(/^(?=(?:.*\d){2,})[A-Za-z0-9\-\[\]\(\)#]{3,24}$/)]],
       customerCode: [this.invoiceFormData ? this.invoiceFormData.customerCode : "", [Validators.required]],
       isEwayBillAvailable: [this.invoiceFormData ? this.invoiceFormData.isEwayBillAvailable : null, [Validators.required]],
@@ -99,6 +99,34 @@ export class InvoiceAddEditComponent {
       this.addedInvoiceItems = count;
     });
   }
+  valueChangeEvent(event: any) {
+    setTimeout(() => {
+      const formArray: FormArray = event.form;
+
+      formArray.controls.forEach((ctrl, index) => {
+        const row = ctrl as FormGroup;
+
+        const productId = row.get('product')?.value;
+        const qtyControl = row.get('qty');
+
+        if (!qtyControl) return;
+
+        // Fetch max from API or internal lookup
+        const maxValue = this.getMaxQty(productId);
+
+        qtyControl.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(maxValue)
+        ]);
+
+        qtyControl.updateValueAndValidity({ emitEvent: false });
+      });
+    });
+  }
+  getMaxQty(productId: string) {
+    return this.productList.filter(F => F.productCode === productId)[0].currentStock ?? 0;
+  }
 
   onInvalidRowCountChange(invalidCount: number) {
     setTimeout(() => {
@@ -108,13 +136,6 @@ export class InvoiceAddEditComponent {
 
   clearall() {
     this.dynamicForm.clearAll();
-  }
-  QuantityValidation(quantity : number, productCode : number) : boolean{
-    const selectedProduct = this.productList.filter(p => p.productCode)[0];
-    if(quantity > selectedProduct.currentStock){
-      return false;
-    }
-    return true;
   }
   onSave() {
     const formState = this.dynamicForm.getFormState();
@@ -151,7 +172,7 @@ export class InvoiceAddEditComponent {
             id: p.productCode,   // or p.productName or p.id depending on what you want
             name: p.productName
           }));
-          console.log(productsSelection);
+          console.log(this.productList);
           this.productList = response.data;
           this.formControlsConfig = this.formControlsConfig.map(control => {
             if (control.type === 'select' && control.name === 'product') {

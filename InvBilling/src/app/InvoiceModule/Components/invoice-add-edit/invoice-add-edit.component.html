@@ -130,7 +130,7 @@
                             </div>
                         </div>
                         <app-dynamic-multi-form *ngIf="!productsLoading" #dynamicForm [controls]="formControlsConfig" 
-                        [title]="'Invoice Items'"
+                        [title]="'Invoice Items'" (valueChange)="valueChangeEvent($event)"
                             (rowCountChange)="onRowCountChange($event)"
                             (invalidRowCountChange)="onInvalidRowCountChange($event)">
                         </app-dynamic-multi-form>
