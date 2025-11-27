@@ -26,6 +26,8 @@ export class ProductListComponent {
     { headerLabel: 'Available Stock', field: 'currentStock' },
     { headerLabel: 'Unit Type', field: 'unitNameDetail' },
     { headerLabel: 'Cost per Unit', field: 'unitCost' },
+    { headerLabel: 'Intra-State GST', field: 'intraStateTotal' },
+    { headerLabel: 'Inter-State GST', field: 'interStateTotal' },
     { headerLabel: 'Options', field: 'options' },
   ];
   options: RowOptions[] = [

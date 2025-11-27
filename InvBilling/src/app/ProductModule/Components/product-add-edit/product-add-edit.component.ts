@@ -40,6 +40,8 @@ export class ProductAddEditComponent {
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
       unitType: [signalData.popupChildData ? this.productData.unitType : 0, [Validators.required, Validators.min(1)]],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      centralGstPer : [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      stateGstPer : [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
     });
     effect(() => {
       const state = this.popupService.popupState();
@@ -75,6 +77,12 @@ export class ProductAddEditComponent {
   }
   get unitCost() {
     return this.form.get('unitCost');
+  }
+  get centralGstPer() {
+    return this.form.get('centralGstPer');
+  }
+  get stateGstPer() {
+    return this.form.get('stateGstPer');
   }
   get hsncode() {
     return this.form.get('hsncode');
@@ -115,9 +123,11 @@ export class ProductAddEditComponent {
 
     formData.append('ProductName', product.productName);
     formData.append('CurrentStock', product.currentStock.toString());
-    formData.append('UnitType', product.unitType.toString());
+    formData.append('unitType', product.unitType.toString());
     formData.append('hsncode', product.hsncode.toString());
-    formData.append('UnitCost', product.unitCost.toString());
+    formData.append('unitCost', product.unitCost.toString());
+    formData.append('centralGstPer', product.centralGstPer.toString());
+    formData.append('stateGstPer', product.stateGstPer.toString());
 
     // ✅ Add file only if exists
     const file = this.form.get('productLogo')?.value;

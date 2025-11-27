@@ -9,6 +9,10 @@ export class VProduct {
     pluralShortName: string = "";
     unitNameDetail: string = "";
     unitCost: number = 0;
+    centralGstPer : number = 0;
+    stateGstPer : number = 0;
+    intraStateTotal : number = 0;
+    interStateTotal : number = 0;
     hsncode : string = "";
     isActive : boolean = true;
     createdOn : string = "";
@@ -24,5 +28,7 @@ export class VProductInput {
     currentStock : number = 0;
     unitType : number = 0;
     unitCost : number = 0;
+    centralGstPer : number = 0;
+    stateGstPer : number = 0;
     hsncode : string = "";
 }
