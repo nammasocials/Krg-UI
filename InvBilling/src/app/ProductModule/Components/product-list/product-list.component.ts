@@ -85,14 +85,14 @@ export class ProductListComponent {
     }
   }
   AddProductPopup() {
-    this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '60%');
+    this.popupService.openComponentPopup(ProductAddEditComponent, {}, 'Add Product Details', 'Save', '70%');
   }
   AddProductStockPopup(selectedProduct: VProduct) {
     this.popupService.openComponentPopup(ProductAddStockComponent, selectedProduct, `Add Stock - ${selectedProduct.productName}`, 'Save', '60%');
   }
 
   EditProductPopup(selectedProduct: VProduct) {
-    this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productName}`, 'Save', '60%');
+    this.popupService.openComponentPopup(ProductAddEditComponent, selectedProduct, `Edit - ${selectedProduct.productName}`, 'Save', '70%');
   }
 
   ViewProduct(selectedProduct: VProduct) {

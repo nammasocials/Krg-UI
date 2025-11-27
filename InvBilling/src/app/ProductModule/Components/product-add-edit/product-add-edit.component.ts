@@ -40,8 +40,8 @@ export class ProductAddEditComponent {
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
       unitType: [signalData.popupChildData ? this.productData.unitType : 0, [Validators.required, Validators.min(1)]],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      centralGstPer : [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      stateGstPer : [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
+      centralGstPer : [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
+      stateGstPer : [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
     });
     effect(() => {
       const state = this.popupService.popupState();
