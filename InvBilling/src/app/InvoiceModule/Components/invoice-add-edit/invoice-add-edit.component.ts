@@ -131,8 +131,8 @@ export class InvoiceAddEditComponent {
     this.invoiceItems = formState.data.formArray;
     let invoiceItems : invoiceItems[] = formState.data.formArray;
     invoiceItems.splice(formIndex, 1);
-    const maxQty = this.productList.filter(F => F.productCode === productId)[0].currentStock ?? 0;
-    const addedQty = invoiceItems.filter(F => F.productCode === productId)[0].quantity ?? 0;
+    const maxQty = this.productList.filter(F => F.productCode === productId)[0]?.currentStock ?? 0;
+    const addedQty = invoiceItems.filter(F => F.productCode === productId)[0]?.quantity ?? 0;
     return Number(maxQty) - Number(addedQty);
   }
 
