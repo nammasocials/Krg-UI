@@ -126,10 +126,10 @@ export class InvoiceAddEditComponent {
       });
     });
   }
-  getMaxQty(productId: string, formIndex : any) {
+  getMaxQty(productId: string, formIndex: any) {
     const formState = this.dynamicForm.getFormState();
     this.invoiceItems = formState.data.formArray;
-    let invoiceItems : invoiceItems[] = formState.data.formArray;
+    let invoiceItems: invoiceItems[] = formState.data.formArray;
     invoiceItems.splice(formIndex, 1);
     const maxQty = this.productList.filter(F => F.productCode === productId)[0]?.currentStock ?? 0;
     const addedQty = invoiceItems.filter(F => F.productCode === productId)[0]?.quantity ?? 0;
@@ -145,12 +145,60 @@ export class InvoiceAddEditComponent {
   clearall() {
     this.dynamicForm.clearAll();
   }
-  onSave() {
+  async onSaveAsync() {
     const formState = this.dynamicForm.getFormState();
 
     if (!formState.valid) {
       console.log("Form invalid");
       return;
+    }
+
+    if (!this.form.valid) {
+      console.warn('Invalid controls:', this.getInvalidControls());
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const product: VProductInput = this.form.value; // ✅ your object for internal use
+
+    const formData = new FormData();
+
+    formData.append('ProductName', product.productName);
+    formData.append('CurrentStock', product.currentStock.toString());
+    formData.append('hsncode', product.hsncode.toString());
+    formData.append('unitCost', product.unitCost.toString());
+    formData.append('centralGstPer', product.centralGstPer.toString());
+    formData.append('stateGstPer', product.stateGstPer.toString());
+
+    // ✅ Add file only if exists
+    const file = this.form.get('productLogo')?.value;
+    if (file) {
+      formData.append('ProductLogo', file);
+    }
+    if (this.productData?.productCode?.length > 0) {
+      formData.append('ProductCode', this.productData.productCode.toString());
+      this.productService.editProduct(formData).subscribe({
+        next: (response) => {
+          toast.success('Product details updated successfully!');
+          this.popupService.updateSubmitFalse(true);
+        },
+        error: (error) => {
+          toast.error('Error Saving Product!');
+          this.popupService.updateSubmitFalse(false);
+        }
+      });
+    }
+    else {
+      this.productService.addProduct(formData).subscribe({
+        next: (response) => {
+          toast.success('Product saved successfully!');
+          this.popupService.updateSubmitFalse(true);
+        },
+        error: (error) => {
+          toast.error('Error Saving Product!');
+          this.popupService.updateSubmitFalse(false);
+        }
+      });
     }
 
     console.log("Form Data:", formState.data.formArray);
@@ -200,5 +248,15 @@ export class InvoiceAddEditComponent {
     const file = event.target.files && event.target.files.length ? event.target.files[0] : null;
     this.form.patchValue({ EWayBillLogo: file });
     this.form.get('EWayBillQR')?.updateValueAndValidity();
+  }
+    getInvalidControls() {
+    const invalid: string[] = [];
+    const controls = this.form.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
   }
 }
