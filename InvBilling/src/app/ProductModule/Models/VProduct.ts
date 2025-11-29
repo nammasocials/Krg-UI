@@ -2,12 +2,7 @@ export class VProduct {
     productCode: string = "";
     productName: string = "";
     currentStock: number = 0;
-    unitType : number = 0;
-    unitName: string = "";
     shortName: string = "";
-    pluralUnitName: string = "";
-    pluralShortName: string = "";
-    unitNameDetail: string = "";
     unitCost: number = 0;
     centralGstPer : number = 0;
     stateGstPer : number = 0;

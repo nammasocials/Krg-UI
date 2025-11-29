@@ -19,9 +19,7 @@ import { CommonApiService } from '../../../shared/Service/common-api.service';
 export class ProductAddEditComponent {
   form: FormGroup;
   loading = true;
-  unitListLoading = true;
   productData: VProductInput = new VProductInput();
-  productUnitLists: VConstant[] = [];
   constructor(private fb: FormBuilder, private popupService: PopupService,
     private productService: ProductService, private commonService: CommonApiService) {
 
@@ -31,14 +29,12 @@ export class ProductAddEditComponent {
     if (this.productData.productCode === undefined || this.productData.productCode.length <= 0) {
       this.loading = false;
     }
-    this.unitListLoading = true;
-    this.fetchUnitList();
     this.form = this.fb.group({
       productLogo: [null, [imageFileValidator(5)]],
       productName: [signalData.popupChildData ? this.productData.productName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       hsncode: [signalData.popupChildData ? this.productData.hsncode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      unitType: [signalData.popupChildData ? this.productData.unitType : 0, [Validators.required, Validators.min(1)]],
+      netCost: [{value : 0, disabled : true}],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
       centralGstPer : [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
       stateGstPer : [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
@@ -72,8 +68,8 @@ export class ProductAddEditComponent {
   get currentStock() {
     return this.form.get('currentStock');
   }
-  get unitType() {
-    return this.form.get('unitType');
+  get netCost() {
+    return this.form.get('netCost');
   }
   get unitCost() {
     return this.form.get('unitCost');
@@ -89,20 +85,6 @@ export class ProductAddEditComponent {
   }
   get productLogo() {
     return this.form.get('productLogo');
-  }
-
-  fetchUnitList() {
-    this.unitListLoading = true;
-    this.commonService.fetchProductUnitLists().subscribe({
-      next: (response) => {
-        this.unitListLoading = false;
-        this.productUnitLists = response.data;
-      },
-      error: (error) => {
-        this.unitListLoading = false;
-        toast.error('Error fetching unit types!');
-      }
-    });
   }
 
   onFileChange(event: any) {
@@ -123,7 +105,6 @@ export class ProductAddEditComponent {
 
     formData.append('ProductName', product.productName);
     formData.append('CurrentStock', product.currentStock.toString());
-    formData.append('unitType', product.unitType.toString());
     formData.append('hsncode', product.hsncode.toString());
     formData.append('unitCost', product.unitCost.toString());
     formData.append('centralGstPer', product.centralGstPer.toString());

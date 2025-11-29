@@ -29,7 +29,7 @@ export class ProductDetailsComponent {
   productHistoryHeaderData: customTableHeader[] = [
     { headerLabel: 'Product Name', field: 'productName' },
     { headerLabel: 'Transaction Type', field: 'transactionType' },
-    { headerLabel: 'Quantity', field: 'stockDisplay' },
+    { headerLabel: 'Quantity', field: 'quantity' },
     { headerLabel: 'Date', field: 'createdOn', fieldPipe: 'date'},
   ];
   productHistoryOptions: RowOptions[] = []

@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div *ngIf="!loading">
-                    <label for="stockCount" class="block label font-medium text-gray-700 mb-2">Stock
+                    <label for="stockCount" class="block label font-medium text-gray-700 mb-2">Available Stock
                         <span class="error-messages">*</span>
                     </label>
                     <input formControlName="currentStock" type="number" min="1" id="currentStock" name="currentStock"
@@ -64,25 +64,23 @@
                         Please enter number for available stock (greater than zero).
                     </div>
                 </div>
-                <div *ngIf="unitListLoading" class="p-4 space-y-4">
+                <div *ngIf="loading" class="p-4 space-y-4">
                     <div class="animate-pulse space-y-2">
                         <div class="h-4 bg-gray-300 rounded w-3/4"></div>
                         <div class="h-4 bg-gray-200 rounded w-1/2"></div>
                     </div>
                 </div>
-                <div *ngIf="!unitListLoading">
-                    <label for="unitType" class="block label font-medium text-gray-700 mb-2">Unit Type.
-                        <span class="error-messages">*</span></label>
-                    <select id="unitType" name="unitType" required formControlName="unitType" [ngClass]="{'border-red-500 focus:ring-red-500': unitType?.invalid && (unitType?.dirty 
-                     || unitType?.touched),'border-gray-300 focus:ring-blue-500': !(unitType?.invalid 
-                     && (unitType?.dirty || unitType?.touched))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
-                     focus:border-transparent transition duration-200">
-                        <option value="0" [disabled]="true">Select Unit Type</option>
-                        <option *ngFor="let units of productUnitLists" [value]="units.key">{{units.name}} (
-                            {{units.shName}} )</option>
-                    </select>
-                    <div *ngIf="unitType?.touched && unitType?.invalid" class="error-messages">
-                        Please select valid Unit Type.
+                <div *ngIf="!loading">
+                    <label for="productLogo" class="block label font-medium text-gray-700 mb-2">Product Logo</label>
+                    <input formControlName="productLogo" type="file" (change)="onFileChange($event)" id="productLogo"
+                        name="productLogo" placeholder="Product Logo" [ngClass]="{'border-red-500 focus:ring-red-500': productLogo?.invalid && (productLogo?.dirty),'border-gray-300 focus:ring-blue-500': !(productLogo?.invalid 
+                     && (productLogo?.dirty))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                     focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                     focus:border-transparent transition duration-200" accept="image/*">
+                    <div *ngIf="productLogo?.invalid" class="error-messages text-red-600 text-sm mt-1">
+                        <div *ngIf="productLogo?.errors?.['invalidFileType']">Only image files are allowed (jpg, png,
+                            webp...)</div>
+                        <div *ngIf="productLogo?.errors?.['fileTooLarge']">File size must be under 5 MB</div>
                     </div>
                 </div>
                 <div *ngIf="loading" class="p-4 space-y-4">
@@ -148,17 +146,12 @@
                     </div>
                 </div>
                 <div *ngIf="!loading">
-                    <label for="productLogo" class="block label font-medium text-gray-700 mb-2">Product Logo</label>
-                    <input formControlName="productLogo" type="file" (change)="onFileChange($event)" id="productLogo"
-                        name="productLogo" placeholder="Product Logo" [ngClass]="{'border-red-500 focus:ring-red-500': productLogo?.invalid && (productLogo?.dirty),'border-gray-300 focus:ring-blue-500': !(productLogo?.invalid 
-                     && (productLogo?.dirty))}" class="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                     focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                     focus:border-transparent transition duration-200" accept="image/*">
-                    <div *ngIf="productLogo?.invalid" class="error-messages text-red-600 text-sm mt-1">
-                        <div *ngIf="productLogo?.errors?.['invalidFileType']">Only image files are allowed (jpg, png,
-                            webp...)</div>
-                        <div *ngIf="productLogo?.errors?.['fileTooLarge']">File size must be under 5 MB</div>
-                    </div>
+                    <label for="netCost" class="block label font-medium text-gray-700 mb-2">Net Cost (₹)
+                    </label>
+                    <input formControlName="netCost" type="number" min="1" id="netCost" name="netCost"
+                        required placeholder="Stock Value" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 
+                     focus:border-transparent transition duration-200">
                 </div>
             </div>
         </form>
