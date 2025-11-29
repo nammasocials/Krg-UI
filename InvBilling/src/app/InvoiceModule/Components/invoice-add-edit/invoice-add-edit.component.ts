@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { invoiceInput } from '../../Models/InvoiceInput';
+import { invoiceInput, invoiceItems } from '../../Models/InvoiceInput';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { CommonApiService } from '../../../shared/Service/common-api.service';
 import { imageFileValidator } from '../../../shared/Service/custom-validators.service';
@@ -35,6 +35,7 @@ export class InvoiceAddEditComponent {
   form: FormGroup;
   loading = true;
   invoiceFormData: invoiceInput = new invoiceInput();
+  invoiceItems: invoiceItems[] = [];
   invoiceCode: string = "";
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute,
@@ -102,17 +103,18 @@ export class InvoiceAddEditComponent {
   valueChangeEvent(event: any) {
     setTimeout(() => {
       const formArray: FormArray = event.form;
-
       formArray.controls.forEach((ctrl, index) => {
         const row = ctrl as FormGroup;
 
-        const productId = row.get('product')?.value;
-        const qtyControl = row.get('qty');
+        const productId = row.get('productCode')?.value;
+        const qtyControl = row.get('quantity');
 
         if (!qtyControl) return;
 
+
+
         // Fetch max from API or internal lookup
-        const maxValue = this.getMaxQty(productId);
+        const maxValue = this.getMaxQty(productId, index);
 
         qtyControl.setValidators([
           Validators.required,
@@ -124,8 +126,14 @@ export class InvoiceAddEditComponent {
       });
     });
   }
-  getMaxQty(productId: string) {
-    return this.productList.filter(F => F.productCode === productId)[0].currentStock ?? 0;
+  getMaxQty(productId: string, formIndex : any) {
+    const formState = this.dynamicForm.getFormState();
+    this.invoiceItems = formState.data.formArray;
+    let invoiceItems : invoiceItems[] = formState.data.formArray;
+    invoiceItems.splice(formIndex, 1);
+    const maxQty = this.productList.filter(F => F.productCode === productId)[0].currentStock ?? 0;
+    const addedQty = invoiceItems.filter(F => F.productCode === productId)[0].quantity ?? 0;
+    return Number(maxQty) - Number(addedQty);
   }
 
   onInvalidRowCountChange(invalidCount: number) {
@@ -175,7 +183,7 @@ export class InvoiceAddEditComponent {
           console.log(this.productList);
           this.productList = response.data;
           this.formControlsConfig = this.formControlsConfig.map(control => {
-            if (control.type === 'select' && control.name === 'product') {
+            if (control.type === 'select' && control.name === 'productCode') {
               return {
                 ...control,                 // copy other fields
                 options: productsSelection  // updated value

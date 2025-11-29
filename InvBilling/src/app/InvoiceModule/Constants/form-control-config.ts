@@ -4,15 +4,16 @@ import { FormControlConfig } from "../../shared/Models/dynamic-forms-structure";
 export const FORM_CONTROLS_CONFIG: FormControlConfig[] = [
   {
     type: 'select',
-    name: 'product',
+    name: 'productCode',
     label: 'Product',
     options: [
     ],
-    validators: [Validators.required]
+    validators: [Validators.required],
+    errorMessage : "Please select product for invoice"
   },
   {
     type: 'number',
-    name: 'qty',
+    name: 'quantity',
     label: 'Quantity',
     validators: [
       Validators.required,
