@@ -17,8 +17,8 @@ export class InvoiceServiceService {
     const url = `/${Constant.apiName}/Invoice/fetchInvoiceList`;
     return this.http.get<ApiResponse<Vinvoice[]>>(url);
   }
-  addInvoiceList(): Observable<ApiResponse<Vinvoice>> {
+  addInvoice(invoice: FormData): Observable<ApiResponse<Vinvoice>> {
     const url = `/${Constant.apiName}/Invoice/AddInvoice`;
-    return this.http.post<ApiResponse<Vinvoice>>(url);
+    return this.http.post<ApiResponse<Vinvoice>>(url,invoice);
   }
 }

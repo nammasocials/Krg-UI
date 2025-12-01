@@ -15,6 +15,9 @@ import { switchMap, timer } from 'rxjs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { VProduct } from '../../../ProductModule/Models/VProduct';
 import { ProductService } from '../../../ProductModule/Services/product.service';
+import { Vinvoice } from '../../Models/Invoice';
+import { toast } from 'ngx-sonner';
+import { PopupService } from '../../../shared/Service/popup.service';
 
 @Component({
   selector: 'app-invoice-add-edit',
@@ -40,7 +43,7 @@ export class InvoiceAddEditComponent {
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute,
     private invoiceService: InvoiceServiceService, private commonService: CommonApiService,
-    private productService: ProductService,
+    private productService: ProductService,private popupService: PopupService,
     private customerService: CustomerService) {
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -158,48 +161,37 @@ export class InvoiceAddEditComponent {
       this.form.markAllAsTouched();
       return;
     }
+    const fd = new FormData();
+    const invoice: invoiceInput = this.form.value;
 
-    const product: VProductInput = this.form.value; // ✅ your object for internal use
+    // simple scalar fields
+    fd.append('InvoiceNo', invoice.invoiceNo);
+    fd.append('CustomerCode', invoice.customerCode);
+    fd.append('IsEwayBillAvailable', String(invoice.isEwayBillAvailable));
 
-    const formData = new FormData();
-
-    formData.append('ProductName', product.productName);
-    formData.append('CurrentStock', product.currentStock.toString());
-    formData.append('hsncode', product.hsncode.toString());
-    formData.append('unitCost', product.unitCost.toString());
-    formData.append('centralGstPer', product.centralGstPer.toString());
-    formData.append('stateGstPer', product.stateGstPer.toString());
-
-    // ✅ Add file only if exists
-    const file = this.form.get('productLogo')?.value;
+    const file = this.form.get('EWayBillQR')?.value;
     if (file) {
-      formData.append('ProductLogo', file);
+      fd.append('EWayBillQR', file);
     }
-    if (this.productData?.productCode?.length > 0) {
-      formData.append('ProductCode', this.productData.productCode.toString());
-      this.productService.editProduct(formData).subscribe({
-        next: (response) => {
-          toast.success('Product details updated successfully!');
-          this.popupService.updateSubmitFalse(true);
-        },
-        error: (error) => {
-          toast.error('Error Saving Product!');
-          this.popupService.updateSubmitFalse(false);
-        }
-      });
-    }
-    else {
-      this.productService.addProduct(formData).subscribe({
-        next: (response) => {
-          toast.success('Product saved successfully!');
-          this.popupService.updateSubmitFalse(true);
-        },
-        error: (error) => {
-          toast.error('Error Saving Product!');
-          this.popupService.updateSubmitFalse(false);
-        }
-      });
-    }
+
+    const invoiceItems: invoiceItems[] = formState.data.formArray;
+
+    invoiceItems.forEach((it, idx) => {
+      // If InvoiceCode is required by server, set it; otherwise leave empty or generate GUID client-side.
+      fd.append(`InvoiceItems[${idx}].ProductCode`, it.productCode);
+      fd.append(`InvoiceItems[${idx}].Quantity`, String(it.quantity));
+    });
+
+    this.invoiceService.addInvoice(fd).subscribe({
+      next: (response) => {
+        toast.success('Invoice saved successfully!');
+        this.popupService.updateSubmitFalse(true);
+      },
+      error: (error) => {
+        toast.error('Error Saving Invoice!');
+        this.popupService.updateSubmitFalse(false);
+      }
+    });
 
     console.log("Form Data:", formState.data.formArray);
     // call API here
@@ -249,7 +241,7 @@ export class InvoiceAddEditComponent {
     this.form.patchValue({ EWayBillLogo: file });
     this.form.get('EWayBillQR')?.updateValueAndValidity();
   }
-    getInvalidControls() {
+  getInvalidControls() {
     const invalid: string[] = [];
     const controls = this.form.controls;
     for (const name in controls) {
