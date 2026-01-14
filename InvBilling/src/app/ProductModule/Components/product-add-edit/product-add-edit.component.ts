@@ -8,6 +8,7 @@ import { imageFileValidator } from '../../../shared/Service/custom-validators.se
 import { toast } from 'ngx-sonner';
 import { VConstant } from '../../../shared/Models/commonModels';
 import { CommonApiService } from '../../../shared/Service/common-api.service';
+import { ProductUtilityService } from '../../Services/product.utility.service';
 
 @Component({
   selector: 'app-product-add-edit',
@@ -20,7 +21,7 @@ export class ProductAddEditComponent {
   form: FormGroup;
   loading = true;
   productData: VProductInput = new VProductInput();
-  constructor(private fb: FormBuilder, private popupService: PopupService,
+  constructor(private fb: FormBuilder, private popupService: PopupService, private utilityService : ProductUtilityService,
     private productService: ProductService, private commonService: CommonApiService) {
 
     var signalData = this.popupService.popupState();
@@ -34,10 +35,10 @@ export class ProductAddEditComponent {
       productName: [signalData.popupChildData ? this.productData.productName : "", [Validators.required, Validators.pattern(/^[A-Za-z. ]{5,50}$/)]],
       hsncode: [signalData.popupChildData ? this.productData.hsncode : "", [Validators.required, Validators.pattern(/^\d{4}(\d{2})?(\d{2})?$/)]],
       currentStock: [signalData.popupChildData ? this.productData.currentStock : "", [Validators.required, Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      netCost: [{value : 0, disabled : true}],
+      netCost: [{ value: 0, disabled: true }],
       unitCost: [signalData.popupChildData ? this.productData.unitCost : "", [Validators.pattern(/^(?:(?:[1-9]\d*)(?:\.\d+)?|0?\.[1-9]\d*)$/)]],
-      centralGstPer : [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
-      stateGstPer : [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
+      centralGstPer: [signalData.popupChildData ? this.productData.centralGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
+      stateGstPer: [signalData.popupChildData ? this.productData.stateGstPer : "", [Validators.required, Validators.min(0), Validators.max(100)]],
     });
     effect(() => {
       const state = this.popupService.popupState();
@@ -61,7 +62,16 @@ export class ProductAddEditComponent {
       }, 2000); // 3 seconds
     }
   }
+  ngOnInit() {
+    this.form.valueChanges.subscribe(values => {
+      const { unitCost, centralGstPer, stateGstPer } = values;
 
+      if (unitCost != null && centralGstPer != null && stateGstPer != null) {
+        const netCost = this.utilityService.calculateNetCost(unitCost, centralGstPer, stateGstPer);
+        this.form.get('netCost')?.setValue(netCost, { emitEvent: false });
+      }
+    });
+  }
   get productName() {
     return this.form.get('productName');
   }
