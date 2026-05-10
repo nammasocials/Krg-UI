@@ -24,6 +24,7 @@ export class CustomerDetailsComponent {
     private customerService: CustomerService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
+    this.customerId = idParam !== null ? idParam.toString() : "";
     const nav = this.router.getCurrentNavigation();
     const stateData = nav?.extras.state;
     if (stateData) {
@@ -32,7 +33,6 @@ export class CustomerDetailsComponent {
     } else {
       this.fetchCustomerData();
     }
-    this.customerId = idParam !== null ? idParam.toString() : "";
     this.fetchCustomerImageData();
   }
 

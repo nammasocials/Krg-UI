@@ -2,7 +2,7 @@ import { Component, effect } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { Vinvoice } from '../../Models/Invoice';
-import { customTableHeader, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
+import { customTableHeader, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
 import { switchMap, timer } from 'rxjs';
 import { PopupService } from '../../../shared/Service/popup.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
@@ -22,14 +22,32 @@ export class InvoiceListComponent {
     { headerLabel: 'Invoice No.', field: 'invoiceNo' },
     { headerLabel: 'Customer', field: 'customerName' },
     { headerLabel: 'GST', field: 'gst' },
-    { headerLabel: 'Total Cost', field: 'totalCost' }
+    { headerLabel: 'Total Cost', field: 'totalCost' },
+    { headerLabel: 'Options', field: 'options' },
   ];
   options: RowOptions[] = [
     { label: "View", actions: RowOptionsEnum.View, theme: "blue" },
-    { label: "Edit", actions: RowOptionsEnum.Edit, theme: "amber" },
-    { label: "Delete", actions: RowOptionsEnum.Delete, theme: "red" }
+    // { label: "Edit", actions: RowOptionsEnum.Edit, theme: "amber" },
+    // { label: "Delete", actions: RowOptionsEnum.Delete, theme: "red" }
   ]
   invoiceList: Vinvoice[] = [];
+
+  OpenOptions(action: customTableOptionsEmitter) {
+    if (action.type === RowOptionsEnum.View) {
+      this.ViewInvioice(action.data);
+    }
+    // if (action.type === RowOptionsEnum.Delete) {
+    //   this.DeleteCustomerPopup(action.data);
+    // }
+    // if (action.type === RowOptionsEnum.Edit) {
+    //   this.EditCustomerPopup(action.data);
+    // }
+  }
+
+  ViewInvioice(selectedInvoice: Vinvoice) {
+    this.router.navigate([`/invoice/${selectedInvoice.invoiceCode}`], { state: { selectedInvoice: selectedInvoice } });
+
+  }
 
   constructor(private invoiceService: InvoiceServiceService, private popupService: PopupService,
     private router: Router,
@@ -55,7 +73,7 @@ export class InvoiceListComponent {
         },
       });
   }
-  AddInvoice(){
+  AddInvoice() {
     this.router.navigate(['/new-invoice']);
   }
 }

@@ -9,6 +9,7 @@ import { InvoiceListComponent } from './InvoiceModule/Components/invoice-list/in
 import { CustomerDetailsComponent } from './CustomerModule/Components/customer-details/customer-details.component';
 import { ProductDetailsComponent } from './ProductModule/Components/product-details/product-details.component';
 import { InvoiceAddEditComponent } from './InvoiceModule/Components/invoice-add-edit/invoice-add-edit.component';
+import { InvoiceDetailsComponent } from './InvoiceModule/Components/invoice-details/invoice-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' }, // default route
@@ -32,6 +33,7 @@ export const routes: Routes = [
       // Invoice routes
       { path: 'invoice', component: InvoiceListComponent },
       { path: 'new-invoice', component: InvoiceAddEditComponent },
+      { path: 'invoice/:id', component: InvoiceDetailsComponent },
     ]
   }
 ];
