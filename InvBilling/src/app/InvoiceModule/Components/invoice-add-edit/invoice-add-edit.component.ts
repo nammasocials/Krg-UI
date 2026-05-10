@@ -43,7 +43,7 @@ export class InvoiceAddEditComponent {
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute,
     private invoiceService: InvoiceServiceService, private commonService: CommonApiService,
-    private productService: ProductService,private popupService: PopupService,
+    private productService: ProductService, private popupService: PopupService,
     private customerService: CustomerService) {
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -250,5 +250,8 @@ export class InvoiceAddEditComponent {
       }
     }
     return invalid;
+  }
+  goBack(): void {
+    this.router.navigate(['/invoice']); // Navigate to customer list page
   }
 }
