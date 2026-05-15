@@ -7,9 +7,42 @@
                 Back To Invoices
             </button>
         </div>
-        <div class="bg-white rounded-lg shadow-xl w-full max-h-screen max-h-screen overflow-y-auto">
-            <div class="p-6">
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden w-full md:w-1/5 flex items-center justify-center">
+                <div *ngIf="customerImageLoading" class="p-4 space-y-4">
+                    @for (i of [1,2]; track i) {
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    }
+                </div>
+                <div *ngIf="!customerImageLoading" class="w-[70%] h-[70%] flex items-center justify-center">
+                    <img data-bs-toggle="tooltip" [src]="customerImageUrl" class="w-full h-full object-contain"
+                        (error)="customerImageUrl='assets/images/no_image_found.png'" alt="Profile Image" />
+                </div>
+            </div>
+            <div class="rounded-lg shadow-md overflow-hidden w-full md:w-3/5 p-4">
+                <div class="bg-white">
 
+                </div>
+                <div class="bg-white">
+                    
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden w-full md:w-1/5 flex items-center justify-center">
+                <div *ngIf="EwayBillLoading" class="p-4 space-y-4">
+                    @for (i of [1,2]; track i) {
+                    <div class="animate-pulse space-y-2">
+                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    }
+                </div>
+                <div *ngIf="!EwayBillLoading" class="w-[70%] h-[70%] flex items-center justify-center">
+                    <img data-bs-toggle="tooltip" [src]="EwayBillImageUrl" class="w-full h-full object-contain"
+                        (error)="EwayBillImageUrl='assets/images/no_image_found.png'" alt="Profile Image" />
+                </div>
             </div>
         </div>
     </div>

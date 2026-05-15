@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
 import { Vinvoice, VinvoiceDetail } from '../Models/Invoice';
 import { Constant } from '../../constants';
@@ -23,6 +23,11 @@ export class InvoiceServiceService {
   }
   addInvoice(invoice: FormData): Observable<ApiResponse<Vinvoice>> {
     const url = `/${Constant.apiName}/Invoice/AddInvoice`;
-    return this.http.post<ApiResponse<Vinvoice>>(url,invoice);
+    return this.http.post<ApiResponse<Vinvoice>>(url, invoice);
+  }
+  fetchEwayBillImage(invoiceCode: string): Observable<string> {
+    return this.http
+      .get(`/${Constant.apiName}/Invoice/getEwayBillPhoto/${invoiceCode}`, { responseType: 'blob' })
+      .pipe(map(blob => URL.createObjectURL(blob)));
   }
 }

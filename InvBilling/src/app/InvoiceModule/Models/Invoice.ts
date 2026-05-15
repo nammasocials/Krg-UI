@@ -2,6 +2,7 @@ export class Vinvoice {
     invoiceCode: string = "";
     invoiceNo: string = "";
     customerName: string = "";
+    customerCode : string = "";
     totalCost: number = 0;
     gst: string = "";
     isEwayBillAvailable: boolean = false;
@@ -16,6 +17,7 @@ export class VinvoiceDetail {
   itemCode: string = "";
   invoiceNo: string = "";
   customerName: string = "";
+  customerCode : string = "";
   productCode: string = "";
   productName: string = "";
   productLogo: string | null = null;
