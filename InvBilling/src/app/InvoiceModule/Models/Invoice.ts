@@ -18,6 +18,8 @@ export class VinvoiceDetail {
   invoiceNo: string = "";
   customerName: string = "";
   customerCode : string = "";
+  customerEmail : string = "";
+  gstnumber : string = "";
   productCode: string = "";
   productName: string = "";
   productLogo: string | null = null;

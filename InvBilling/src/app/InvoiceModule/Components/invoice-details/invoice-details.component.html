@@ -22,12 +22,60 @@
                         (error)="customerImageUrl='assets/images/no_image_found.png'" alt="Profile Image" />
                 </div>
             </div>
-            <div class="rounded-lg shadow-md overflow-hidden w-full md:w-3/5 p-4">
-                <div class="bg-white">
-
-                </div>
-                <div class="bg-white">
-                    
+            <div class="bg-white rounded-lg shadow-md overflow-hidden w-full md:w-3/5 p-4">
+                <div class="flex flex-col md:flex-row flex-wrap">
+                    <!-- Column 1: Label/Value Pair -->
+                    <div class="flex flex-row md:flex-col w-full md:w-1/3 mb-4 md:mb-0">
+                        <div class="w-1/2 md:w-full block label font-medium text-gray-700 mb-2">Customer
+                            Name</div>
+                        <div *ngIf="InvoiceDetailsLoading" class="p-4 space-y-4">
+                            @for (i of [1]; track i) {
+                            <div class="animate-pulse space-y-2">
+                                <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                            </div>
+                            }
+                        </div>
+                        <div *ngIf="!InvoiceDetailsLoading" class="w-1/2 md:w-full">
+                            <input type="text" id="customerName" name="customerName" disabled
+                                class="w-[90%] px-4 py-3 border border-gray-300 rounded-lg 
+                                bg-gradient-to-r font-semibold from-blue-700 to-purple-900 text-transparent bg-clip-text" 
+                                [(ngModel)]="InvoiceDetails.customerName" />
+                        </div>
+                    </div>
+                    <div class="flex flex-row md:flex-col w-full md:w-1/3 mb-4 md:mb-0">
+                        <div class="w-1/2 md:w-full block label font-medium text-gray-700 mb-2">Customer
+                            Email</div>
+                        <div *ngIf="InvoiceDetailsLoading" class="p-4 space-y-4">
+                            @for (i of [1]; track i) {
+                            <div class="animate-pulse space-y-2">
+                                <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                            </div>
+                            }
+                        </div>
+                        <div *ngIf="!InvoiceDetailsLoading" class="w-1/2 md:w-full">
+                            <input type="text" id="customerName" name="customerName" disabled
+                                class="w-[90%] px-4 py-3 border border-gray-300 rounded-lg 
+                                bg-gradient-to-r font-semibold from-blue-700 to-purple-900 text-transparent bg-clip-text" 
+                                [(ngModel)]="InvoiceDetails.customerEmail" />
+                        </div>
+                    </div>
+                    <div class="flex flex-row md:flex-col w-full md:w-1/3 mb-4 md:mb-0">
+                        <div class="w-1/2 md:w-full block label font-medium text-gray-700 mb-2">Customer
+                            GST</div>
+                        <div *ngIf="InvoiceDetailsLoading" class="p-4 space-y-4">
+                            @for (i of [1]; track i) {
+                            <div class="animate-pulse space-y-2">
+                                <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                            </div>
+                            }
+                        </div>
+                        <div *ngIf="!InvoiceDetailsLoading" class="w-1/2 md:w-full">
+                            <input type="text" id="customerName" name="customerName" disabled
+                                class="w-[90%] px-4 py-3 border border-gray-300 rounded-lg 
+                                bg-gradient-to-r font-semibold from-blue-700 to-purple-900 text-transparent bg-clip-text" 
+                                [(ngModel)]="InvoiceDetails.gstnumber" />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-md overflow-hidden w-full md:w-1/5 flex items-center justify-center">

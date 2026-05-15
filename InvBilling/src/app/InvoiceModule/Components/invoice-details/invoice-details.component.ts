@@ -6,11 +6,12 @@ import { VinvoiceDetail } from '../../Models/Invoice';
 import { switchMap, timer } from 'rxjs';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { CustomerService } from '../../../CustomerModule/Services/customer.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-invoice-details',
   standalone: true,
-  imports: [RouterModule, CustomTableComponent, CommonModule],
+  imports: [RouterModule, CustomTableComponent, CommonModule,FormsModule],
   templateUrl: './invoice-details.component.html',
   styleUrl: './invoice-details.component.css'
 })
@@ -35,6 +36,9 @@ export class InvoiceDetailsComponent {
     if (stateData) {
       this.InvoiceDetailsLoading = false;
       this.InvoiceDetails = stateData['selectedInvoice'];
+      this.customerImageLoading = true;
+      this.customerId = this.InvoiceDetails.customerCode;
+      this.fetchCustomerImageData(this.customerId);
     } else {
       this.fetchInvoiceDetails();
     }
