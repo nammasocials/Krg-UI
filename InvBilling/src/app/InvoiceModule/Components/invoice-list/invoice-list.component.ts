@@ -5,6 +5,7 @@ import { Vinvoice } from '../../Models/Invoice';
 import { customTableHeader, customTableOptionsEmitter, RowOptions, RowOptionsEnum } from '../../../shared/Models/custom-table';
 import { switchMap, timer } from 'rxjs';
 import { PopupService } from '../../../shared/Service/popup.service';
+import { FileDownloadService } from '../../../shared/Service/file-download.service';
 import { CustomTableComponent } from '../../../shared/Components/custom-table/custom-table.component';
 import { CommonModule } from '@angular/common';
 
@@ -27,14 +28,20 @@ export class InvoiceListComponent {
   ];
   options: RowOptions[] = [
     { label: "View", actions: RowOptionsEnum.View, theme: "blue" },
+    { label: "PDF", actions: RowOptionsEnum.Pdf, theme: "amber" },
     // { label: "Edit", actions: RowOptionsEnum.Edit, theme: "amber" },
     // { label: "Delete", actions: RowOptionsEnum.Delete, theme: "red" }
   ]
   invoiceList: Vinvoice[] = [];
 
+  pdfDownloadingFor: string | null = null;
+
   OpenOptions(action: customTableOptionsEmitter) {
     if (action.type === RowOptionsEnum.View) {
       this.ViewInvioice(action.data);
+    }
+    if (action.type === RowOptionsEnum.Pdf) {
+      this.DownloadInvoicePdf(action.data);
     }
     // if (action.type === RowOptionsEnum.Delete) {
     //   this.DeleteCustomerPopup(action.data);
@@ -49,8 +56,23 @@ export class InvoiceListComponent {
 
   }
 
+  /** Downloads the RDLC-rendered PDF for one invoice. */
+  DownloadInvoicePdf(selectedInvoice: Vinvoice) {
+    this.pdfDownloadingFor = selectedInvoice.invoiceCode;
+    this.invoiceService.downloadInvoicePdf(selectedInvoice.invoiceCode).subscribe({
+      next: (response) => {
+        this.fileDownloadService.saveResponse(response, `Invoice_${selectedInvoice.invoiceNo}.pdf`);
+        this.pdfDownloadingFor = null;
+      },
+      error: () => {
+        this.pdfDownloadingFor = null;
+      }
+    });
+  }
+
   constructor(private invoiceService: InvoiceServiceService, private popupService: PopupService,
     private router: Router,
+    private fileDownloadService: FileDownloadService,
   ) {
     this.fetchInvoices();
     effect(() => {

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../shared/Models/ApiResponse';
@@ -29,5 +29,13 @@ export class InvoiceServiceService {
     return this.http
       .get(`/${Constant.apiName}/Invoice/getEwayBillPhoto/${invoiceCode}`, { responseType: 'blob' })
       .pipe(map(blob => URL.createObjectURL(blob)));
+  }
+  /**
+   * Fetches the RDLC-rendered invoice PDF. The response is observed in full so the
+   * filename the API sets in Content-Disposition can be reused for the download.
+   */
+  downloadInvoicePdf(invoiceCode: string): Observable<HttpResponse<Blob>> {
+    const url = `/${Constant.apiName}/Invoice/exportInvoicePdf/${invoiceCode}`;
+    return this.http.get(url, { responseType: 'blob', observe: 'response' });
   }
 }

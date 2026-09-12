@@ -6,6 +6,7 @@ import { VinvoiceDetail } from '../../Models/Invoice';
 import { switchMap, timer } from 'rxjs';
 import { InvoiceServiceService } from '../../Services/invoice-service.service';
 import { CustomerService } from '../../../CustomerModule/Services/customer.service';
+import { FileDownloadService } from '../../../shared/Service/file-download.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -24,11 +25,13 @@ export class InvoiceDetailsComponent {
   InvoiceId: string = "";
   customerId : string = "";
   customerImageUrl: string | null = null;
+  pdfDownloading: boolean = false;
   InvoiceDetails: VinvoiceDetail = new VinvoiceDetail();
 
   constructor(private router: Router, private route: ActivatedRoute,
     private invoiceService: InvoiceServiceService,
-    private customerService: CustomerService,) {
+    private customerService: CustomerService,
+    private fileDownloadService: FileDownloadService,) {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.InvoiceId = idParam !== null ? idParam.toString() : "";
     const nav = this.router.getCurrentNavigation();
@@ -86,6 +89,23 @@ export class InvoiceDetailsComponent {
           },
         });
     }
+  }
+
+  /** Downloads this invoice as the RDLC-rendered PDF. */
+  downloadPdf(): void {
+    if (!this.InvoiceId || this.pdfDownloading) {
+      return;
+    }
+    this.pdfDownloading = true;
+    this.invoiceService.downloadInvoicePdf(this.InvoiceId).subscribe({
+      next: (response) => {
+        this.fileDownloadService.saveResponse(response, `Invoice_${this.InvoiceDetails.invoiceNo}.pdf`);
+        this.pdfDownloading = false;
+      },
+      error: () => {
+        this.pdfDownloading = false;
+      }
+    });
   }
 
   goBack(): void {
